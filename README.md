@@ -9,9 +9,9 @@ IO API is independent of the particular XML parser used.
 
 ## Getting started
 
-'''
-$ pip install pengyifan
-'''
+```
+$ pip install bioc
+```
 
 ## Developers
 
