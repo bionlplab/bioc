@@ -330,90 +330,180 @@ class BioCCollection:
         s += ']'
         return s
 
+    def tobioc(self):
+        """
+        Returns the BioC xml that the BioCollection represents as a string.
 
-def read_bioc(filename):
+        :return: the BioC xml that the BioCollection represents as a string.
+        :rtype: str
+        """
+        doc = ET.ElementTree(self.totree())
+        return tostring(doc, pretty_print=True, encoding=self.encoding,
+                        standalone=self.standalone)
+
+    def tobiocfile(self, file):
+        """
+        Writes the entire collection into BioC file.
+
+        :param file: the name of the file to write to
+        :type file: str
+        """
+        f = open(file, 'w')
+        f.write(self.tobioc())
+        f.close()
+
+    def totree(self):
+        """
+        Returns the BioC xml that the BioCollection represents as a ElementTree .
+
+        :return: the BioC xml that the BioCollection represents as a ElementTree .
+        :rtype: ElementTree
+        """
+        ctree = ET.Element('collection')
+        ET.SubElement(ctree, 'source').text = self.source
+        ET.SubElement(ctree, 'date').text = self.date
+        ET.SubElement(ctree, 'key').text = self.key
+        self.__write_infons(ctree, self.infons)
+
+        for d in self.documents:
+            self.__write_document(ET.SubElement(ctree, 'document'), d)
+
+        return ctree
+
+    def __write_document(self, dtree, document):
+        ET.SubElement(dtree, 'id').text = document.id
+        self.__write_infons(dtree, document.infons)
+
+        for p in document.passages:
+            self.__write_passage(ET.SubElement(dtree, 'passage'), p)
+        for a in document.annotations:
+            self.__write_annotation(dtree, a)
+        for r in document.relations:
+            self.__write_relation(dtree, r)
+
+    def __write_passage(self, ptree, passage):
+        self.__write_infons(ptree, passage.infons)
+        ET.SubElement(ptree, 'offset').text = str(passage.offset)
+        if passage.text is not None:
+            ET.SubElement(ptree, 'text').text = passage.text
+        for s in passage.sentences:
+            self.__write_sentence(ET.SubElement(ptree, 'sentence'), s)
+        for a in passage.annotations:
+            self.__write_annotation(ptree, a)
+        for r in passage.relations:
+            self.__write_relation(ptree, r)
+
+    def __write_sentence(self, stree, sentence):
+        self.__write_infons(stree, sentence.infons)
+        ET.SubElement(stree, 'offset').text = str(sentence.offset)
+        if sentence.text is not None:
+            ET.SubElement(stree, 'text').text = sentence.text
+        for a in sentence.annotations:
+            self.__write_annotation(stree, a)
+        for r in sentence.relations:
+            self.__write_relation(stree, r)
+
+    def __write_annotation(self, parent, annotation):
+        atree = ET.SubElement(parent, 'annotation', {'id': annotation.id})
+        self.__write_infons(atree, annotation.infons)
+        for l in annotation.locations:
+            ET.SubElement(atree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
+        ET.SubElement(atree, 'text').text = annotation.text
+
+    def __write_relation(self, parent, relation):
+        rtree = ET.SubElement(parent, 'relation', {'id': relation.id})
+        self.__write_infons(rtree, relation.infons)
+        for n in relation.nodes:
+            ET.SubElement(rtree, 'node', {'refid': n.refid, 'role': n.role})
+
+    def __write_infons(self, parent, infons):
+        for k, v in infons.items():
+            ET.SubElement(parent, 'infon', {'key': k}).text = v
+
+
+def parse(file):
     """
     Reads the entire BioC file into one collection.
 
-    :param filename: the name of the file to read from
-    :type filename: str
+    :param file: the name of the file to read from
+    :type file: str
     :return: BioC collection
     :rtype: BioCCollection
     """
-    tree = ET.parse(filename)
-    collection = __read_collection(tree.getroot())
+    tree = ET.parse(file)
+    collection = __parse_collection(tree.getroot())
     collection.encoding = tree.docinfo.encoding
     collection.standalone = tree.docinfo.standalone
     collection.version = tree.docinfo.xml_version
     return collection
 
 
-def __read_collection(ctree):
+def __parse_collection(ctree):
     collection = BioCCollection()
     collection.source = ctree.findtext('source')
     collection.date = ctree.findtext('date')
     collection.key = ctree.findtext('key')
-    collection.infons = __read_infons(ctree)
+    collection.infons = __parse_infons(ctree)
 
     for dtree in ctree.findall('document'):
-        collection.add_document(__read_document(dtree))
+        collection.add_document(__parse_document(dtree))
 
     return collection
 
 
-def __read_document(dtree):
+def __parse_document(dtree):
     document = BioCDocument()
     document.id = dtree.findtext('id')
 
     for ptree in dtree.findall('passage'):
-        document.add_passage(__read_passage(ptree))
+        document.add_passage(__parse_passage(ptree))
 
     for atree in dtree.findall('annotation'):
-        document.add_annotation(__read_annotation(atree))
+        document.add_annotation(__parse_annotation(atree))
 
     for rtree in dtree.findall('relation'):
-        document.add_relation(__read_relation(rtree))
+        document.add_relation(__parse_relation(rtree))
     return document
 
 
-def __read_passage(ptree):
+def __parse_passage(ptree):
     passage = BioCPassage()
     passage.offset = int(ptree.findtext('offset'))
-    passage.infons = __read_infons(ptree)
+    passage.infons = __parse_infons(ptree)
     if ptree.find('text') is not None:
         passage.text = ptree.findtext('text')
 
     for stree in ptree.findall('sentence'):
-        passage.add_sentence(__read_sentence(stree))
+        passage.add_sentence(__parse_sentence(stree))
 
     for atree in ptree.findall('annotation'):
-        passage.add_annotation(__read_annotation(atree))
+        passage.add_annotation(__parse_annotation(atree))
 
     for rtree in ptree.findall('relation'):
-        passage.add_relation(__read_relation(rtree))
+        passage.add_relation(__parse_relation(rtree))
 
     return passage
 
 
-def __read_sentence(stree):
+def __parse_sentence(stree):
     sentence = BioCSentence()
     sentence.offset = int(stree.findtext('offset'))
     sentence.text = stree.findtext('text')
-    sentence.infons = __read_infons(stree)
+    sentence.infons = __parse_infons(stree)
 
     for atree in stree.findall('annotation'):
-        sentence.add_annotation(__read_annotation(atree))
+        sentence.add_annotation(__parse_annotation(atree))
 
     for rtree in stree.findall('relation'):
-        sentence.add_relation(__read_relation(rtree))
+        sentence.add_relation(__parse_relation(rtree))
 
     return sentence
 
 
-def __read_annotation(atree):
+def __parse_annotation(atree):
     annotation = BioCAnnotation()
     annotation.id = atree.attrib['id']
-    annotation.infons = __read_infons(atree)
+    annotation.infons = __parse_infons(atree)
     annotation.text = atree.findtext('text')
     for ltree in atree.findall('location'):
         annotation.add_location(
@@ -421,105 +511,20 @@ def __read_annotation(atree):
     return annotation
 
 
-def __read_relation(rtree):
+def __parse_relation(rtree):
     relation = BioCRelation()
     if 'id' in rtree.attrib:
         relation.id = rtree.attrib['id']
 
-    relation.infons = __read_infons(rtree)
+    relation.infons = __parse_infons(rtree)
     for ntree in rtree.findall('node'):
         relation.add_node(BioCNode(ntree.attrib['refid'], ntree.attrib['role']))
 
     return relation
 
 
-def __read_infons(tree):
+def __parse_infons(tree):
     infons = dict()
     for infon_xml in tree.findall('infon'):
         infons[infon_xml.attrib['key']] = infon_xml.text
     return infons
-
-
-def write_bioc(filename, collection):
-    """
-    Writes the entire collection into BioC file.
-
-    :param filename: the name of the file to write to
-    :type filename: str
-    :param collection: the BioC collection
-    :type collection: BioCCollection
-    """
-    doc = ET.ElementTree(__write_collection(collection))
-    f = open(filename, 'w')
-    f.write(tostring(doc, pretty_print=True, encoding=collection.encoding,
-                     standalone=collection.standalone))
-    f.close()
-
-
-def __write_collection(collection):
-    ctree = ET.Element('collection')
-    ET.SubElement(ctree, 'source').text = collection.source
-    ET.SubElement(ctree, 'date').text = collection.date
-    ET.SubElement(ctree, 'key').text = collection.key
-    __write_infons(ctree, collection.infons)
-
-    for d in collection.documents:
-        __write_document(ET.SubElement(ctree, 'document'), d)
-
-    return ctree
-
-
-def __write_document(dtree, document):
-    ET.SubElement(dtree, 'id').text = document.id
-    __write_infons(dtree, document.infons)
-
-    for p in document.passages:
-        __write_passage(ET.SubElement(dtree, 'passage'), p)
-    for a in document.annotations:
-        __write_annotation(dtree, a)
-    for r in document.relations:
-        __write_relation(dtree, r)
-
-
-def __write_passage(ptree, passage):
-    __write_infons(ptree, passage.infons)
-    ET.SubElement(ptree, 'offset').text = str(passage.offset)
-    if passage.text is not None:
-        ET.SubElement(ptree, 'text').text = passage.text
-    for s in passage.sentences:
-        __write_sentence(ET.SubElement(ptree, 'sentence'), s)
-    for a in passage.annotations:
-        __write_annotation(ptree, a)
-    for r in passage.relations:
-        __write_relation(ptree, r)
-
-
-def __write_sentence(stree, sentence):
-    __write_infons(stree, sentence.infons)
-    ET.SubElement(stree, 'offset').text = str(sentence.offset)
-    if sentence.text is not None:
-        ET.SubElement(stree, 'text').text = sentence.text
-    for a in sentence.annotations:
-        __write_annotation(stree, a)
-    for r in sentence.relations:
-        __write_relation(stree, r)
-
-
-def __write_annotation(tree, annotation):
-    atree = ET.SubElement(tree, 'annotation', {'id': annotation.id})
-    __write_infons(atree, annotation.infons)
-    for l in annotation.locations:
-        ET.SubElement(atree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
-    ET.SubElement(atree, 'text').text = annotation.text
-
-
-def __write_relation(tree, relation):
-    rtree = ET.SubElement(tree, 'relation', {'id': relation.id})
-    __write_infons(rtree, relation.infons)
-    for n in relation.nodes:
-        ET.SubElement(rtree, 'node', {'refid': n.refid, 'role': n.role})
-
-
-def __write_infons(tree, infons):
-    for k, v in infons.items():
-        ET.SubElement(tree, 'infon', {'key': k}).text = v
