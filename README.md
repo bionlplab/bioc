@@ -4,8 +4,8 @@ Data structures and code to read/write BioC XML.
 
 ## BioC
 
-BioC XML format can be used to share text documents and annotations. The development of Java BioC
-IO API is independent of the particular XML parser used.
+BioC XML format can be used to share text documents and annotations. The development of Python BioC
+IO API use [lxml](http://lxml.de/) parser.
 
 ## Getting started
 
