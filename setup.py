@@ -3,14 +3,14 @@ __author__ = 'Yifan Peng'
 from distutils.core import setup
 setup(
     name = 'bioc',
-    packages = ['bioc'], # this must be the same as the name above
-    version = '1.0.dev3',
+    version = '1.0.dev5',
     description = 'Data structures and code to read/write BioC XML.',
     author = 'Yifan Peng',
     author_email = 'yfpeng@udel.edu',
     keywords = ['bioc'],
     license = 'BSD 3-clause license',
     url = 'https://github.com/yfpeng/pengyifan-pybioc',
+    packages = ['bioc'],
     classifiers = [
         'Development Status :: 1 - Planning',
         'Environment :: Console',
