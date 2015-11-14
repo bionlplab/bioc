@@ -3,7 +3,7 @@ __author__ = 'Yifan Peng'
 from distutils.core import setup
 setup(
     name = 'bioc',
-    version = '1.0.dev5',
+    version = '1.0.dev6',
     description = 'Data structures and code to read/write BioC XML.',
     author = 'Yifan Peng',
     author_email = 'yfpeng@udel.edu',

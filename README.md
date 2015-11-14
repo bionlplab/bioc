@@ -31,7 +31,7 @@ The official BioC webpage is available with all up-to-date instructions, code, a
 
 ## Reference
 
-* Comeau,D.C., Do?an,R.I., Ciccarese,P., Cohen,K.B., Krallinger,M., Leitner,F., Lu,Z., Peng,Y.,
+* Comeau,D.C., Doğan,R.I., Ciccarese,P., Cohen,K.B., Krallinger,M., Leitner,F., Lu,Z., Peng,Y.,
 Rinaldi,F., Torii,M., Valencia,V., Verspoor,K., Wiegers,T.C., Wu,C.H., Wilbur,W.J. (2013) BioC: A
 minimalist approach to interoperability for biomedical text processing. Database: The Journal of
 Biological Databases and Curation.

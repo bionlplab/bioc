@@ -438,6 +438,23 @@ def parse(file):
     return collection
 
 
+def fromstring(text):
+    """
+    Reads the entire BioC xml string into one collection.
+
+    :param text: BioC xml string
+    :type text: str
+    :return: BioC collection
+    :rtype: BioCCollection
+    """
+    tree = ET.fromstring(text)
+    collection = __parse_collection(tree.getroot())
+    collection.encoding = tree.docinfo.encoding
+    collection.standalone = tree.docinfo.standalone
+    collection.version = tree.docinfo.xml_version
+    return collection
+
+
 def __parse_collection(ctree):
     collection = BioCCollection()
     collection.source = ctree.findtext('source')
