@@ -1,0 +1,203 @@
+# -*- coding: utf-8 -*-
+
+"""
+Code to read/write BioC XML in an incremental way.
+"""
+
+__author__ = 'Yifan Peng'
+
+from contextlib import contextmanager
+
+import lxml.etree as ET
+from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+    BioCRelation, BioCNode, BioCLocation
+
+
+class BioCDocumentReader:
+    def __init__(self, filename):
+        self.__context = iter(ET.iterparse(filename, events=('start', 'end')))
+        self.__state = 0
+        self.__read()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.__document is None:
+            raise StopIteration
+        else:
+            document = self.__document
+            self.__read()
+            return document
+
+    def next(self):
+        """
+        Reads one BioC document from the XML file.
+
+        :return: the BioC document
+        :rtype: BioCDocument
+        """
+        return self.__next__()
+
+    def __read(self):
+        while self.__has_next():
+            event, elem = self.__next_event()
+            if self.__state == 0:
+                if event == 'start':
+                    if elem.tag == 'collection':
+                        self.__state = 1
+                        self.__collection = BioCCollection()
+                        # collection information
+            elif self.__state == 1:
+                if event == 'start':
+                    if elem.tag == 'source':
+                        self.__collection.source = self.__gettext()
+                    elif elem.tag == 'data':
+                        self.__collection.date = self.__gettext()
+                    elif elem.tag == 'key':
+                        self.__collection.key = self.__gettext()
+                    elif elem.tag == 'infon':
+                        self.__collection.infons[elem.get('key')] = self.__gettext()
+                    elif elem.tag == 'document':
+                        self.__document = BioCDocument()
+                        self.__state = 2
+                elif event == 'end':
+                    if elem.tag == 'collection':
+                        self.__state = 0
+                        self.__document = None
+                        self.__passage = None
+                        self.__sentence = None
+            elif self.__state == 2:
+                if event == 'start':
+                    if elem.tag == 'id':
+                        self.__document.id = self.__gettext()
+                    elif elem.tag == 'infon':
+                        self.__document.infons[elem.get('key')] = self.__gettext()
+                    elif elem.tag == 'passage':
+                        self.__passage = BioCPassage()
+                        self.__state = 3
+                    elif elem.tag == 'annotation':
+                        self.__document.add_annotation(self.__read_annotation(elem))
+                    elif elem.tag == 'relation':
+                        self.__document.add_relation(self.__read_relation(elem))
+                elif event == 'end':
+                    if elem.tag == 'document':
+                        self.__state = 1
+                        return
+            elif self.__state == 3:
+                if event == 'start':
+                    if elem.tag == 'offset':
+                        self.__passage.offset = int(self.__gettext())
+                    elif elem.tag == 'text':
+                        self.__passage.text = self.__gettext()
+                    elif elem.tag == 'infon':
+                        self.__passage.infons[elem.get('key')] = self.__gettext()
+                    elif elem.tag == 'sentence':
+                        self.__sentence = BioCSentence()
+                        self.__state = 4
+                    elif elem.tag == 'annotation':
+                        self.__passage.add_annotation(self.__read_annotation(elem))
+                    elif elem.tag == 'relation':
+                        self.__passage.add_relation(self.__read_relation(elem))
+                elif event == 'end':
+                    if elem.tag == 'passage':
+                        self.__state = 2
+                        if self.__passage is not None:
+                            self.__document.add_passage(self.__passage)
+            elif self.__state == 4:
+                if event == 'start':
+                    if elem.tag == 'offset':
+                        self.__sentence.offset = int(self.__gettext())
+                    elif elem.tag == 'text':
+                        self.__sentence.text = self.__gettext()
+                    elif elem.tag == 'infon':
+                        self.__sentence.infons[elem.get('key')] = self.__gettext()
+                    elif elem.tag == 'annotation':
+                        self.__sentence.add_annotation(self.__read_annotation(elem))
+                    elif elem.tag == 'relation':
+                        self.__sentence.add_relation(self.__read_relation(elem))
+                elif event == 'end':
+                    if elem.tag == 'sentence':
+                        self.__state = 3
+                        if self.__sentence is not None:
+                            self.__passage.add_sentence(self.__sentence)
+
+    def __read_annotation(self, start_elem):
+        ann = BioCAnnotation()
+        ann.id = start_elem.get('id')
+        while self.__has_next():
+            event, elem = self.__next_event()
+            if event == 'start':
+                if elem.tag == 'text':
+                    ann.text = self.__gettext()
+            elif elem.tag == 'infon':
+                ann.infons[elem.get('key')] = self.__gettext()
+            elif elem.tag == 'location':
+                ann.add_location(
+                    BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
+            elif event == 'end':
+                if elem.tag == 'annotation':
+                    return ann
+        raise RuntimeError("should not reach here")
+        return None
+
+    def __read_relation(self, start_elem):
+        rel = BioCRelation()
+        rel.id = start_elem.get('id')
+        while self.__has_next():
+            event, elem = self.__next_event()
+            if event == 'start':
+                if elem.tag == 'infon':
+                    rel.infons[elem.get('key')] = self.__gettext()
+                elif elem.tag == 'node':
+                    rel.add_node(BioCNode(elem.get('refid'), elem.get('role')))
+            elif event == 'end':
+                if elem.tag == 'relation':
+                    return rel
+        raise RuntimeError("should not reach here")
+        return None
+
+    def __gettext(self, elem=None):
+        if self.__has_next():
+            event, nextelem = self.__next_event()
+            assert ((elem is None) or (elem.tag == nextelem.tag)), \
+                'cannot read tag[%s] text' % elem.tag
+            return nextelem.text
+        return None
+
+    def __has_next(self):
+        try:
+            self.__event, self.__elem = next(self.__context)
+            return True
+        except StopIteration:
+            self.__event = None
+            self.__elem = None
+            return False
+
+    def __next_event(self):
+        return self.__event, self.__elem
+
+    def get_collection_info(self):
+        """
+        Reads the collection information: encoding, version, DTD, source, date, key, infons, etc.
+
+        :return: the BioC collection that contains only information
+        :rtype: BioCCollection
+        """
+        return self.__collection
+
+
+@contextmanager
+def biocopen(file, mode='r'):
+    """Open a file, returning an object of the BioCDocumentReader which can parse an BioC file
+    incrementally at BioCDocument level.
+
+    :param file: file name
+    :type file: str
+    :param mode: not used
+    :type mode: str
+    :return: an object of the BioCDocumentReader
+    :rtype: BioCDocumentReader
+    """
+    reader = BioCDocumentReader(file)
+    yield reader
