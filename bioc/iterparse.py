@@ -160,11 +160,11 @@ class iterparse:
             if event == 'start':
                 if elem.tag == 'text':
                     ann.text = self.__gettext()
-            elif elem.tag == 'infon':
-                ann.infons[elem.get('key')] = self.__gettext()
-            elif elem.tag == 'location':
-                ann.add_location(
-                    BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
+                elif elem.tag == 'infon':
+                    ann.infons[elem.get('key')] = self.__gettext()
+                elif elem.tag == 'location':
+                    ann.add_location(
+                        BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
             elif event == 'end':
                 if elem.tag == 'annotation':
                     return ann
