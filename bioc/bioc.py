@@ -70,17 +70,6 @@ class BioCAnnotation:
         """
         self.locations.append(location)
 
-    def add_location(self, offset, length):
-        """
-        Adds the location at the specified position in this annotation.
-
-        :param offset: the offset of annotation
-        :type offset: int
-        :param length: the length of the annotated text
-        :type length: int
-        """
-        self.add_location(BioCLocation(offset, length))
-
     def __str__(self):
         s = 'BioCAnnotation['
         s += 'id=%s,' % self.id

@@ -6,18 +6,48 @@ Code to read/write BioC XML in an incremental way.
 
 __author__ = 'Yifan Peng'
 
-from contextlib import contextmanager
-
 import lxml.etree as ET
-from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation, BioCNode, BioCLocation
 
 
-class BioCDocumentReader:
-    def __init__(self, filename):
-        self.__context = iter(ET.iterparse(filename, events=('start', 'end')))
+class iterparse:
+    """
+    iterparse(file, 'r')
+
+    An object that can parse an BioC file incrementally at document level.
+
+    Cannot parse doc information.
+
+    Arguments:
+      - file (str): file name
+      - mode (char): not used
+    """
+    def __init__(self, file, mode='r'):
+        """Open an object of the iterparse which can parse an BioC file
+        incrementally at document level.
+
+        <pre>
+
+        </pre>
+
+        :param file: file name
+        :type file: str
+        :param mode: not used
+        :type mode: str
+        :return: an object of the iterparse
+        :rtype: iterparse
+        """
+
+        self.__context = iter(ET.iterparse(file, events=('start', 'end')))
         self.__state = 0
         self.__read()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
     def __iter__(self):
         return self
@@ -185,19 +215,3 @@ class BioCDocumentReader:
         :rtype: BioCCollection
         """
         return self.__collection
-
-
-@contextmanager
-def biocopen(file, mode='r'):
-    """Open a file, returning an object of the BioCDocumentReader which can parse an BioC file
-    incrementally at BioCDocument level.
-
-    :param file: file name
-    :type file: str
-    :param mode: not used
-    :type mode: str
-    :return: an object of the BioCDocumentReader
-    :rtype: BioCDocumentReader
-    """
-    reader = BioCDocumentReader(file)
-    yield reader
