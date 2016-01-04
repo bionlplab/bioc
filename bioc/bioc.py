@@ -384,7 +384,7 @@ class BioCCollection:
     def __write_passage(self, ptree, passage):
         self.__write_infons(ptree, passage.infons)
         ET.SubElement(ptree, 'offset').text = str(passage.offset)
-        if passage.text is not None:
+        if passage.text is not None and not passage.text:
             ET.SubElement(ptree, 'text').text = passage.text
         for s in passage.sentences:
             self.__write_sentence(ET.SubElement(ptree, 'sentence'), s)
@@ -396,7 +396,7 @@ class BioCCollection:
     def __write_sentence(self, stree, sentence):
         self.__write_infons(stree, sentence.infons)
         ET.SubElement(stree, 'offset').text = str(sentence.offset)
-        if sentence.text is not None:
+        if sentence.text is not None and not sentence.text:
             ET.SubElement(stree, 'text').text = sentence.text
         for a in sentence.annotations:
             self.__write_annotation(stree, a)
