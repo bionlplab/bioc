@@ -396,7 +396,7 @@ class BioCCollection:
     def __write_sentence(self, stree, sentence):
         self.__write_infons(stree, sentence.infons)
         ET.SubElement(stree, 'offset').text = str(sentence.offset)
-        if sentence.text is not None and not sentence.text:
+        if sentence.text:
             ET.SubElement(stree, 'text').text = sentence.text
         for a in sentence.annotations:
             self.__write_annotation(stree, a)

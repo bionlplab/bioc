@@ -81,13 +81,13 @@ class iterparse:
             elif self.__state == 1:
                 if event == 'start':
                     if elem.tag == 'source':
-                        self.__collection.source = elem.text
+                        self.__collection.source = self.__gettext(elem)
                     elif elem.tag == 'data':
-                        self.__collection.date = elem.text
+                        self.__collection.date = self.__gettext(elem)
                     elif elem.tag == 'key':
-                        self.__collection.key = elem.text
+                        self.__collection.key = self.__gettext(elem)
                     elif elem.tag == 'infon':
-                        self.__collection.infons[elem.get('key')] = elem.text
+                        self.__collection.infons[elem.get('key')] = self.__gettext(elem)
                     elif elem.tag == 'document':
                         self.__document = BioCDocument()
                         self.__state = 2
@@ -100,9 +100,9 @@ class iterparse:
             elif self.__state == 2:
                 if event == 'start':
                     if elem.tag == 'id':
-                        self.__document.id = elem.text
+                        self.__document.id = self.__gettext(elem)
                     elif elem.tag == 'infon':
-                        self.__document.infons[elem.get('key')] = elem.text
+                        self.__document.infons[elem.get('key')] = self.__gettext(elem)
                     elif elem.tag == 'passage':
                         self.__passage = BioCPassage()
                         self.__state = 3
@@ -117,11 +117,11 @@ class iterparse:
             elif self.__state == 3:
                 if event == 'start':
                     if elem.tag == 'offset':
-                        self.__passage.offset = int(elem.text)
+                        self.__passage.offset = int(self.__gettext(elem))
                     elif elem.tag == 'text':
-                        self.__passage.text = elem.text
+                        self.__passage.text = self.__gettext(elem)
                     elif elem.tag == 'infon':
-                        self.__passage.infons[elem.get('key')] = elem.text
+                        self.__passage.infons[elem.get('key')] = self.__gettext(elem)
                     elif elem.tag == 'sentence':
                         self.__sentence = BioCSentence()
                         self.__state = 4
@@ -137,11 +137,11 @@ class iterparse:
             elif self.__state == 4:
                 if event == 'start':
                     if elem.tag == 'offset':
-                        self.__sentence.offset = int(elem.text)
+                        self.__sentence.offset = int(self.__gettext(elem))
                     elif elem.tag == 'text':
-                        self.__sentence.text = elem.text
+                        self.__sentence.text = self.__gettext(elem)
                     elif elem.tag == 'infon':
-                        self.__sentence.infons[elem.get('key')] = elem.text
+                        self.__sentence.infons[elem.get('key')] = self.__gettext(elem)
                     elif elem.tag == 'annotation':
                         self.__sentence.add_annotation(self.__read_annotation(elem))
                     elif elem.tag == 'relation':
@@ -159,9 +159,9 @@ class iterparse:
             event, elem = self.__next_event()
             if event == 'start':
                 if elem.tag == 'text':
-                    ann.text = elem.text
+                    ann.text = self.__gettext(elem)
                 elif elem.tag == 'infon':
-                    ann.infons[elem.get('key')] = elem.text
+                    ann.infons[elem.get('key')] = self.__gettext(elem)
                 elif elem.tag == 'location':
                     ann.add_location(
                         BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
@@ -178,7 +178,7 @@ class iterparse:
             event, elem = self.__next_event()
             if event == 'start':
                 if elem.tag == 'infon':
-                    rel.infons[elem.get('key')] = elem.text
+                    rel.infons[elem.get('key')] = self.__gettext(elem)
                 elif elem.tag == 'node':
                     rel.add_node(BioCNode(elem.get('refid'), elem.get('role')))
             elif event == 'end':
@@ -187,13 +187,13 @@ class iterparse:
         raise RuntimeError("should not reach here")
         return None
 
-    # def __gettext(self, elem=None):
-    #     if self.__has_next():
-    #         event, nextelem = self.__next_event()
-    #         assert ((elem is None) or (elem.tag == nextelem.tag)), \
-    #             'cannot read tag[%s] text' % elem.tag
-    #         return nextelem.text
-    #     return None
+    def __gettext(self, startelem):
+        self.__has_next()
+        event, endelem = self.__next_event()
+        assert (event == 'end' and (startelem.tag == endelem.tag)), \
+            'cannot read tag[%s] text' % startelem.tag
+        # print endelem.text
+        return endelem.text
 
     def __has_next(self):
         try:

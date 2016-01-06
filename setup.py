@@ -5,6 +5,7 @@ setup(
     name = 'bioc',
     version = '1.0.dev9',
     description = 'Data structures and code to read/write BioC XML.',
+    long_description='README.md',
     author = 'Yifan Peng',
     author_email = 'yfpeng@udel.edu',
     keywords = ['bioc'],
