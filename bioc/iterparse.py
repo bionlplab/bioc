@@ -7,6 +7,7 @@ Code to read/write BioC XML in an incremental way.
 __author__ = 'Yifan Peng'
 
 import lxml.etree as ET
+
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation, BioCNode, BioCLocation
 
@@ -23,6 +24,7 @@ class iterparse:
       - file (str): file name
       - mode (char): not used
     """
+
     def __init__(self, file, mode='r'):
         """Open an object of the iterparse which can parse an BioC file
         incrementally at document level.
@@ -80,30 +82,26 @@ class iterparse:
                         # collection information
             elif self.__state == 1:
                 if event == 'start':
-                    if elem.tag == 'source':
-                        self.__collection.source = self.__gettext(elem)
-                    elif elem.tag == 'data':
-                        self.__collection.date = self.__gettext(elem)
-                    elif elem.tag == 'key':
-                        self.__collection.key = self.__gettext(elem)
-                    elif elem.tag == 'infon':
-                        self.__collection.infons[elem.get('key')] = self.__gettext(elem)
-                    elif elem.tag == 'document':
+                    if elem.tag == 'document':
                         self.__document = BioCDocument()
                         self.__state = 2
                 elif event == 'end':
-                    if elem.tag == 'collection':
+                    if elem.tag == 'source':
+                        self.__collection.source = elem.text
+                    elif elem.tag == 'data':
+                        self.__collection.date = elem.text
+                    elif elem.tag == 'key':
+                        self.__collection.key = elem.text
+                    elif elem.tag == 'infon':
+                        self.__collection.infons[elem.get('key')] = elem.text
+                    elif elem.tag == 'collection':
                         self.__state = 0
                         self.__document = None
                         self.__passage = None
                         self.__sentence = None
             elif self.__state == 2:
                 if event == 'start':
-                    if elem.tag == 'id':
-                        self.__document.id = self.__gettext(elem)
-                    elif elem.tag == 'infon':
-                        self.__document.infons[elem.get('key')] = self.__gettext(elem)
-                    elif elem.tag == 'passage':
+                    if elem.tag == 'passage':
                         self.__passage = BioCPassage()
                         self.__state = 3
                     elif elem.tag == 'annotation':
@@ -111,18 +109,16 @@ class iterparse:
                     elif elem.tag == 'relation':
                         self.__document.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'document':
+                    if elem.tag == 'id':
+                        self.__document.id = elem.text
+                    elif elem.tag == 'infon':
+                        self.__document.infons[elem.get('key')] = elem.text
+                    elif elem.tag == 'document':
                         self.__state = 1
                         return
             elif self.__state == 3:
                 if event == 'start':
-                    if elem.tag == 'offset':
-                        self.__passage.offset = int(self.__gettext(elem))
-                    elif elem.tag == 'text':
-                        self.__passage.text = self.__gettext(elem)
-                    elif elem.tag == 'infon':
-                        self.__passage.infons[elem.get('key')] = self.__gettext(elem)
-                    elif elem.tag == 'sentence':
+                    if elem.tag == 'sentence':
                         self.__sentence = BioCSentence()
                         self.__state = 4
                     elif elem.tag == 'annotation':
@@ -130,24 +126,30 @@ class iterparse:
                     elif elem.tag == 'relation':
                         self.__passage.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'passage':
+                    if elem.tag == 'offset':
+                        self.__passage.offset = int(elem.text)
+                    elif elem.tag == 'text':
+                        self.__passage.text = elem.text
+                    elif elem.tag == 'infon':
+                        self.__passage.infons[elem.get('key')] = elem.text
+                    elif elem.tag == 'passage':
                         self.__state = 2
                         if self.__passage is not None:
                             self.__document.add_passage(self.__passage)
             elif self.__state == 4:
                 if event == 'start':
-                    if elem.tag == 'offset':
-                        self.__sentence.offset = int(self.__gettext(elem))
-                    elif elem.tag == 'text':
-                        self.__sentence.text = self.__gettext(elem)
-                    elif elem.tag == 'infon':
-                        self.__sentence.infons[elem.get('key')] = self.__gettext(elem)
-                    elif elem.tag == 'annotation':
+                    if elem.tag == 'annotation':
                         self.__sentence.add_annotation(self.__read_annotation(elem))
                     elif elem.tag == 'relation':
                         self.__sentence.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'sentence':
+                    if elem.tag == 'offset':
+                        self.__sentence.offset = int(elem.text)
+                    elif elem.tag == 'text':
+                        self.__sentence.text = elem.text
+                    elif elem.tag == 'infon':
+                        self.__sentence.infons[elem.get('key')] = elem.text
+                    elif elem.tag == 'sentence':
                         self.__state = 3
                         if self.__sentence is not None:
                             self.__passage.add_sentence(self.__sentence)
@@ -158,15 +160,15 @@ class iterparse:
         while self.__has_next():
             event, elem = self.__next_event()
             if event == 'start':
-                if elem.tag == 'text':
-                    ann.text = self.__gettext(elem)
-                elif elem.tag == 'infon':
-                    ann.infons[elem.get('key')] = self.__gettext(elem)
-                elif elem.tag == 'location':
-                    ann.add_location(
-                        BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
+                pass
             elif event == 'end':
-                if elem.tag == 'annotation':
+                if elem.tag == 'text':
+                    ann.text = elem.text
+                elif elem.tag == 'infon':
+                    ann.infons[elem.get('key')] = elem.text
+                elif elem.tag == 'location':
+                    ann.add_location(BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
+                elif elem.tag == 'annotation':
                     return ann
         raise RuntimeError("should not reach here")
         return None
@@ -177,23 +179,16 @@ class iterparse:
         while self.__has_next():
             event, elem = self.__next_event()
             if event == 'start':
+                pass
+            elif event == 'end':
                 if elem.tag == 'infon':
-                    rel.infons[elem.get('key')] = self.__gettext(elem)
+                    rel.infons[elem.get('key')] = elem.text
                 elif elem.tag == 'node':
                     rel.add_node(BioCNode(elem.get('refid'), elem.get('role')))
-            elif event == 'end':
                 if elem.tag == 'relation':
                     return rel
         raise RuntimeError("should not reach here")
         return None
-
-    def __gettext(self, startelem):
-        self.__has_next()
-        event, endelem = self.__next_event()
-        assert (event == 'end' and (startelem.tag == endelem.tag)), \
-            'cannot read tag[%s] text' % startelem.tag
-        # print endelem.text
-        return endelem.text
 
     def __has_next(self):
         try:
