@@ -384,7 +384,7 @@ class BioCCollection:
     def __write_passage(self, ptree, passage):
         self.__write_infons(ptree, passage.infons)
         ET.SubElement(ptree, 'offset').text = str(passage.offset)
-        if passage.text is not None and not passage.text:
+        if passage.text:
             ET.SubElement(ptree, 'text').text = passage.text
         for s in passage.sentences:
             self.__write_sentence(ET.SubElement(ptree, 'sentence'), s)
@@ -546,6 +546,7 @@ def __parse_infons(tree):
         infons[infon_xml.attrib['key']] = infon_xml.text
     return infons
 
+
 def merge(dest, srcs):
     """
 
@@ -566,3 +567,73 @@ def merge(dest, srcs):
                 collection.add_document(document)
 
     collection.tobiocfile(dest)
+
+
+def validate(collection):
+    for document in collection.documents:
+        text = __get_doc_text(document)
+        __validate_ann(document.annotations, text, 0)
+        for relation in document.relations:
+            for node in relation.nodes:
+                assert __contains(document.annotations, node.refid), \
+                    'Cannot find node %s in relation' % str(node)
+
+        for passage in document.passages:
+            text = __get_passage_text(passage)
+            __validate_ann(passage.annotations, text, passage.offset)
+            for relation in passage.relations:
+                for node in relation.nodes:
+                    assert __contains(passage.annotations, node.refid), \
+                        'Cannot find node %s in relation' % str(node)
+
+            for sentence in passage.sentences:
+                __validate_ann(sentence.annotations, sentence.text, sentence.offset)
+                for relation in sentence.relations:
+                    for node in relation.nodes:
+                        assert __contains(sentence.annotations, node.refid), \
+                            'Cannot find node %s in relation' % str(node)
+
+
+def __validate_ann(annotations, text, offset):
+    for ann in annotations:
+        anntext = ''
+        sorted(ann.locations, key=lambda l: l.offset)
+        for location in ann.locations:
+            anntext += ' ' \
+                       + text[location.offset - offset: location.offset + location.length - offset]
+        anntext = anntext.lstrip()
+        assert anntext == ann.text, 'Annotation text is incorrect.\n  Annotation: %s\n  Acutal text: %s' \
+                                    % (anntext, ann.text)
+
+
+def __contains(annotations, id):
+    for ann in annotations:
+        if ann.id == id:
+            return True
+    return False
+
+
+def __filltext(text, offset):
+    while len(text) < offset:
+        text += '\n'
+    return text
+
+
+def __get_passage_text(passage):
+    if passage.text:
+        return passage.text
+
+    text = ''
+    for sentence in passage.sentences:
+        text = __filltext(text, sentence.offset)
+        assert sentence.text, 'BioC sentence has no text'
+        text += sentence.text
+    return text
+
+
+def __get_doc_text(document):
+    text = ''
+    for passage in document.passages:
+        text = __filltext(text, passage.offset)
+        text += __get_passage_text(passage)
+    return text
