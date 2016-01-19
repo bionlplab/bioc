@@ -9,6 +9,7 @@ __author__ = 'Yifan Peng'
 import time
 
 import lxml.etree as ET
+from operator import attrgetter
 from lxml.etree import tostring
 
 
@@ -30,6 +31,14 @@ class BioCNode:
     def __str__(self):
         return 'BioCNode[refid=%s,role=%s]' % (self.refid, self.role)
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        return self.refid == other.refid and self.role == other.role
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class BioCLocation:
     """
@@ -48,6 +57,14 @@ class BioCLocation:
 
     def __str__(self):
         return 'BioCLocation[offset=%s,length=%s]' % (self.offset, self.length)
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        return self.offset == other.offset and self.length == other.length
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 
 class BioCAnnotation:
