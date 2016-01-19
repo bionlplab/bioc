@@ -39,6 +39,9 @@ class BioCNode:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __hash__(self):
+        return hash((self.refid, self.role))
+
 
 class BioCLocation:
     """
@@ -65,6 +68,9 @@ class BioCLocation:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.offset, self.length))
 
 
 class BioCAnnotation:
@@ -105,7 +111,7 @@ class BioCRelation:
     def __init__(self):
         self.id = ''
         self.infons = dict()
-        self.nodes = set()
+        self.nodes = list()
 
     def __str__(self):
         s = 'BioCRelation['
@@ -122,7 +128,7 @@ class BioCRelation:
         :param node: node to be added to this relation
         :type node: BioCNode
         """
-        self.nodes.add(node)
+        self.nodes.append(node)
 
 
 class BioCSentence:
@@ -593,7 +599,7 @@ def validate(collection):
         for relation in document.relations:
             for node in relation.nodes:
                 assert __contains(document.annotations, node.refid), \
-                    'Cannot find node %s in relation' % str(node)
+                    'Cannot find node %s in document %s' % (str(node), document.id)
 
         for passage in document.passages:
             text = __get_passage_text(passage)
@@ -601,14 +607,14 @@ def validate(collection):
             for relation in passage.relations:
                 for node in relation.nodes:
                     assert __contains(passage.annotations, node.refid), \
-                        'Cannot find node %s in relation' % str(node)
+                        'Cannot find node %s in document %s' % (str(node), document.id)
 
             for sentence in passage.sentences:
                 __validate_ann(sentence.annotations, sentence.text, sentence.offset)
                 for relation in sentence.relations:
                     for node in relation.nodes:
                         assert __contains(sentence.annotations, node.refid), \
-                            'Cannot find node %s in relation' % str(node)
+                            'Cannot find node %s document %s' % (str(node), document.id)
 
 
 def __validate_ann(annotations, text, offset):
