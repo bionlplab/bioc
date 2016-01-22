@@ -598,7 +598,7 @@ def validate(collection):
         __validate_ann(document.annotations, text, 0)
         for relation in document.relations:
             for node in relation.nodes:
-                assert __contains(document.annotations, node.refid), \
+                assert __contains(document.annotations, document.relations, node.refid), \
                     'Cannot find node %s in document %s' % (str(node), document.id)
 
         for passage in document.passages:
@@ -606,14 +606,14 @@ def validate(collection):
             __validate_ann(passage.annotations, text, passage.offset)
             for relation in passage.relations:
                 for node in relation.nodes:
-                    assert __contains(passage.annotations, node.refid), \
+                    assert __contains(passage.annotations, passage.relations, node.refid), \
                         'Cannot find node %s in document %s' % (str(node), document.id)
 
             for sentence in passage.sentences:
                 __validate_ann(sentence.annotations, sentence.text, sentence.offset)
                 for relation in sentence.relations:
                     for node in relation.nodes:
-                        assert __contains(sentence.annotations, node.refid), \
+                        assert __contains(sentence.annotations, sentence.relations, node.refid), \
                             'Cannot find node %s document %s' % (str(node), document.id)
 
 
@@ -629,9 +629,12 @@ def __validate_ann(annotations, text, offset):
                                     % (anntext, ann.text)
 
 
-def __contains(annotations, id):
+def __contains(annotations, relations, id):
     for ann in annotations:
         if ann.id == id:
+            return True
+    for rel in relations:
+        if rel.id == id:
             return True
     return False
 
