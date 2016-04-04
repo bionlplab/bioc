@@ -10,7 +10,7 @@ IO API use [lxml](http://lxml.de/) parser.
 ## Getting started
 
 ```
-$ pip install bioc
+$ pip install --pre bioc
 ```
 
 ## Developers
