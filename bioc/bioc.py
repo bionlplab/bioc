@@ -494,6 +494,7 @@ def __parse_collection(ctree):
 def __parse_document(dtree):
     document = BioCDocument()
     document.id = dtree.findtext('id')
+    document.infons = __parse_infons(dtree)
 
     for ptree in dtree.findall('passage'):
         document.add_passage(__parse_passage(ptree))
