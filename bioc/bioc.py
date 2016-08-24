@@ -9,7 +9,6 @@ __author__ = 'Yifan Peng'
 import time
 
 import lxml.etree as ET
-from operator import attrgetter
 from lxml.etree import tostring
 
 
