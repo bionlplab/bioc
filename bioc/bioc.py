@@ -101,6 +101,14 @@ class BioCAnnotation:
         s += ']'
         return s
 
+    def get_total_location(self):
+        start = 0
+        end = 0
+        for loc in self.locations:
+            start = min(start, loc.offset)
+            end = max(end, loc.offset + loc.length)
+        return BioCLocation(start, end - start)
+
 
 class BioCRelation:
     """
