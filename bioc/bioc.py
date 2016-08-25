@@ -6,7 +6,7 @@ Data structures and code to read/write BioC XML.
 
 __author__ = 'Yifan Peng'
 
-import time
+import time, sys
 
 import lxml.etree as ET
 from lxml.etree import tostring
@@ -102,7 +102,7 @@ class BioCAnnotation:
         return s
 
     def get_total_location(self):
-        start = 0
+        start = sys.maxint
         end = 0
         for loc in self.locations:
             start = min(start, loc.offset)
