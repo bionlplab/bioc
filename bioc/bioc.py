@@ -448,7 +448,7 @@ class BioCCollection:
 
     def __write_infons(self, parent, infons):
         for k, v in infons.items():
-            ET.SubElement(parent, 'infon', {'key': k}).text = v
+            ET.SubElement(parent, 'infon', {'key': str(k)}).text = str(v)
 
 
 def parse(file):
