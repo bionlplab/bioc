@@ -109,6 +109,11 @@ class BioCAnnotation:
             end = max(end, loc.offset + loc.length)
         return BioCLocation(start, end - start)
 
+    def __contains__(self, annotation):
+        loc1 = self.get_total_location()
+        loc2 = annotation.get_total_location()
+        return loc1.offset <= loc2.offset and loc2.offset + loc2.length <= loc1.offset + loc1.length
+
 
 class BioCRelation:
     """
