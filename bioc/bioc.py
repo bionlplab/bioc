@@ -676,3 +676,31 @@ def __get_doc_text(document):
         text = __filltext(text, passage.offset)
         text += __get_passage_text(passage)
     return text
+
+
+def dumps(collection):
+    """
+    Serialize collection to a BioC formatted str
+    """
+    return collection.tobioc()
+
+
+def dump(collection, fp):
+    """
+    Serialize collection as a BioC formatted stream to fp
+    """
+    fp.write(collection.tobioc())
+
+
+def load(fp):
+    """
+    Deserialize fp to a BioC collection object
+    """
+    return parse(fp)
+
+
+def loads(s):
+    """
+    Deserialize s to a BioC collection object
+    """
+    return fromstring(s)
