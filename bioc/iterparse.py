@@ -4,8 +4,6 @@
 Code to read/write BioC XML in an incremental way.
 """
 
-__author__ = 'Yifan Peng'
-
 import lxml.etree as ET
 
 from .bioc import (
@@ -34,12 +32,8 @@ class iterparse:
     """
 
     def __init__(self, file, mode='r'):
-        """Open an object of the iterparse which can parse an BioC file
-        incrementally at document level.
-
-        <pre>
-
-        </pre>
+        """
+        Open an object of the iterparse which can parse an BioC file incrementally at document level.
 
         :param file: file name
         :type file: str
@@ -179,7 +173,6 @@ class iterparse:
                 elif elem.tag == 'annotation':
                     return ann
         raise RuntimeError("should not reach here")
-        return None
 
     def __read_relation(self, start_elem):
         rel = BioCRelation()
@@ -196,7 +189,6 @@ class iterparse:
                 if elem.tag == 'relation':
                     return rel
         raise RuntimeError("should not reach here")
-        return None
 
     def __has_next(self):
         try:

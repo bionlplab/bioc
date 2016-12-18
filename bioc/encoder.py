@@ -5,6 +5,7 @@ class BioCEncoder(object):
     def __init__(self, pretty_print=True):
         """
         Constructor for BioCEncoder, with sensible defaults.
+
         :param pretty_print: (bool) enables formatted XML
         """
         self.pretty_print = pretty_print
@@ -22,26 +23,24 @@ class BioCEncoder(object):
 
     def totree(self, collection):
         """
-        Returns the BioC xml tree that the BioCollection represents as a ElementTree .
+        Returns the BioC xml tree that the BioCollection represents as a ElementTree.
 
-        :return: the BioC xml that the BioCollection represents as a ElementTree .
+        :param collection: a BioC collection
+        :return: the BioC xml that the BioCollection represents as a ElementTree.
         :rtype: ElementTree
         """
-        ctree = ET.Element('collection')
-        ET.SubElement(ctree, 'source').text = collection.source
-        ET.SubElement(ctree, 'date').text = collection.date
-        ET.SubElement(ctree, 'key').text = collection.key
-        self.__encode_infons(ctree, collection.infons)
-
+        tree = ET.Element('collection')
+        ET.SubElement(tree, 'source').text = collection.source
+        ET.SubElement(tree, 'date').text = collection.date
+        ET.SubElement(tree, 'key').text = collection.key
+        self.__encode_infons(tree, collection.infons)
         for d in collection.documents:
-            self.__encode_document(ET.SubElement(ctree, 'document'), d)
-
-        return ctree
+            self.__encode_document(ET.SubElement(tree, 'document'), d)
+        return tree
 
     def __encode_document(self, dtree, document):
         ET.SubElement(dtree, 'id').text = document.id
         self.__encode_infons(dtree, document.infons)
-
         for p in document.passages:
             self.__encode_passage(ET.SubElement(dtree, 'passage'), p)
         for a in document.annotations:
@@ -72,17 +71,17 @@ class BioCEncoder(object):
             self.__encode_relation(stree, r)
 
     def __encode_annotation(self, parent, annotation):
-        atree = ET.SubElement(parent, 'annotation', {'id': annotation.id})
-        self.__encode_infons(atree, annotation.infons)
+        tree = ET.SubElement(parent, 'annotation', {'id': annotation.id})
+        self.__encode_infons(tree, annotation.infons)
         for l in annotation.locations:
-            ET.SubElement(atree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
-        ET.SubElement(atree, 'text').text = annotation.text
+            ET.SubElement(tree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
+        ET.SubElement(tree, 'text').text = annotation.text
 
     def __encode_relation(self, parent, relation):
-        rtree = ET.SubElement(parent, 'relation', {'id': relation.id})
-        self.__encode_infons(rtree, relation.infons)
+        tree = ET.SubElement(parent, 'relation', {'id': relation.id})
+        self.__encode_infons(tree, relation.infons)
         for n in relation.nodes:
-            ET.SubElement(rtree, 'node', {'refid': n.refid, 'role': n.role})
+            ET.SubElement(tree, 'node', {'refid': n.refid, 'role': n.role})
 
     def __encode_infons(self, parent, infons):
         for k, v in infons.items():
