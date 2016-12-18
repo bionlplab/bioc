@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='bioc',
-    version='1.0.dev13',
+    version='1.0.dev14',
     description='Data structures and code to read/write BioC XML.',
     author='Yifan Peng',
     author_email='yifan.peng@nih.gov',
