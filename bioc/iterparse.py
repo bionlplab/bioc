@@ -8,8 +8,16 @@ __author__ = 'Yifan Peng'
 
 import lxml.etree as ET
 
-from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
-    BioCRelation, BioCNode, BioCLocation
+from .bioc import (
+    BioCCollection,
+    BioCDocument,
+    BioCPassage,
+    BioCSentence,
+    BioCAnnotation,
+    BioCRelation,
+    BioCLocation,
+    BioCNode
+)
 
 
 class iterparse:
