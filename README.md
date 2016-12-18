@@ -1,21 +1,56 @@
-# Another Python implementation of BioC
+# `bioc` -- Another BioC encoder and decoder
 
-Data structures and code to read/write BioC XML.
+[BioC XML format](http://bioc.sourceforge.net/) can be used to share text documents and annotations.
 
-## BioC
+`bioc` exposes an API familiar to users of the standard library `marshal` and `pickle` modules.
 
-BioC XML format can be used to share text documents and annotations. The development of Python BioC
-IO API use [lxml](http://lxml.de/) parser.
+Development of `bioc` happens on GitHub: https://github.com/yfpeng/pengyifan-pybioc
 
 ## Getting started
+
+Installing `bioc`
 
 ```
 $ pip install --pre bioc
 ```
 
+Encoding the BioC collection object `collection':
+
+```
+import bioc
+# Serialize ``collection`` to a BioC formatted ``str``.
+bioc.dumps(collection)
+
+# Serialize ``collection`` as a BioC formatted stream to ``fp``.
+with open(filename, 'w') as fp
+    bioc.dump(collection, fp)
+```
+
+Compact encoding:
+
+```
+import bioc
+bioc.dumps(collection, pretty_print=False)
+```
+
+Decoding the BioC XML file:
+
+```
+import json
+# Deserialize ``s`` to a BioC collection object.
+collection = json.loads(s)
+# Deserialize ``fp`` to a BioC collection object.
+with open(filename, 'r') as fp:
+    bioc.load(fp)
+```
+
+## Requirements
+
+[lxml](http://lxml.de/)
+
 ## Developers
 
-* Yifan Peng (yfpeng@udel.edu)
+* Yifan Peng (yifan.peng@nih.gov)
 
 ## Acknowledgment
 
