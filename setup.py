@@ -9,7 +9,7 @@ except(IOError, ImportError):
 
 setup(
     name='bioc',
-    version='1.0.dev16',
+    version='1.0.dev17',
     description='Data structures and code to read/write BioC XML.',
     long_description=long_description,
     author='Yifan Peng',
