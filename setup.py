@@ -1,17 +1,17 @@
 from distutils.core import setup
 
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    long_description = open('README.md').read()
+# try:
+#     import pypandoc
+#
+#     long_description = pypandoc.convert('README.md', 'rst')
+# except(IOError, ImportError):
+#     long_description = open('README.md').read()
 
 setup(
     name='bioc',
-    version='1.0.dev17',
+    version='1.0.dev19',
     description='Data structures and code to read/write BioC XML.',
-    long_description=long_description,
+    # long_description=long_description,
     author='Yifan Peng',
     author_email='yifan.peng@nih.gov',
     keywords=['bioc'],
