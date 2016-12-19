@@ -42,18 +42,21 @@ class BioCValidator(object):
             location = ann.get_total_location()
             anntext = text[location.offset - offset: location.offset + location.length - offset]
             assert anntext == ann.text, \
-                'Annotation text is incorrect.\n  Annotation: %s\n  Acutal text: %s' \
+                'Annotation text is incorrect.\n  Annotation: %s\n  Actual text: %s' \
                 % (anntext, ann.text)
 
-    def __contains(self, annotations, id):
+    @staticmethod
+    def __contains(annotations, id):
         for ann in annotations:
             if ann.id == id:
                 return True
         return False
 
-    def __filltext(self, text, offset):
-        while len(text) < offset:
-            text += '\n'
+    @staticmethod
+    def __fill_newline(text, offset):
+        dis = offset - len(text)
+        if dis > 0:
+            text += '\n' * dis
         return text
 
     def __get_passage_text(self, passage):
@@ -62,14 +65,14 @@ class BioCValidator(object):
 
         text = ''
         for sentence in passage.sentences:
-            text = self.__filltext(text, sentence.offset)
-            assert sentence.text, 'BioC sentence has no text'
+            text = self.__fill_newline(text, sentence.offset)
+            assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
             text += sentence.text
         return text
 
     def __get_doc_text(self, document):
         text = ''
         for passage in document.passages:
-            text = self.__filltext(text, passage.offset)
+            text = self.__fill_newline(text, passage.offset)
             text += self.__get_passage_text(passage)
         return text
