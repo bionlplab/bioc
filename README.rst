@@ -19,7 +19,7 @@ Installing ``bioc``
 
     $ pip install --pre bioc
 
-Encoding the BioC collection object \`collection':
+Encoding the BioC collection object ``collection``:
 
 ::
 
@@ -45,6 +45,7 @@ Decoding the BioC XML file:
     import json
     # Deserialize ``s`` to a BioC collection object.
     collection = json.loads(s)
+
     # Deserialize ``fp`` to a BioC collection object.
     with open(filename, 'r') as fp:
         bioc.load(fp)
@@ -52,7 +53,7 @@ Decoding the BioC XML file:
 Requirements
 ------------
 
-`lxml <http://lxml.de/>`_
+-  lxml (http://lxml.de)
 
 Developers
 ----------
@@ -62,7 +63,7 @@ Developers
 Acknowledgment
 --------------
 
--  `Hernani Marques <https://github.com/2mh/PyBioC/>`_
+-  Hernani Marques (https://github.com/2mh/PyBioC)
 
 Webpage
 -------
