@@ -9,7 +9,7 @@ from distutils.core import setup
 
 setup(
     name='bioc',
-    version='1.0.dev19',
+    version='1.0.dev21',
     description='Data structures and code to read/write BioC XML.',
     # long_description=long_description,
     author='Yifan Peng',
