@@ -1,3 +1,4 @@
+`bioc` -- BioC data structures and encoder/decoder for Python
 ============================================
 
 `BioC XML format <http://bioc.sourceforge.net/>`_ can be used to share
