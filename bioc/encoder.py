@@ -17,7 +17,7 @@ class BioCEncoder(object):
         :param collection: a BioC collection
         :return: a BioC formatted ``str``
         """
-        doc = ET.ElementTree(collection.totree())
+        doc = ET.ElementTree(self.totree(collection))
         return ET.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
                            standalone=collection.standalone)
 

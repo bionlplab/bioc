@@ -1,4 +1,5 @@
-import lxml.etree as ET
+import lxml.etree as etree
+from io import BytesIO
 
 from .bioc import (
     BioCCollection,
@@ -23,7 +24,7 @@ class BioCDecoder(object):
         :param s: a ``str`` instance containing a BioC collection
         :return a object of BioCollection
         """
-        tree = ET.fromstring(s)
+        tree = etree.parse(BytesIO(s))
         collection = self.__parse_collection(tree.getroot())
         collection.encoding = tree.docinfo.encoding
         collection.standalone = tree.docinfo.standalone

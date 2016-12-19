@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<collection>
+  <source>source</source>
+  <date>date</date>
+  <key>key</key>
+  <infon key="collection-infon-key">collection-infon-value</infon>
+  <document>
+    <id>1</id>
+    <infon key="document-infon-key">document-infon-value</infon>
+    <passage>
+      <infon key="passage-infon-key">passage-infon-value</infon>
+      <offset>0</offset>
+      <text>abcdefghijklmnopqrstuvwxyz</text>
+      <annotation id="1">
+        <infon key="annotation-infon-key">annotation-infon-value</infon>
+        <location offset="1" length="2"/>
+        <text>bc</text>
+      </annotation>
+      <annotation id="2">
+        <infon key="annotation-infon-key">annotation-infon-value</infon>
+        <location offset="5" length="2"/>
+        <text>fg</text>
+      </annotation>
+      <relation id="R1">
+        <infon key="relation-infon-key">relation-infon-value</infon>
+        <node refid="1" role="role1"/>
+        <node refid="2" role="role2"/>
+      </relation>
+    </passage>
+    <relation id="R2">
+      <infon key="relation-infon-key">relation-infon-value</infon>
+      <node refid="1" role="role1"/>
+      <node refid="2" role="role2"/>
+    </relation>
+  </document>
+  <document>
+    <id>2</id>
+    <passage>
+      <offset>27</offset>
+      <sentence>
+        <infon key="sentence-infon-key">sentence-infon-value</infon>
+        <offset>27</offset>
+        <text>abcdefg</text>
+        <annotation id="3">
+          <infon key="annotation-infon-key">annotation-infon-value</infon>
+          <location offset="28" length="2"/>
+          <text>bc</text>
+        </annotation>
+        <relation id="R3">
+          <infon key="relation-infon-key">relation-infon-value</infon>
+          <node refid="3" role="role1"/>
+        </relation>
+      </sentence>
+      <sentence>
+        <infon key="sentence-infon-key">sentence-infon-value</infon>
+        <offset>34</offset>
+        <text>hijklm</text>
+        <annotation id="4">
+          <infon key="annotation-infon-key">annotation-infon-value</infon>
+          <location offset="34" length="2"/>
+          <text>hi</text>
+        </annotation>
+      </sentence>
+    </passage>
+  </document>
+</collection>

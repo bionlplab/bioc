@@ -1,16 +1,28 @@
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup
+
+VERSION = '1.0.dev22'
+DESCRIPTION = "BioC data structures and encoder/decoder for Python"
+with open('README.rst', 'r') as f:
+    LONG_DESCRIPTION = f.read()
 
 setup(
         name='bioc',
-        version='1.0.dev14',
-        description='Data structures and code to read/write BioC XML.',
+        version=VERSION,
+        description=DESCRIPTION,
+        long_description=LONG_DESCRIPTION,
         author='Yifan Peng',
         author_email='yifan.peng@nih.gov',
         keywords=['bioc'],
         license='BSD 3-clause license',
+        packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
         url='https://github.com/yfpeng/pengyifan-pybioc',
-        packages=find_packages(),
-        install_requires=['docutils>=0.3', 'lxml'],
+        platforms=['any'],
+        install_requires=[
+            'docutils>=0.3',
+            'lxml'],
         classifiers=[
             'Development Status :: 1 - Planning',
             'Environment :: Console',

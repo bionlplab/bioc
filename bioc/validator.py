@@ -3,12 +3,23 @@ class BioCValidator(object):
         pass
 
     def validate(self, collection):
+        annotations = []
+        for document in collection.documents:
+            annotations.extend(document.annotations)
+            annotations.extend(document.relations)
+            for passage in document.passages:
+                annotations.extend(passage.annotations)
+                annotations.extend(passage.relations)
+                for sentence in passage.sentences:
+                    annotations.extend(sentence.annotations)
+                    annotations.extend(sentence.relations)
+
         for document in collection.documents:
             text = self.__get_doc_text(document)
             self.__validate_ann(document.annotations, text, 0)
             for relation in document.relations:
                 for node in relation.nodes:
-                    assert self.__contains(document.annotations, document.relations, node.refid), \
+                    assert self.__contains(annotations, node.refid), \
                         'Cannot find node %s in document %s' % (str(node), document.id)
 
             for passage in document.passages:
@@ -16,35 +27,27 @@ class BioCValidator(object):
                 self.__validate_ann(passage.annotations, text, passage.offset)
                 for relation in passage.relations:
                     for node in relation.nodes:
-                        assert self.__contains(passage.annotations, passage.relations, node.refid), \
+                        assert self.__contains(annotations, node.refid), \
                             'Cannot find node %s in document %s' % (str(node), document.id)
 
                 for sentence in passage.sentences:
                     self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
                     for relation in sentence.relations:
                         for node in relation.nodes:
-                            assert self.__contains(sentence.annotations, sentence.relations,
-                                                   node.refid), \
+                            assert self.__contains(annotations, node.refid), \
                                 'Cannot find node %s document %s' % (str(node), document.id)
 
     def __validate_ann(self, annotations, text, offset):
         for ann in annotations:
-            anntext = ''
-            sorted(ann.locations, key=lambda l: l.offset)
-            for location in ann.locations:
-                anntext += ' ' \
-                           + text[
-                             location.offset - offset: location.offset + location.length - offset]
-            anntext = anntext.lstrip()
-            assert anntext == ann.text, 'Annotation text is incorrect.\n  Annotation: %s\n  Acutal text: %s' \
-                                        % (anntext, ann.text)
+            location = ann.get_total_location()
+            anntext = text[location.offset - offset: location.offset + location.length - offset]
+            assert anntext == ann.text, \
+                'Annotation text is incorrect.\n  Annotation: %s\n  Acutal text: %s' \
+                % (anntext, ann.text)
 
-    def __contains(self, annotations, relations, id):
+    def __contains(self, annotations, id):
         for ann in annotations:
             if ann.id == id:
-                return True
-        for rel in relations:
-            if rel.id == id:
                 return True
         return False
 
