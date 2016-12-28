@@ -1,4 +1,4 @@
-import lxml.etree as ET
+import lxml.etree as etree
 
 
 class BioCEncoder(object):
@@ -17,9 +17,9 @@ class BioCEncoder(object):
         :param collection: a BioC collection
         :return: a BioC formatted ``str``
         """
-        doc = ET.ElementTree(self.totree(collection))
-        return ET.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
-                           standalone=collection.standalone)
+        doc = etree.ElementTree(self.totree(collection))
+        return etree.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
+                              standalone=collection.standalone)
 
     def totree(self, collection):
         """
@@ -29,60 +29,81 @@ class BioCEncoder(object):
         :return: the BioC xml that the BioCollection represents as a ElementTree.
         :rtype: ElementTree
         """
-        tree = ET.Element('collection')
-        ET.SubElement(tree, 'source').text = collection.source
-        ET.SubElement(tree, 'date').text = collection.date
-        ET.SubElement(tree, 'key').text = collection.key
-        self.__encode_infons(tree, collection.infons)
+        tree = etree.Element('collection')
+        etree.SubElement(tree, 'source').text = collection.source
+        etree.SubElement(tree, 'date').text = collection.date
+        etree.SubElement(tree, 'key').text = collection.key
+        for k, v in collection.infons.items():
+            tree.append(encode_infon(k, v))
         for d in collection.documents:
-            self.__encode_document(ET.SubElement(tree, 'document'), d)
+            tree.append(encode_document(d))
         return tree
 
-    def __encode_document(self, dtree, document):
-        ET.SubElement(dtree, 'id').text = document.id
-        self.__encode_infons(dtree, document.infons)
-        for p in document.passages:
-            self.__encode_passage(ET.SubElement(dtree, 'passage'), p)
-        for a in document.annotations:
-            self.__encode_annotation(dtree, a)
-        for r in document.relations:
-            self.__encode_relation(dtree, r)
 
-    def __encode_passage(self, ptree, passage):
-        self.__encode_infons(ptree, passage.infons)
-        ET.SubElement(ptree, 'offset').text = str(passage.offset)
-        if passage.text:
-            ET.SubElement(ptree, 'text').text = passage.text
-        for s in passage.sentences:
-            self.__encode_sentence(ET.SubElement(ptree, 'sentence'), s)
-        for a in passage.annotations:
-            self.__encode_annotation(ptree, a)
-        for r in passage.relations:
-            self.__encode_relation(ptree, r)
+def encode_document(document):
+    tree = etree.Element('document')
+    etree.SubElement(tree, 'id').text = document.id
+    for k, v in document.infons.items():
+        tree.append(encode_infon(k, v))
+    for p in document.passages:
+        tree.append(encode_passage(p))
+    for a in document.annotations:
+        tree.append(encode_annotation(a))
+    for r in document.relations:
+        tree.append(encode_relation(r))
+    return tree
 
-    def __encode_sentence(self, stree, sentence):
-        self.__encode_infons(stree, sentence.infons)
-        ET.SubElement(stree, 'offset').text = str(sentence.offset)
-        if sentence.text:
-            ET.SubElement(stree, 'text').text = sentence.text
-        for a in sentence.annotations:
-            self.__encode_annotation(stree, a)
-        for r in sentence.relations:
-            self.__encode_relation(stree, r)
 
-    def __encode_annotation(self, parent, annotation):
-        tree = ET.SubElement(parent, 'annotation', {'id': annotation.id})
-        self.__encode_infons(tree, annotation.infons)
-        for l in annotation.locations:
-            ET.SubElement(tree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
-        ET.SubElement(tree, 'text').text = annotation.text
+def encode_passage(passage):
+    tree = etree.Element('passage')
+    etree.SubElement(tree, 'offset').text = str(passage.offset)
+    if passage.text:
+        etree.SubElement(tree, 'text').text = passage.text
+    for k, v in passage.infons.items():
+        tree.append(encode_infon(k, v))
+    for s in passage.sentences:
+        tree.append(encode_sentence(s))
+    for a in passage.annotations:
+        tree.append(encode_annotation(a))
+    for r in passage.relations:
+        tree.append(encode_relation(r))
+    return tree
 
-    def __encode_relation(self, parent, relation):
-        tree = ET.SubElement(parent, 'relation', {'id': relation.id})
-        self.__encode_infons(tree, relation.infons)
-        for n in relation.nodes:
-            ET.SubElement(tree, 'node', {'refid': n.refid, 'role': n.role})
 
-    def __encode_infons(self, parent, infons):
-        for k, v in infons.items():
-            ET.SubElement(parent, 'infon', {'key': str(k)}).text = str(v)
+def encode_sentence(sentence):
+    tree = etree.Element('sentence')
+    for k, v in sentence.infons.items():
+        tree.append(encode_infon(k, v))
+    etree.SubElement(tree, 'offset').text = str(sentence.offset)
+    if sentence.text:
+        etree.SubElement(tree, 'text').text = sentence.text
+    for a in sentence.annotations:
+        tree.append(encode_annotation(a))
+    for r in sentence.relations:
+        tree.append(encode_relation(r))
+    return tree
+
+
+def encode_annotation(annotation):
+    tree = etree.Element('annotation', {'id': annotation.id})
+    for k, v in annotation.infons.items():
+        tree.append(encode_infon(k, v))
+    for l in annotation.locations:
+        etree.SubElement(tree, 'location', {'offset': str(l.offset), 'length': str(l.length)})
+    etree.SubElement(tree, 'text').text = annotation.text
+    return tree
+
+
+def encode_relation(relation):
+    tree = etree.Element('relation', {'id': relation.id})
+    for k, v in relation.infons.items():
+        tree.append(encode_infon(k, v))
+    for n in relation.nodes:
+        etree.SubElement(tree, 'node', {'refid': n.refid, 'role': n.role})
+    return tree
+
+
+def encode_infon(k, v):
+    elem = etree.Element('infon', {'key': str(k)})
+    elem.text = str(v)
+    return elem

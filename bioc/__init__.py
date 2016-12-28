@@ -13,6 +13,7 @@ from .iterparse import iterparse
 from .encoder import BioCEncoder
 from .decoder import BioCDecoder
 from .validator import BioCValidator
+from .iterwriter import iterwriter
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',

@@ -38,6 +38,15 @@ Compact encoding:
     import bioc
     bioc.dumps(collection, pretty_print=False)
 
+Incremental BioC serialisation:
+
+::
+
+    import bioc
+    with bioc.iterwriter(filename, collection) as writer:
+        for document in collection.documents:
+            writer.writedocument(document)
+
 Decoding the BioC XML file:
 
 ::
@@ -49,6 +58,15 @@ Decoding the BioC XML file:
     # Deserialize ``fp`` to a BioC collection object.
     with open(filename, 'r') as fp:
         bioc.load(fp)
+
+Incremental BioC parsing:
+
+::
+
+    import bioc
+    for document in bioc.iterparse(filename):
+        # process document
+        ...
 
 Requirements
 ------------

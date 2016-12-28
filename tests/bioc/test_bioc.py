@@ -41,7 +41,6 @@ class BioCTests(unittest.TestCase):
             collection = bioc.load(fp)
         bioc.validate(collection)
 
-
     def __test_collection(self, collection):
         self.assertEqual('source', collection.source)
         self.assertEqual('date', collection.date)

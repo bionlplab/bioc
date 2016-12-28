@@ -4,7 +4,7 @@
 Code to read/write BioC XML in an incremental way.
 """
 
-import lxml.etree as ET
+import lxml.etree as etree
 
 from .bioc import (
     BioCCollection,
@@ -31,19 +31,16 @@ class iterparse:
       - mode (char): not used
     """
 
-    def __init__(self, file, mode='r'):
+    def __init__(self, file):
         """
         Open an object of the iterparse which can parse an BioC file incrementally at document level.
 
         :param file: file name
         :type file: str
-        :param mode: not used
-        :type mode: str
         :return: an object of the iterparse
         :rtype: iterparse
         """
-
-        self.__context = iter(ET.iterparse(file, events=('start', 'end')))
+        self.__context = iter(etree.iterparse(file, events=('start', 'end')))
         self.__state = 0
         self.__read()
 
