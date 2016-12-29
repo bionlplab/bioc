@@ -17,12 +17,12 @@ class BioCDecoderIter:
     Code to read/write BioC XML in an incremental way.
     """
 
-    def __init__(self, file):
+    def __init__(self, name):
         """
-        Open an object of the iterparse which can parse an BioC file incrementally at document level.
-        :param file: file name
+        Open an object of the BioCDecoderIter which can parse an BioC file incrementally at document level.
+        :param name: file name to be decoded
         """
-        self.file = file
+        self.file = name
         self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
         self.__state = 0
         self.__read()

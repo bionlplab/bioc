@@ -43,7 +43,7 @@ Incremental BioC serialisation:
 ::
 
     import bioc
-    with bioc.iterwriter(filename, collection) as writer:
+    with bioc.iterwrite(filename, collection) as writer:
         for document in collection.documents:
             writer.writedocument(document)
 
@@ -82,6 +82,19 @@ the construction of the `iterparse` anytime.
         ...
     # Get the collection information again if needed
     collection_info = parser.get_collection_info()
+
+Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
+
+::
+
+    import bioc
+    parser = bioc.iterparse(src)
+    with bioc.iterwrite(dst, parser.get_collection_info()) as writer:
+        for document in parser:
+            # modify the document
+            ...
+            writer.writedocument(document)
+
 
 Requirements
 ------------

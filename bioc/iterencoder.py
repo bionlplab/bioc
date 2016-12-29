@@ -17,8 +17,13 @@ class BioCEncoderIter(object):
                 except GeneratorExit:
                     pass
 
-    def __init__(self, file, collection=None):
-        self.file = file
+    def __init__(self, name, collection=None):
+        """
+        Returns an object of the BioCEncoderIter which can write an BioC file incrementally at document level.
+        :param name: file name to be decoded
+        """
+
+        self.file = name
         if not collection:
             collection = BioCCollection()
         self.collection = collection

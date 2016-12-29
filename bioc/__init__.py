@@ -11,17 +11,15 @@ from .bioc import (
     BioCNode
 )
 
-# from .iterparse import iterparse
 from .encoder import BioCEncoder
 from .decoder import BioCDecoder
 from .validator import BioCValidator
-# from .iterwriter import iterwriter
 from .iterdecoder import BioCDecoderIter
 from .iterencoder import BioCEncoderIter
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
-           'iterparse', 'merge', 'validate', 'iterwriter']
+           'iterparse', 'merge', 'validate', 'iterwrite']
 
 
 def dumps(collection, pretty_print=True):
