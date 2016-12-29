@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from .bioc import (
     BioCCollection,
     BioCDocument,
@@ -9,15 +11,17 @@ from .bioc import (
     BioCNode
 )
 
-from .iterparse import iterparse
+# from .iterparse import iterparse
 from .encoder import BioCEncoder
 from .decoder import BioCDecoder
 from .validator import BioCValidator
-from .iterwriter import iterwriter
+# from .iterwriter import iterwriter
+from .iterdecoder import BioCDecoderIter
+from .iterencoder import BioCEncoderIter
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
-           'iterparse', 'merge', 'validate']
+           'iterparse', 'merge', 'validate', 'iterwriter']
 
 
 def dumps(collection, pretty_print=True):
@@ -81,3 +85,16 @@ def merge(dst, srcs):
                 collection.add_document(document)
     with open(dst, 'w') as fp:
         dump(collection, fp)
+
+
+@contextmanager
+def iterparse(file):
+    parser = BioCDecoderIter(file)
+    yield parser
+
+
+@contextmanager
+def iterwrite(file, collection=None):
+    writer = BioCEncoderIter(file, collection)
+    yield writer
+    writer.close()

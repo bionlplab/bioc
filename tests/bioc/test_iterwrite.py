@@ -4,7 +4,7 @@ import tempfile
 import bioc
 
 
-class IterwriterTests(unittest.TestCase):
+class IterwriteTests(unittest.TestCase):
     def setUp(self):
         self.src = os.path.join(os.path.dirname(__file__), 'everything.xml')
 
@@ -13,10 +13,9 @@ class IterwriterTests(unittest.TestCase):
             collection = bioc.load(fp)
         tmp = tempfile.NamedTemporaryFile()
 
-        with bioc.iterwriter(tmp.name, collection) as writer:
+        with bioc.iterwrite(tmp.name, collection) as writer:
             for document in collection.documents:
                 writer.writedocument(document)
 
         with open(tmp.name, 'r') as fp:
             print(fp.read())
-        # pass

@@ -3,7 +3,7 @@ from .bioc import BioCCollection
 from .encoder import encode_infon, encode_document
 
 
-class iterwriter(object):
+class BioCEncoderIter(object):
     def __writer__(self):
         with etree.xmlfile(self.file, encoding=self.collection.encoding, close=True) as xf:
             xf.write_declaration(standalone=self.collection.standalone)
@@ -22,14 +22,6 @@ class iterwriter(object):
         if not collection:
             collection = BioCCollection()
         self.collection = collection
-
-    def __write_infons(self, infons):
-        for k, v in infons.items():
-            elem = etree.Element('infon', {'key': str(k)})
-            elem.text = str(v)
-            self.w.send(elem)
-
-    def __enter__(self):
         self.w = self.__writer__()
         next(self.w)   # start writing (run up to 'yield')
 
@@ -48,9 +40,14 @@ class iterwriter(object):
         for k, v in self.collection.infons.items():
             elem = encode_infon(k, v)
             self.w.send(elem)
-        return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __write_infons(self, infons):
+        for k, v in infons.items():
+            elem = etree.Element('infon', {'key': str(k)})
+            elem.text = str(v)
+            self.w.send(elem)
+
+    def close(self):
         self.w.close()
 
     def writedocument(self, document):

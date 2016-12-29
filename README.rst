@@ -59,7 +59,7 @@ Decoding the BioC XML file:
     with open(filename, 'r') as fp:
         bioc.load(fp)
 
-Incremental BioC parsing:
+Incrementally decoding the BioC XML file:
 
 ::
 
@@ -67,6 +67,21 @@ Incremental BioC parsing:
     for document in bioc.iterparse(filename):
         # process document
         ...
+
+Or getting the collection information while incrementally decoding the file. `get_collection_info` can be called after
+the construction of the `iterparse` anytime.
+
+::
+
+    import bioc
+    parser = bioc.iterparse(filename)
+    # Get the collection information upto documents
+    collection_info = parser.get_collection_info()
+    for document in bioc.iterparse(filename):
+        # process document
+        ...
+    # Get the collection information again if needed
+    collection_info = parser.get_collection_info()
 
 Requirements
 ------------

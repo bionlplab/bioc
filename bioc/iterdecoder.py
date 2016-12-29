@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-
-"""
-Code to read/write BioC XML in an incremental way.
-"""
-
 import lxml.etree as etree
 
 from .bioc import (
@@ -18,38 +12,20 @@ from .bioc import (
 )
 
 
-class iterparse:
+class BioCDecoderIter:
     """
-    iterparse(file, 'r')
-
-    An object that can parse an BioC file incrementally at document level.
-
-    Cannot parse doc information.
-
-    Arguments:
-      - file (str): file name
-      - mode (char): not used
+    Code to read/write BioC XML in an incremental way.
     """
 
     def __init__(self, file):
         """
         Open an object of the iterparse which can parse an BioC file incrementally at document level.
-
         :param file: file name
-        :type file: str
-        :return: an object of the iterparse
-        :rtype: iterparse
         """
-        self.__file = file
-
-    def __enter__(self):
-        self.__context = iter(etree.iterparse(self.__file, events=('start', 'end')))
+        self.file = file
+        self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
         self.__state = 0
         self.__read()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
 
     def __iter__(self):
         return self
