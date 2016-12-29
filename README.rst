@@ -15,7 +15,7 @@ Getting started
 
 Installing ``bioc``
 
-.. code:: python
+.. code:: bash
 
     $ pip install --pre bioc
 
