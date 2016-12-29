@@ -64,36 +64,25 @@ Incrementally decoding the BioC XML file:
 ::
 
     import bioc
-    for document in bioc.iterparse(filename):
-        # process document
-        ...
+    with bioc.iterparse(filename) as parser:
+        collection_info = parser.get_collection_info()
+        for document in parser:
+            # process document
+            ...
 
-Or getting the collection information while incrementally decoding the file. `get_collection_info` can be called after
-the construction of the `iterparse` anytime.
-
-::
-
-    import bioc
-    parser = bioc.iterparse(filename)
-    # Get the collection information upto documents
-    collection_info = parser.get_collection_info()
-    for document in bioc.iterparse(filename):
-        # process document
-        ...
-    # Get the collection information again if needed
-    collection_info = parser.get_collection_info()
+`get_collection_info` can be called after the construction of the `iterparse` anytime.
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
 ::
 
     import bioc
-    parser = bioc.iterparse(src)
-    with bioc.iterwrite(dst, parser.get_collection_info()) as writer:
-        for document in parser:
-            # modify the document
-            ...
-            writer.writedocument(document)
+    with bioc.iterparse(filename) as parser:
+        with bioc.iterwrite(dst, parser.get_collection_info()) as writer:
+            for document in parser:
+                # modify the document
+                ...
+                writer.writedocument(document)
 
 
 Requirements
