@@ -1,5 +1,5 @@
 `bioc` -- BioC data structures and encoder/decoder for Python
-============================================
+=============================================================
 
 `BioC XML format <http://bioc.sourceforge.net/>`_ can be used to share
 text documents and annotations.
@@ -15,13 +15,13 @@ Getting started
 
 Installing ``bioc``
 
-.. code:: bash
+::
 
     $ pip install --pre bioc
 
 Encoding the BioC collection object ``collection``:
 
-.. code:: python
+::
 
     import bioc
     # Serialize ``collection`` to a BioC formatted ``str``.
@@ -33,14 +33,14 @@ Encoding the BioC collection object ``collection``:
 
 Compact encoding:
 
-.. code:: python
+::
 
     import bioc
     bioc.dumps(collection, pretty_print=False)
 
 Incremental BioC serialisation:
 
-.. code:: python
+::
 
     import bioc
     with bioc.iterwrite(filename, collection) as writer:
@@ -49,7 +49,7 @@ Incremental BioC serialisation:
 
 Decoding the BioC XML file:
 
-.. code:: python
+::
 
     import json
     # Deserialize ``s`` to a BioC collection object.
@@ -61,7 +61,7 @@ Decoding the BioC XML file:
 
 Incrementally decoding the BioC XML file:
 
-.. code:: python
+::
 
     import bioc
     with bioc.iterparse(filename) as parser:
@@ -74,7 +74,7 @@ Incrementally decoding the BioC XML file:
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
-.. code:: python
+::
 
     import bioc
     with bioc.iterparse(filename) as parser:
