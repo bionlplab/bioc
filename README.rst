@@ -74,7 +74,7 @@ Incrementally decoding the BioC XML file:
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
-::
+.. code:: python
 
     import bioc
     with bioc.iterparse(filename) as parser:
