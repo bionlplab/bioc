@@ -8,7 +8,7 @@ text documents and annotations.
 ``marshal`` and ``pickle`` modules.
 
 Development of ``bioc`` happens on GitHub:
-https://github.com/yfpeng/pengyifan-pybioc
+https://github.com/yfpeng/bioc
 
 Getting started
 ---------------
