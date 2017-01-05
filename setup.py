@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.0.dev28'
+VERSION = '1.0.dev29'
 
 setup(
         version=VERSION,
