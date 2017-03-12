@@ -19,8 +19,11 @@ class BioCEncoderIter(object):
 
     def __init__(self, name, collection=None):
         """
-        Returns an object of the BioCEncoderIter which can write an BioC file incrementally at document level.
-        :param name: file name to be decoded
+        Returns an object of the BioCEncoderIter which can write an BioC file
+        incrementally at document level.
+
+        Args:
+            name(str): file name to be decode
         """
 
         self.file = name

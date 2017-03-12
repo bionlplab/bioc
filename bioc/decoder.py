@@ -21,8 +21,11 @@ class BioCDecoder(object):
         """
         Deserialize ``s`` to a BioC collection object.
 
-        :param s: a ``str`` instance containing a BioC collection
-        :return a object of BioCollection
+        Args:
+            s(str): a "str" instance containing a BioC collection
+
+        Returns:
+            BioCCollection: a object of BioCollection
         """
         tree = etree.parse(BytesIO(s))
         collection = self.__parse_collection(tree.getroot())
@@ -97,5 +100,6 @@ class BioCDecoder(object):
             relation.add_node(BioCNode(child.attrib['refid'], child.attrib['role']))
         return relation
 
-    def __parse_infons(self, tree):
+    @classmethod
+    def __parse_infons(cls, tree):
         return {child.attrib['key']: child.text for child in tree.findall('infon')}

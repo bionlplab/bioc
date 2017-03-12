@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Data structures and code to read/write BioC XML.
 """
@@ -13,10 +11,10 @@ class BioCNode:
 
     def __init__(self, refid, role):
         """
-        :param refid: the id of an annotated object or another relation
-        :type refid: str
-        :param role: the role of how the referenced annotation or other relation participates in the current relation
-        :type role: str
+        Args:
+            refid (str): the id of an annotated object or another relation
+            role (str): the role of how the referenced annotation or other
+                relation participates in the current relation
         """
         self.refid = refid
         self.role = role
@@ -43,10 +41,9 @@ class BioCLocation:
 
     def __init__(self, offset, length):
         """
-        :param offset: the offset of annotation
-        :type offset: int
-        :param length: the length of the annotated text
-        :type length: int
+        Args:
+            offset (int): the offset of annotation
+            length (int): the length of the annotated text
         """
         self.offset = offset
         self.length = length
@@ -81,8 +78,9 @@ class BioCAnnotation:
         """
         Adds the location at the specified position in this annotation.
 
-        :param location: The location at the specified position in this annotation
-        :type location: BioCLocation
+        Args:
+            location(BioCLocation): the location at the specified position in
+                this annotation
         """
         self.locations.append(location)
 
@@ -96,7 +94,7 @@ class BioCAnnotation:
         return s
 
     def get_total_location(self):
-        start = sys.maxint
+        start = sys.maxsize
         end = 0
         for loc in self.locations:
             start = min(start, loc.offset)
@@ -131,8 +129,8 @@ class BioCRelation:
         """
         Add the node to this relation
 
-        :param node: node to be added to this relation
-        :type node: BioCNode
+        Args:
+            node (BioCNode): node to be added to this relation
         """
         self.nodes.append(node)
 
@@ -187,8 +185,8 @@ class BioCSentence:
         """
         Adds annotation in this sentence.
 
-        :param annotation: annotation
-        :type annotation: BioCAnnotation
+        Args:
+            annotation (BioCAnnotation): the annotation
         """
         self.annotations.append(annotation)
 
@@ -196,8 +194,8 @@ class BioCSentence:
         """
         Adds relation in this sentence.
 
-        :param relation: relation
-        :type relation: BioCRelation
+        Args:
+            relation(BioCRelation): a relation
         """
         self.relations.append(relation)
 
@@ -235,8 +233,8 @@ class BioCPassage:
         """
         Adds sentence in this passage.
 
-        :param sentence: sentence
-        :type sentence: BioCSentence
+        Args:
+            sentence(BioCSentence): a sentence
         """
         self.sentences.append(sentence)
 
@@ -244,8 +242,8 @@ class BioCPassage:
         """
         Adds annotation in this passage.
 
-        :param annotation: annotation
-        :type annotation: BioCAnnotation
+        Args:
+            annotation (BioCAnnotation): the annotation
         """
         self.annotations.append(annotation)
 
@@ -253,8 +251,8 @@ class BioCPassage:
         """
         Adds relation in this passage.
 
-        :param relation: relation
-        :type relation: BioCRelation
+        Args:
+            relation(BioCRelation): a relation
         """
         self.relations.append(relation)
 
@@ -288,8 +286,8 @@ class BioCDocument:
         """
         Adds passage in this document.
 
-        :param passage: passage
-        :type passage: BioCPassage
+        Args:
+            passage(BioCPassage): a passage
         """
         self.passages.append(passage)
 
@@ -297,8 +295,8 @@ class BioCDocument:
         """
         Adds annotation in this document.
 
-        :param annotation: annotation
-        :type annotation: BioCAnnotation
+        Args:
+            annotation (BioCAnnotation): the annotation
         """
         self.annotations.append(annotation)
 
@@ -306,8 +304,8 @@ class BioCDocument:
         """
         Adds relation in this document.
 
-        :param relation: relation
-        :type relation: BioCRelation
+        Args:
+            relation(BioCRelation): a relation
         """
         self.relations.append(relation)
 
@@ -338,8 +336,8 @@ class BioCCollection:
         """
         Adds document in this collection.
 
-        :param document: document
-        :type document: BioCDocument
+        Args:
+            document(BioCDocument): a document
         """
         self.documents.append(document)
 

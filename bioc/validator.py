@@ -37,7 +37,8 @@ class BioCValidator(object):
                             assert self.__contains(annotations, node.refid), \
                                 'Cannot find node %s document %s' % (str(node), document.id)
 
-    def __validate_ann(self, annotations, text, offset):
+    @classmethod
+    def __validate_ann(cls, annotations, text, offset):
         for ann in annotations:
             location = ann.get_total_location()
             anntext = text[location.offset - offset: location.offset + location.length - offset]
@@ -45,8 +46,8 @@ class BioCValidator(object):
                 'Annotation text is incorrect.\n  Annotation: %s\n  Actual text: %s' \
                 % (anntext, ann.text)
 
-    @staticmethod
-    def __contains(annotations, id):
+    @classmethod
+    def __contains(cls, annotations, id):
         for ann in annotations:
             if ann.id == id:
                 return True

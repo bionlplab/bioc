@@ -19,8 +19,11 @@ class BioCDecoderIter:
 
     def __init__(self, name):
         """
-        Open an object of the BioCDecoderIter which can parse an BioC file incrementally at document level.
-        :param name: file name to be decoded
+        Open an object of the BioCDecoderIter which can parse an BioC file
+        incrementally at document level.
+
+        Args:
+            name(str): file name to be decoded
         """
         self.file = name
         self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
@@ -42,8 +45,8 @@ class BioCDecoderIter:
         """
         Reads one BioC document from the XML file.
 
-        :return: the BioC document
-        :rtype: BioCDocument
+        Returns:
+            BioCDocument: the BioC document
         """
         return self.__next__()
 
@@ -180,7 +183,7 @@ class BioCDecoderIter:
         """
         Reads the collection information: encoding, version, DTD, source, date, key, infons, etc.
 
-        :return: the BioC collection that contains only information
-        :rtype: BioCCollection
+        Returns:
+            BioCCollection: the BioC collection that contains only information
         """
         return self.__collection

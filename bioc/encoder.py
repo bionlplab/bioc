@@ -6,7 +6,8 @@ class BioCEncoder(object):
         """
         Constructor for BioCEncoder, with sensible defaults.
 
-        :param pretty_print: (bool) enables formatted XML
+        Args:
+            pretty_print(boolean): enables formatted XML
         """
         self.pretty_print = pretty_print
 
@@ -14,20 +15,26 @@ class BioCEncoder(object):
         """
         Return a BioC formatted string representation of a BioC collection structure.
 
-        :param collection: a BioC collection
-        :return: a BioC formatted ``str``
+        Args:
+            collection(BioCCollection): a BioC collection
+
+        Returns:
+            str: a BioC formatted ``str``
         """
-        doc = etree.ElementTree(self.totree(collection))
+        doc = etree.ElementTree(BioCEncoder.to_element_tree(collection))
         return etree.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
                               standalone=collection.standalone)
 
-    def totree(self, collection):
+    @classmethod
+    def to_element_tree(cls, collection):
         """
         Returns the BioC xml tree that the BioCollection represents as a ElementTree.
 
-        :param collection: a BioC collection
-        :return: the BioC xml that the BioCollection represents as a ElementTree.
-        :rtype: ElementTree
+        Args:
+            collection(BioCCollection): a BioC collection
+
+        Returns:
+            ElementTree: the BioC xml that the BioCollection represents as a ElementTree.
         """
         tree = etree.Element('collection')
         etree.SubElement(tree, 'source').text = collection.source
