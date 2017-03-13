@@ -22,8 +22,9 @@ class BioCEncoder(object):
             str: a BioC formatted ``str``
         """
         doc = etree.ElementTree(BioCEncoder.to_element_tree(collection))
-        return etree.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
-                              standalone=collection.standalone)
+        s = etree.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,
+                           standalone=collection.standalone)
+        return s.decode(collection.encoding)
 
     @classmethod
     def to_element_tree(cls, collection):

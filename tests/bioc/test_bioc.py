@@ -1,7 +1,8 @@
 import os
 import unittest
 import tempfile
-import bioc
+
+from ..context import bioc
 
 
 class BioCTests(unittest.TestCase):

@@ -1,5 +1,5 @@
 import lxml.etree as etree
-from io import BytesIO
+import io
 
 from .bioc import (
     BioCCollection,
@@ -17,7 +17,7 @@ class BioCDecoder(object):
     def __init__(self):
         pass
 
-    def decode(self, s):
+    def decodes(self, s):
         """
         Deserialize ``s`` to a BioC collection object.
 
@@ -27,7 +27,24 @@ class BioCDecoder(object):
         Returns:
             BioCCollection: a object of BioCollection
         """
-        tree = etree.parse(BytesIO(s))
+        tree = etree.parse(io.BytesIO(bytes(s, encoding='UTF-8')))
+        collection = self.__parse_collection(tree.getroot())
+        collection.encoding = tree.docinfo.encoding
+        collection.standalone = tree.docinfo.standalone
+        collection.version = tree.docinfo.xml_version
+        return collection
+
+    def decode(self, fp):
+        """
+        Deserialize ``fp`` to a BioC collection object.
+
+        Args:
+            fp: a ``.read()``-supporting file-like object containing a BioC collection
+
+        Returns:
+            BioCCollection: a object of BioCollection
+        """
+        tree = etree.parse(fp)
         collection = self.__parse_collection(tree.getroot())
         collection.encoding = tree.docinfo.encoding
         collection.standalone = tree.docinfo.standalone
