@@ -1,6 +1,6 @@
 import os
 import unittest
-import bioc
+from ..context import bioc
 
 
 class IterparseTests(unittest.TestCase):

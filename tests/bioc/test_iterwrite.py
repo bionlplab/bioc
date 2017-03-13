@@ -1,7 +1,7 @@
 import os
 import unittest
 import tempfile
-import bioc
+from ..context import bioc
 
 
 class IterwriteTests(unittest.TestCase):
