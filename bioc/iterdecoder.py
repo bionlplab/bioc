@@ -1,3 +1,12 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import next
+from builtins import int
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import lxml.etree as etree
 
 from .bioc import (
@@ -12,7 +21,7 @@ from .bioc import (
 )
 
 
-class BioCDecoderIter:
+class BioCDecoderIter(object):
     """
     Code to read/write BioC XML in an incremental way.
     """

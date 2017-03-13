@@ -1,10 +1,19 @@
 """
 Data structures and code to read/write BioC XML.
 """
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import dict
+from builtins import str
+from builtins import object
+from future import standard_library
+standard_library.install_aliases()
 import time, sys
 
 
-class BioCNode:
+class BioCNode(object):
     """
     The annotations and/or other relations in the relation.
     """
@@ -34,7 +43,7 @@ class BioCNode:
         return hash((self.refid, self.role))
 
 
-class BioCLocation:
+class BioCLocation(object):
     """
     The connection to the original text can be made through the offset and length fields.
     """
@@ -63,7 +72,7 @@ class BioCLocation:
         return hash((self.offset, self.length))
 
 
-class BioCAnnotation:
+class BioCAnnotation(object):
     """
     Stand off annotation.
     """
@@ -107,7 +116,7 @@ class BioCAnnotation:
         return loc1.offset <= loc2.offset and loc2.offset + loc2.length <= loc1.offset + loc1.length
 
 
-class BioCRelation:
+class BioCRelation(object):
     """
     Relationship between multiple BioCAnnotations and possibly other BioCRelations
     """
@@ -135,7 +144,7 @@ class BioCRelation:
         self.nodes.append(node)
 
 
-class BioCSentence:
+class BioCSentence(object):
     """
     One sentence in a {@link BioCPassage}.
 
@@ -200,7 +209,7 @@ class BioCSentence:
         self.relations.append(relation)
 
 
-class BioCPassage:
+class BioCPassage(object):
     """
     One passage in a BioCDocument.
 
@@ -257,7 +266,7 @@ class BioCPassage:
         self.relations.append(relation)
 
 
-class BioCDocument:
+class BioCDocument(object):
     """
     One document in the BioCCollection.
 
@@ -310,7 +319,7 @@ class BioCDocument:
         self.relations.append(relation)
 
 
-class BioCCollection:
+class BioCCollection(object):
     """
     Collection of documents.
 
