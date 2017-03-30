@@ -68,6 +68,12 @@ class BioCLocation(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __contains__(self, location):
+        if not isinstance(location, BioCLocation):
+            raise TypeError('%s is not an instance of BioCLocation' % type(location))
+        return self.offset <= location.offset \
+            and location.offset + location.length <= self.offset + self.length
+
     def __hash__(self):
         return hash((self.offset, self.length))
 
@@ -111,9 +117,11 @@ class BioCAnnotation(object):
         return BioCLocation(start, end - start)
 
     def __contains__(self, annotation):
+        if not isinstance(annotation, BioCAnnotation):
+            raise TypeError('%s is not an instance of BioCAnnotation' % type(annotation))
         loc1 = self.get_total_location()
         loc2 = annotation.get_total_location()
-        return loc1.offset <= loc2.offset and loc2.offset + loc2.length <= loc1.offset + loc1.length
+        return loc2 in loc1
 
 
 class BioCRelation(object):
