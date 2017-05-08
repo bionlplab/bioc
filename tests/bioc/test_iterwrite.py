@@ -1,21 +1,22 @@
-import os
-import unittest
 import tempfile
+
+import os
+
+from .utils import assert_everything
 from ..context import bioc
 
 
-class IterwriteTests(unittest.TestCase):
-    def setUp(self):
-        self.src = os.path.join(os.path.dirname(__file__), 'everything.xml')
+def test_iterwrite():
+    src = os.path.join(os.path.dirname(__file__), 'everything.xml')
+    with open(src) as fp:
+        collection = bioc.load(fp)
+    tmp = tempfile.NamedTemporaryFile()
 
-    def test(self):
-        with open(self.src) as fp:
-            collection = bioc.load(fp)
-        tmp = tempfile.NamedTemporaryFile()
+    with bioc.iterwrite(tmp.name, collection) as writer:
+        for document in collection.documents:
+            writer.writedocument(document)
 
-        with bioc.iterwrite(tmp.name, collection) as writer:
-            for document in collection.documents:
-                writer.writedocument(document)
+    with open(tmp.name) as fp:
+        collection = bioc.load(fp)
 
-        with open(tmp.name, 'r') as fp:
-            print(fp.read())
+    assert_everything(collection)
