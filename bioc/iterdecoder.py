@@ -76,7 +76,7 @@ class BioCDecoderIter(object):
                 elif event == 'end':
                     if elem.tag == 'source':
                         self.__collection.source = elem.text
-                    elif elem.tag == 'data':
+                    elif elem.tag == 'date':
                         self.__collection.date = elem.text
                     elif elem.tag == 'key':
                         self.__collection.key = elem.text

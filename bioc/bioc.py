@@ -77,6 +77,10 @@ class BioCLocation(object):
     def __hash__(self):
         return hash((self.offset, self.length))
 
+    @property
+    def end(self):
+        return self.offset + self.length
+
 
 class BioCAnnotation(object):
     """
