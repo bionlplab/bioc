@@ -57,12 +57,6 @@ class BioCEncoderIter(object):
             elem = encode_infon(k, v)
             self.w.send(elem)
 
-    def __write_infons(self, infons):
-        for k, v in infons.items():
-            elem = etree.Element('infon', {'key': str(k)})
-            elem.text = str(v)
-            self.w.send(elem)
-
     def close(self):
         self.w.close()
 

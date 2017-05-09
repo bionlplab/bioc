@@ -5,6 +5,8 @@ from __future__ import absolute_import
 from builtins import str
 from future import standard_library
 standard_library.install_aliases()
+
+
 class BioCValidator(object):
     def __init__(self):
         pass

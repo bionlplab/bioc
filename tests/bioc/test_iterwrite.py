@@ -10,8 +10,8 @@ def test_iterwrite():
     src = os.path.join(os.path.dirname(__file__), 'everything.xml')
     with open(src) as fp:
         collection = bioc.load(fp)
-    tmp = tempfile.NamedTemporaryFile()
 
+    tmp = tempfile.NamedTemporaryFile()
     with bioc.iterwrite(tmp.name, collection) as writer:
         for document in collection.documents:
             writer.writedocument(document)
