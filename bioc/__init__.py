@@ -15,10 +15,12 @@ from .encoder import BioCEncoder
 from .iterdecoder import BioCDecoderIter
 from .iterencoder import BioCEncoderIter
 from .validator import BioCValidator
+from .iterator import annotations, sentences
+from .jsonencoder import jsondumps
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
-           'iterparse', 'merge', 'validate', 'iterwrite']
+           'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'jsondumps']
 
 
 def dumps(collection, pretty_print=True):
