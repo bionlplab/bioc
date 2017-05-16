@@ -20,6 +20,7 @@ from .iterator import (
     SENTENCE,
     DOCUMENT,
     annotations,
+    relations,
     sentences,
 )
 from .utils import (
