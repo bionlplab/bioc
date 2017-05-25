@@ -1,0 +1,8 @@
+dependencies:
+  pre:
+    - pip install -r requirements.txt
+test:
+  pre:
+    - "py.test -vv ./tests/":
+       environment:
+         PYTHONPATH: $PWD
