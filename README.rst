@@ -1,7 +1,18 @@
 `bioc` -- BioC data structures and encoder/decoder for Python
 =============================================================
 
-[![circleci build](https://img.shields.io/circleci/project/github/yfpeng/bioc.svg)](https://circleci.com/gh/yfpeng/bioc)
+.. image:: https://img.shields.io/circleci/project/github/yfpeng/bioc.svg
+   :alt: Build status
+   :target: https://circleci.com/gh/yfpeng/bioc
+
+.. image:: https://img.shields.io/pypi/v/bioc.svg
+   :target: https://pypi.python.org/pypi/bioc
+   :alt: Latest version on PyPI
+
+.. image:: https://img.shields.io/pypi/l/bioc.svg
+   :alt: License
+   :target: https://opensource.org/licenses/BSD-3-Clause
+
 
 `BioC XML format <http://bioc.sourceforge.net/>`_ can be used to share
 text documents and annotations.
