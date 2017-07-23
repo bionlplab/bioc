@@ -9,6 +9,7 @@ from builtins import dict
 from builtins import str
 from builtins import object
 import time, sys
+import deprecation
 
 
 class BioCNode(object):
@@ -119,7 +120,18 @@ class BioCAnnotation(object):
     def __repr__(self):
         return str(self)
 
+    @deprecation.deprecated(deprecated_in='1.1', removed_in='1.2',
+                            details='Use total_span instead')
     def get_total_location(self):
+        start = sys.maxsize
+        end = 0
+        for loc in self.locations:
+            start = min(start, loc.offset)
+            end = max(end, loc.offset + loc.length)
+        return BioCLocation(start, end - start)
+
+    @property
+    def total_span(self):
         start = sys.maxsize
         end = 0
         for loc in self.locations:
