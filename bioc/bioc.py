@@ -29,6 +29,9 @@ class BioCNode(object):
     def __str__(self):
         return 'BioCNode[refid=%s,role=%s]' % (self.refid, self.role)
 
+    def __repr__(self):
+        return str(self)
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
@@ -57,6 +60,9 @@ class BioCLocation(object):
 
     def __str__(self):
         return 'BioCLocation[offset=%s,length=%s]' % (self.offset, self.length)
+
+    def __repr__(self):
+        return str(self)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -110,6 +116,9 @@ class BioCAnnotation(object):
         s += ']'
         return s
 
+    def __repr__(self):
+        return str(self)
+
     def get_total_location(self):
         start = sys.maxsize
         end = 0
@@ -143,6 +152,9 @@ class BioCRelation(object):
         s += 'nodes=[%s],' % ','.join(str(n) for n in self.nodes)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def add_node(self, node):
         """
@@ -181,6 +193,9 @@ class BioCSentence(object):
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def clear_infons(self):
         """
@@ -248,6 +263,9 @@ class BioCPassage(object):
         s += ']'
         return s
 
+    def __repr__(self):
+        return str(self)
+
     def add_sentence(self, sentence):
         """
         Adds sentence in this passage.
@@ -300,6 +318,9 @@ class BioCDocument(object):
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def add_passage(self, passage):
         """
@@ -376,5 +397,6 @@ class BioCCollection(object):
         s += ']'
         return s
 
-
+    def __repr__(self):
+        return str(self)
 
