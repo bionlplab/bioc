@@ -9,6 +9,7 @@ from builtins import dict
 from builtins import str
 from builtins import object
 import time, sys
+import deprecation
 
 
 class BioCNode(object):
@@ -28,6 +29,9 @@ class BioCNode(object):
 
     def __str__(self):
         return 'BioCNode[refid=%s,role=%s]' % (self.refid, self.role)
+
+    def __repr__(self):
+        return str(self)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -57,6 +61,9 @@ class BioCLocation(object):
 
     def __str__(self):
         return 'BioCLocation[offset=%s,length=%s]' % (self.offset, self.length)
+
+    def __repr__(self):
+        return str(self)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -119,7 +126,18 @@ class BioCAnnotation(object):
         s += ']'
         return s
 
+    @deprecation.deprecated(deprecated_in='1.1', removed_in='1.2',
+                            details='Use total_span instead')
     def get_total_location(self):
+        start = sys.maxsize
+        end = 0
+        for loc in self.locations:
+            start = min(start, loc.offset)
+            end = max(end, loc.offset + loc.length)
+        return BioCLocation(start, end - start)
+
+    @property
+    def total_span(self):
         start = sys.maxsize
         end = 0
         for loc in self.locations:
@@ -152,6 +170,9 @@ class BioCRelation(object):
         s += 'nodes=[%s],' % ','.join(str(n) for n in self.nodes)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def add_node(self, node):
         """
@@ -213,6 +234,9 @@ class BioCSentence(object):
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def clear_infons(self):
         """
@@ -292,6 +316,9 @@ class BioCPassage(object):
         s += ']'
         return s
 
+    def __repr__(self):
+        return str(self)
+
     def add_sentence(self, sentence):
         """
         Adds sentence in this passage.
@@ -344,6 +371,9 @@ class BioCDocument(object):
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         s += ']'
         return s
+
+    def __repr__(self):
+        return str(self)
 
     def add_passage(self, passage):
         """
@@ -420,6 +450,9 @@ class BioCCollection(object):
         s += ']'
         return s
 
+    def __repr__(self):
+        return str(self)
+
 
 def _shorten_text(text):
     if len(text) <= 40:
@@ -427,4 +460,3 @@ def _shorten_text(text):
     else:
         text = text[:17] + ' ... ' + text[-17:]
     return repr(text)
-

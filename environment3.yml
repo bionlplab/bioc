@@ -5,3 +5,5 @@ dependencies:
   - lxml==3.7.3
   - docutils==0.13.1
   - pytest
+  - pypi
+    - deprecation
