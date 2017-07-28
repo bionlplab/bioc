@@ -104,6 +104,15 @@ class BioCAnnotation(object):
     def __str__(self):
         s = 'BioCAnnotation['
         s += 'id=%s,' % self.id
+        s += 'text=%s,' % _shorten_text(self.text)
+        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
+        s += ']'
+        return s
+
+    def __repr__(self):
+        s = 'BioCAnnotation['
+        s += 'id=%s,' % self.id
         s += 'text=%s,' % self.text
         s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
         s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
@@ -153,6 +162,19 @@ class BioCRelation(object):
         """
         self.nodes.append(node)
 
+    def get_node(self, role, default=None):
+        """
+        Get the first node with role
+
+        Args:
+            role(str): role
+            default: node returned instead of raising StopIteration
+
+        Returns:
+            BioCNode
+        """
+        return next((node for node in self.nodes if node.role == role), default=default)
+
 
 class BioCSentence(object):
     """
@@ -173,6 +195,16 @@ class BioCSentence(object):
         self.relations = list()
 
     def __str__(self):
+        s = 'BioCSentence['
+        s += 'offset=%s,' % self.offset
+        s += 'text=%s,' % _shorten_text(self.text)
+        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
+        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        s += ']'
+        return s
+
+    def __repr__(self):
         s = 'BioCSentence['
         s += 'offset=%s,' % self.offset
         s += 'text=%s,' % self.text
@@ -237,6 +269,18 @@ class BioCPassage(object):
         self.relations = list()
 
     def __str__(self):
+        s = 'BioCPassage['
+        s += 'offset=%s,' % self.offset
+        if self.text is not None:
+            s += 'text=%s,' % _shorten_text(self.text)
+        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
+        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
+        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        s += ']'
+        return s
+
+    def __repr__(self):
         s = 'BioCPassage['
         s += 'offset=%s,' % self.offset
         if self.text is not None:
@@ -377,4 +421,10 @@ class BioCCollection(object):
         return s
 
 
+def _shorten_text(text):
+    if len(text) <= 40:
+        text = text
+    else:
+        text = text[:17] + ' ... ' + text[-17:]
+    return repr(text)
 

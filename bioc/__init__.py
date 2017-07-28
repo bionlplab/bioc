@@ -15,7 +15,7 @@ from .encoder import BioCEncoder
 from .iterdecoder import BioCDecoderIter
 from .iterencoder import BioCEncoderIter
 from .validator import BioCValidator
-from .iterator import (
+from .biocitertools import (
     PASSAGE,
     SENTENCE,
     DOCUMENT,
