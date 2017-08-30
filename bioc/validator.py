@@ -82,7 +82,8 @@ class BioCValidator(object):
     def __fill_newline(self, text, offset):
         dis = offset - len(text)
         if dis < 0:
-            self.onerror('%s: Overlap with previous text: %d vs %d' % (self.current_docid, len(text), offset),
+            self.onerror('%s: Overlap with previous text: len[%d] vs next offset[%d]\n%s'
+                         % (self.current_docid, len(text), offset, text),
                          self.traceback)
         if dis > 0:
             text += '\n' * dis
@@ -101,7 +102,6 @@ class BioCValidator(object):
             else:
                 self.onerror('%s: BioC sentence has no text: {}'.format(self.current_docid, sentence.offset),
                              self.traceback)
-            text += sentence.text
             self.traceback.pop()
         return text
 
