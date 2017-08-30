@@ -89,8 +89,8 @@ def loads(s, encoding='UTF-8'):
     return BioCDecoder().decodes(s)
 
 
-def validate(collection):
-    BioCValidator().validate(collection)
+def validate(collection, onerror=None):
+    BioCValidator(onerror).validate(collection)
 
 
 def merge(dst, srcs):

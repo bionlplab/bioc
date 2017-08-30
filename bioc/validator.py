@@ -1,12 +1,21 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
+def default_error(msg, traceback):
+    raise ValueError(msg)
 
 
 class BioCValidator(object):
-    def __init__(self):
-        pass
+    def __init__(self, onerror=None):
+        if onerror is None:
+            self.onerror = default_error
+        else:
+            self.onerror = onerror
+        self.current_docid = None
+        self.traceback = []
 
     def validate(self, collection):
         annotations = []
@@ -21,6 +30,9 @@ class BioCValidator(object):
                     annotations.extend(sentence.relations)
 
         for document in collection.documents:
+            self.current_docid = document.id
+            self.traceback.append(document)
+
             text = self.__get_doc_text(document)
             self.__validate_ann(document.annotations, text, 0)
             for relation in document.relations:
@@ -29,6 +41,8 @@ class BioCValidator(object):
                         'Cannot find node %s in document %s' % (str(node), document.id)
 
             for passage in document.passages:
+                self.traceback.append(passage)
+
                 text = self.__get_passage_text(passage)
                 self.__validate_ann(passage.annotations, text, passage.offset)
                 for relation in passage.relations:
@@ -37,20 +51,26 @@ class BioCValidator(object):
                             'Cannot find node %s in document %s' % (str(node), document.id)
 
                 for sentence in passage.sentences:
+                    self.traceback.append(sentence)
                     self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
                     for relation in sentence.relations:
                         for node in relation.nodes:
                             assert self.__contains(annotations, node.refid), \
                                 'Cannot find node %s document %s' % (str(node), document.id)
+                    self.traceback.pop()
+                self.traceback.pop()
+            self.traceback.pop()
 
-    @classmethod
-    def __validate_ann(cls, annotations, text, offset):
+    def __validate_ann(self, annotations, text, offset):
         for ann in annotations:
+            self.traceback.append(ann)
             location = ann.get_total_location()
             anntext = text[location.offset - offset: location.offset + location.length - offset]
-            assert anntext == ann.text, \
-                'Annotation text is incorrect.\n  Annotation: %s\n  Actual text: %s' \
-                % (anntext, ann.text)
+            if anntext != ann.text:
+                self.onerror('%s: Annotation text is incorrect at %d.\n  Annotation: %s\n  Actual text: %s' %
+                             (self.current_docid, location.offset, anntext, ann.text),
+                             self.traceback)
+            self.traceback.pop()
 
     @classmethod
     def __contains(cls, annotations, id):
@@ -59,9 +79,11 @@ class BioCValidator(object):
                 return True
         return False
 
-    @staticmethod
-    def __fill_newline(text, offset):
+    def __fill_newline(self, text, offset):
         dis = offset - len(text)
+        if dis < 0:
+            self.onerror('%s: Overlap with previous text: %d vs %d' % (self.current_docid, len(text), offset),
+                         self.traceback)
         if dis > 0:
             text += '\n' * dis
         return text
@@ -72,9 +94,15 @@ class BioCValidator(object):
 
         text = ''
         for sentence in passage.sentences:
+            self.traceback.append(sentence)
             text = self.__fill_newline(text, sentence.offset)
-            assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
+            if sentence.text:
+                text += sentence.text
+            else:
+                self.onerror('%s: BioC sentence has no text: {}'.format(self.current_docid, sentence.offset),
+                             self.traceback)
             text += sentence.text
+            self.traceback.pop()
         return text
 
     def __get_doc_text(self, document):

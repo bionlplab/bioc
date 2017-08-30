@@ -6,6 +6,8 @@ import bioc
 
 def fill_char(text, offset, char='\n'):
     dis = offset - len(text)
+    if dis < 0:
+        raise ValueError
     if dis > 0:
         text += char * dis
     return text
@@ -29,15 +31,21 @@ def get_text(obj):
         else:
             text = ''
             for sentence in obj.sentences:
-                text = fill_char(text, sentence.offset - obj.offset, ' ')
-                assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
-                text += sentence.text
+                try:
+                    text = fill_char(text, sentence.offset - obj.offset, ' ')
+                    assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
+                    text += sentence.text
+                except:
+                    raise ValueError('Overlapping sentences %d' % (sentence.offset))
             return obj.offset, text
     elif isinstance(obj, bioc.BioCDocument):
         text = ''
         for passage in obj.passages:
-            text = fill_char(text, passage.offset)
-            text += get_text(passage)[1]
+            try:
+                text = fill_char(text, passage.offset)
+                text += get_text(passage)[1]
+            except:
+                raise ValueError('%s: overlapping passages %d' % (obj.id, passage.offset))
         return 0, text
     else:
         raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')

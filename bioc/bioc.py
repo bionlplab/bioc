@@ -194,7 +194,7 @@ class BioCRelation(object):
         Returns:
             BioCNode
         """
-        return next((node for node in self.nodes if node.role == role), default=default)
+        return next((node for node in self.nodes if node.role == role), default)
 
 
 class BioCSentence(object):
