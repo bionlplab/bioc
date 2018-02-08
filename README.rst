@@ -3,7 +3,7 @@
 
 .. image:: https://img.shields.io/travis/yfpeng/bioc.svg
    :alt: Build status
-   :target: https://circleci.com/gh/yfpeng/bioc
+   :target: https://travis-ci.org/yfpeng/bioc
 
 .. image:: https://img.shields.io/pypi/v/bioc.svg
    :target: https://pypi.python.org/pypi/bioc
