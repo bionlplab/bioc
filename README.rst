@@ -66,7 +66,7 @@ Decoding the BioC XML file:
 
     import json
     # Deserialize ``s`` to a BioC collection object.
-    collection = json.loads(s)
+    collection = bioc.loads(s)
 
     # Deserialize ``fp`` to a BioC collection object.
     with open(filename, 'r') as fp:
@@ -102,6 +102,7 @@ Requirements
 ------------
 
 -  lxml (http://lxml.de)
+-  deprecation
 
 Developers
 ----------
