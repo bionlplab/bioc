@@ -235,9 +235,6 @@ class BioCSentence(object):
         s += ']'
         return s
 
-    def __repr__(self):
-        return str(self)
-
     def clear_infons(self):
         """
         Clears all information.
@@ -315,9 +312,6 @@ class BioCPassage(object):
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         s += ']'
         return s
-
-    def __repr__(self):
-        return str(self)
 
     def add_sentence(self, sentence):
         """
@@ -401,6 +395,21 @@ class BioCDocument(object):
             relation(BioCRelation): a relation
         """
         self.relations.append(relation)
+
+    def get_passage(self, offset):
+        """
+        Gets passage
+
+        Args:
+            offset(int): passage offset
+
+        Return:
+            BioCPassage: the passage
+        """
+        for passage in self.passages:
+            if passage.offset == offset:
+                return passage
+        return None
 
 
 class BioCCollection(object):
