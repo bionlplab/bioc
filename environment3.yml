@@ -1,6 +1,11 @@
 name: bioc3
+channels:
+  - anaconda
+  - conda-forge
+  - auto
 dependencies:
   - python=3.6
   - lxml
   - docutils
   - pytest
+  - jsonlines

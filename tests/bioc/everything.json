@@ -1,0 +1,167 @@
+{
+  "source": "source",
+  "date": "date",
+  "key": "key",
+  "infons": {
+    "collection-infon-key": "collection-infon-value"
+  },
+  "documents": [
+    {
+      "id": "1",
+      "infons": {
+        "document-infon-key": "document-infon-value"
+      },
+      "passages": [
+        {
+          "offset": 0,
+          "infons": {
+            "passage-infon-key": "passage-infon-value"
+          },
+          "text": "abcdefghijklmnopqrstuvwxyz",
+          "sentences": [],
+          "annotations": [
+            {
+              "id": "1",
+              "infons": {
+                "annotation-infon-key": "annotation-infon-value"
+              },
+              "text": "bc",
+              "locations": [
+                {
+                  "offset": 1,
+                  "length": 2
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "infons": {
+                "annotation-infon-key": "annotation-infon-value"
+              },
+              "text": "fg",
+              "locations": [
+                {
+                  "offset": 5,
+                  "length": 2
+                }
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "id": "R1",
+              "infons": {
+                "relation-infon-key": "relation-infon-value"
+              },
+              "nodes": [
+                {
+                  "refid": "1",
+                  "role": "role1"
+                },
+                {
+                  "refid": "2",
+                  "role": "role2"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "annotations": [],
+      "relations": [
+        {
+          "id": "R2",
+          "infons": {
+            "relation-infon-key": "relation-infon-value"
+          },
+          "nodes": [
+            {
+              "refid": "1",
+              "role": "role1"
+            },
+            {
+              "refid": "2",
+              "role": "role2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "infons": {},
+      "passages": [
+        {
+          "offset": 27,
+          "infons": {},
+          "text": "",
+          "sentences": [
+            {
+              "offset": 27,
+              "infons": {
+                "sentence-infon-key": "sentence-infon-value"
+              },
+              "text": "abcdefg",
+              "annotations": [
+                {
+                  "id": "3",
+                  "infons": {
+                    "annotation-infon-key": "annotation-infon-value"
+                  },
+                  "text": "bc",
+                  "locations": [
+                    {
+                      "offset": 28,
+                      "length": 2
+                    }
+                  ]
+                }
+              ],
+              "relations": [
+                {
+                  "id": "R3",
+                  "infons": {
+                    "relation-infon-key": "relation-infon-value"
+                  },
+                  "nodes": [
+                    {
+                      "refid": "3",
+                      "role": "role1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "offset": 34,
+              "infons": {
+                "sentence-infon-key": "sentence-infon-value"
+              },
+              "text": "hijklm",
+              "annotations": [
+                {
+                  "id": "4",
+                  "infons": {
+                    "annotation-infon-key": "annotation-infon-value"
+                  },
+                  "text": "hi",
+                  "locations": [
+                    {
+                      "offset": 34,
+                      "length": 2
+                    }
+                  ]
+                }
+              ],
+              "relations": []
+            }
+          ],
+          "annotations": [],
+          "relations": []
+        }
+      ],
+      "annotations": [],
+      "relations": []
+    }
+  ]
+}
