@@ -6,7 +6,7 @@ from ..context import bioc
 
 def test_sentences():
     filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename) as fp:
+    with open(filename, encoding='utf8') as fp:
         collection = bioc.load(fp)
 
     sentences = list(bioc.sentences(collection))
@@ -20,7 +20,7 @@ def test_sentences():
 
 def test_annotations():
     filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename) as fp:
+    with open(filename, encoding='utf8') as fp:
         collection = bioc.load(fp)
 
     annotations = list(bioc.annotations(collection))
@@ -39,7 +39,7 @@ def test_annotations():
 
 def test_relations():
     filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename) as fp:
+    with open(filename, encoding='utf8') as fp:
         collection = bioc.load(fp)
 
     relations = list(bioc.relations(collection))

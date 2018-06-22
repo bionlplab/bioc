@@ -13,11 +13,11 @@ src = Path(__file__).parent / 'everything.json'
 
 
 def test_jsonlines():
-    with open(src) as fp:
+    with open(src, encoding='utf8') as fp:
         collection = bioc.jsonload(fp)
 
     tmp = tempfile.NamedTemporaryFile()
-    with jsonlines.open(tmp.name, 'w') as writer:
+    with jsonlines.open(tmp.name, mode='w') as writer:
         for doc in collection.documents:
             writer.write(BioCJSONEncoder().default(doc))
 

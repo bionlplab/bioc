@@ -137,14 +137,14 @@
               "infons": {
                 "sentence-infon-key": "sentence-infon-value"
               },
-              "text": "hijklm",
+              "text": "测试Non-ASCII",
               "annotations": [
                 {
                   "id": "4",
                   "infons": {
                     "annotation-infon-key": "annotation-infon-value"
                   },
-                  "text": "hi",
+                  "text": "测试",
                   "locations": [
                     {
                       "offset": 34,

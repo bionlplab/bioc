@@ -44,6 +44,7 @@ class BioCDecoder(object):
         Returns:
             BioCCollection: a object of BioCollection
         """
+        # utf8_parser = etree.XMLParser(encoding='utf-8')
         tree = etree.parse(fp)
         collection = self.__parse_collection(tree.getroot())
         collection.encoding = tree.docinfo.encoding

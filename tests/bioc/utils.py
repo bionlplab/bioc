@@ -47,7 +47,7 @@ def assert_everything(collection):
     sentence = passage.sentences[1]
     assert 34 == sentence.offset
     assert 'sentence-infon-value' == sentence.infons['sentence-infon-key']
-    assert 'hijklm' == sentence.text
+    assert '测试Non-ASCII' == sentence.text
     annotation = passage.sentences[0].annotations[0]
     assert '3' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
@@ -57,7 +57,7 @@ def assert_everything(collection):
     annotation = passage.sentences[1].annotations[0]
     assert '4' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
-    assert 'hi' == annotation.text
+    assert '测试' == annotation.text
     assert 34 == annotation.total_span.offset
     assert 2 == annotation.total_span.length
     relation = passage.sentences[0].relations[0]
