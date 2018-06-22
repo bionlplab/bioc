@@ -37,4 +37,3 @@ def test_jsondumps():
     s = bioc.jsondumps(collection)
     collection = bioc.jsonloads(s)
     assert_everything(collection)
-
