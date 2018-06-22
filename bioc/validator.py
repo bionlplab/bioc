@@ -60,7 +60,7 @@ class BioCValidator(object):
     def __validate_ann(self, annotations, text, offset):
         for ann in annotations:
             self.traceback.append(ann)
-            location = ann.get_total_location()
+            location = ann.total_span
             anntext = text[location.offset - offset: location.offset + location.length - offset]
             if anntext != ann.text:
                 self.onerror('%s: Annotation text is incorrect at %d.\n  Annotation: %s\n  Actual text: %s' %
