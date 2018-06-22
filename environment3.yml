@@ -1,9 +1,6 @@
 name: bioc3
 dependencies:
   - python=3.6
-  - future==0.16.0
-  - lxml==3.7.3
-  - docutils==0.13.1
+  - lxml
+  - docutils
   - pytest
-  - pypi
-    - deprecation

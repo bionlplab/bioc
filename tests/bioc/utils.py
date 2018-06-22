@@ -14,14 +14,14 @@ def assert_everything(collection):
     assert '1' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
     assert 'bc' == annotation.text
-    assert 1 == annotation.get_total_location().offset
-    assert 2 == annotation.get_total_location().length
+    assert 1 == annotation.total_span.offset
+    assert 2 == annotation.total_span.length
     annotation = passage.annotations[1]
     assert '2' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
     assert 'fg' == annotation.text
-    assert 5 == annotation.get_total_location().offset
-    assert 2 == annotation.get_total_location().length
+    assert 5 == annotation.total_span.offset
+    assert 2 == annotation.total_span.length
     relation = passage.relations[0]
     assert 'R1' == relation.id
     assert 'relation-infon-value' == relation.infons['relation-infon-key']
@@ -52,14 +52,14 @@ def assert_everything(collection):
     assert '3' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
     assert 'bc' == annotation.text
-    assert 28 == annotation.get_total_location().offset
-    assert 2 == annotation.get_total_location().length
+    assert 28 == annotation.total_span.offset
+    assert 2 == annotation.total_span.length
     annotation = passage.sentences[1].annotations[0]
     assert '4' == annotation.id
     assert 'annotation-infon-value' == annotation.infons['annotation-infon-key']
     assert 'hi' == annotation.text
-    assert 34 == annotation.get_total_location().offset
-    assert 2 == annotation.get_total_location().length
+    assert 34 == annotation.total_span.offset
+    assert 2 == annotation.total_span.length
     relation = passage.sentences[0].relations[0]
     assert 'R3' == relation.id
     assert 'relation-infon-value' == relation.infons['relation-infon-key']

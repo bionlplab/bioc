@@ -1,9 +1,0 @@
-name: bioc2
-dependencies:
-  - python=2.7
-  - future==0.16.0
-  - lxml==3.7.3
-  - docutils==0.13.1
-  - pytest
-  - pypi
-    - deprecation
