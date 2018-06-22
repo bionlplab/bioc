@@ -1,4 +1,4 @@
-`bioc` -- BioC data structures and encoder/decoder for Python
+`bioc` - BioC data structures and encoder/decoder for Python
 =============================================================
 
 .. image:: https://img.shields.io/travis/yfpeng/bioc.svg
@@ -30,7 +30,7 @@ Installing ``bioc``
 
 .. code:: bash
 
-    $ pip install --pre bioc
+    $ pip install bioc
 
 Encoding the BioC collection object ``collection``:
 
@@ -102,7 +102,6 @@ Requirements
 ------------
 
 -  lxml (http://lxml.de)
--  deprecation
 
 Developers
 ----------
