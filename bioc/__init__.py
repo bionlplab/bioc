@@ -28,12 +28,16 @@ from .utils import (
     pretty_print
 )
 
-from .jsonencoder import jsondumps
+from .jsonencoder import dumps as jsondumps
+from .jsonencoder import dump as jsondump
+from .jsondecoder import load as jsonload
+from .jsondecoder import loads as jsonloads
+
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
-           'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'jsondumps',
-           'get_text', 'pretty_print']
+           'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'jsondumps', 'jsondump',
+           'jsonload', 'jsonloads', 'get_text', 'pretty_print']
 
 
 def dumps(collection, pretty_print=True):
