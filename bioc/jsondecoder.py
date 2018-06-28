@@ -1,4 +1,5 @@
 import json
+from typing import TextIO
 
 import bioc
 
@@ -73,7 +74,7 @@ def parse_doc(obj):
     return doc
 
 
-def load(fp, **kwargs):
+def load(fp: TextIO, **kwargs) -> bioc.BioCCollection:
     """
     Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to a BioCCollection object
 
@@ -82,22 +83,22 @@ def load(fp, **kwargs):
         **kwargs:
 
     Returns:
-        BioCCollection: a collection
+        a collection
     """
     obj = json.load(fp, **kwargs)
     return parse_collection(obj)
 
 
-def loads(s, **kwargs):
+def loads(s: str or bytes or bytearray, **kwargs) -> bioc.BioCCollection:
     """
     Deserialize s (a str, bytes or bytearray instance containing a JSON document) to a BioCCollection object.
 
     Args:
-        s(str):
+        s: a str containing a JSON document
         **kwargs:
 
     Returns:
-        BioCCollection: a collection
+        a collection
     """
     obj = json.loads(s, **kwargs)
     return parse_collection(obj)

@@ -2,7 +2,7 @@ import lxml.etree as etree
 import bioc
 
 
-def fill_char(text, offset, char='\n'):
+def fill_char(text: str, offset: int, char='\n') -> str:
     dis = offset - len(text)
     if dis < 0:
         raise ValueError

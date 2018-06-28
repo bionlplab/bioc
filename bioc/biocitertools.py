@@ -1,3 +1,5 @@
+from typing import Generator
+
 import bioc
 
 DOCUMENT = 1
@@ -5,7 +7,8 @@ PASSAGE = 2
 SENTENCE = 3
 
 
-def annotations(obj, docid=None, level=PASSAGE):
+def annotations(obj: bioc.BioCCollection or bioc.BioCDocument or bioc.BioCPassage or bioc.BioCSentence,
+                docid=None, level=PASSAGE) -> Generator[bioc.BioCAnnotation, None, None]:
     """
     Get all annotations in document id.
 
@@ -15,7 +18,7 @@ def annotations(obj, docid=None, level=PASSAGE):
         level(int): one of DOCUMENT, PASSAGE, SENTENCE
 
     Yields:
-        BioCAnnotation: one annotation
+        one annotation
     """
     if isinstance(obj, bioc.BioCCollection):
         for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
@@ -51,7 +54,8 @@ def annotations(obj, docid=None, level=PASSAGE):
         raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
 
 
-def relations(obj, docid=None, level=PASSAGE):
+def relations(obj: bioc.BioCCollection or bioc.BioCDocument or bioc.BioCPassage or bioc.BioCSentence,
+              docid=None, level=PASSAGE) -> Generator[bioc.BioCRelation, None, None]:
     """
     Get all relations in document id.
 
@@ -61,7 +65,7 @@ def relations(obj, docid=None, level=PASSAGE):
         level(int): one of DOCUMENT, PASSAGE, SENTENCE
 
     Yields:
-        BioCRelation: one relation
+        one relation
     """
     if isinstance(obj, bioc.BioCCollection):
         for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
@@ -97,7 +101,8 @@ def relations(obj, docid=None, level=PASSAGE):
         raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
 
 
-def sentences(obj):
+def sentences(obj: bioc.BioCCollection or bioc.BioCDocument or bioc.BioCPassage) \
+        -> Generator[bioc.BioCSentence, None, None]:
     """
     Get all sentences in document id.
 
@@ -105,7 +110,7 @@ def sentences(obj):
         obj: BioCCollection, BioCDocument, or BioCPassage
 
     Yields:
-        BioCSentence: one sentence
+        one sentence
     """
     if isinstance(obj, bioc.BioCCollection):
         for document in obj.documents:

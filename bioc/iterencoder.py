@@ -17,13 +17,13 @@ class BioCEncoderIter(object):
                 except GeneratorExit:
                     pass
 
-    def __init__(self, name, collection=None):
+    def __init__(self, name: str, collection=None):
         """
         Returns an object of the BioCEncoderIter which can write an BioC file
         incrementally at document level.
 
         Args:
-            name(str): file name to be decode
+            name: file name to be decode
         """
 
         self.file = name
