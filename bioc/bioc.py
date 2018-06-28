@@ -2,7 +2,6 @@
 Data structures and code to read/write BioC XML.
 """
 import time
-import sys
 
 
 class BioCNode(object):
@@ -70,7 +69,7 @@ class BioCLocation(object):
         if not isinstance(location, BioCLocation):
             raise TypeError('%s is not an instance of BioCLocation' % type(location))
         return self.offset <= location.offset \
-            and location.offset + location.length <= self.offset + self.length
+               and location.offset + location.length <= self.offset + self.length
 
     def __hash__(self):
         return hash((self.offset, self.length))
@@ -121,11 +120,10 @@ class BioCAnnotation(object):
 
     @property
     def total_span(self):
-        start = sys.maxsize
-        end = 0
-        for loc in self.locations:
-            start = min(start, loc.offset)
-            end = max(end, loc.offset + loc.length)
+        if len(self.locations) <= 0:
+            raise ValueError('BioCAnnotation must have at least one location')
+        start = min((l.offset for l in self.locations))
+        end = max((l.offset + l.length for l in self.locations))
         return BioCLocation(start, end - start)
 
     def __contains__(self, annotation):
