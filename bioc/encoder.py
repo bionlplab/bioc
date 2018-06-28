@@ -1,5 +1,5 @@
 import lxml.etree as etree
-from bioc import BioCCollection
+from .bioc import BioCCollection
 
 
 class BioCEncoder(object):

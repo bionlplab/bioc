@@ -1,5 +1,11 @@
+from typing import Tuple
+
 import lxml.etree as etree
-import bioc
+from .bioc import (
+    BioCDocument,
+    BioCPassage,
+    BioCSentence,
+)
 
 
 def fill_char(text: str, offset: int, char='\n') -> str:
@@ -11,7 +17,7 @@ def fill_char(text: str, offset: int, char='\n') -> str:
     return text
 
 
-def get_text(obj):
+def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str]:
     """
     Return text with its offset in the document
     
@@ -19,11 +25,11 @@ def get_text(obj):
         obj: BioCDocument, BioCPassage, or BioCSentence
     
     Returns:
-        tuple(int,str): offset, text
+        offset, text
     """
-    if isinstance(obj, bioc.BioCSentence):
+    if isinstance(obj, BioCSentence):
         return obj.offset, obj.text,
-    elif isinstance(obj, bioc.BioCPassage):
+    elif isinstance(obj,BioCPassage):
         if obj.text:
             return obj.offset, obj.text
         else:
@@ -36,7 +42,7 @@ def get_text(obj):
                 except:
                     raise ValueError('Overlapping sentences %d' % (sentence.offset))
             return obj.offset, text
-    elif isinstance(obj, bioc.BioCDocument):
+    elif isinstance(obj, BioCDocument):
         text = ''
         for passage in obj.passages:
             try:
@@ -49,7 +55,7 @@ def get_text(obj):
         raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
 
 
-def pretty_print(src, dst):
+def pretty_print(src: str, dst: str):
     """
     Pretty print the XML file
     """

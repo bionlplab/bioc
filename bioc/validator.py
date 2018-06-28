@@ -1,4 +1,4 @@
-from bioc import BioCDocument, BioCCollection
+from .bioc import BioCDocument, BioCCollection
 
 
 def default_error(msg, traceback):

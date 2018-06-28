@@ -1,11 +1,20 @@
 import json
 from typing import TextIO
 
-import bioc
+from .bioc import (
+    BioCCollection,
+    BioCDocument,
+    BioCPassage,
+    BioCSentence,
+    BioCAnnotation,
+    BioCRelation,
+    BioCLocation,
+    BioCNode
+)
 
 
 def parse_collection(obj):
-    collection = bioc.BioCCollection()
+    collection = BioCCollection()
     collection.source = obj['source']
     collection.date = obj['date']
     collection.key = obj['key']
@@ -16,26 +25,26 @@ def parse_collection(obj):
 
 
 def parse_annotation(obj):
-    ann = bioc.BioCAnnotation()
+    ann = BioCAnnotation()
     ann.id = obj['id']
     ann.infons = obj['infons']
     ann.text = obj['text']
     for loc in obj['locations']:
-        ann.add_location(bioc.BioCLocation(loc['offset'], loc['length']))
+        ann.add_location(BioCLocation(loc['offset'], loc['length']))
     return ann
 
 
 def parse_relation(obj):
-    rel = bioc.BioCRelation()
+    rel = BioCRelation()
     rel.id = obj['id']
     rel.infons = obj['infons']
     for node in obj['nodes']:
-        rel.add_node(bioc.BioCNode(node['refid'], node['role']))
+        rel.add_node(BioCNode(node['refid'], node['role']))
     return rel
 
 
 def parse_sentence(obj):
-    sentence = bioc.BioCSentence()
+    sentence = BioCSentence()
     sentence.offset = obj['offset']
     sentence.infons = obj['infons']
     sentence.text = obj['text']
@@ -47,7 +56,7 @@ def parse_sentence(obj):
 
 
 def parse_passage(obj):
-    passage = bioc.BioCPassage()
+    passage = BioCPassage()
     passage.offset = obj['offset']
     passage.infons = obj['infons']
     if 'text' in obj:
@@ -62,7 +71,7 @@ def parse_passage(obj):
 
 
 def parse_doc(obj):
-    doc = bioc.BioCDocument()
+    doc = BioCDocument()
     doc.id = obj['id']
     doc.infons = obj['infons']
     for passage in obj['passages']:
@@ -74,7 +83,7 @@ def parse_doc(obj):
     return doc
 
 
-def load(fp: TextIO, **kwargs) -> bioc.BioCCollection:
+def load(fp: TextIO, **kwargs) -> BioCCollection:
     """
     Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to a BioCCollection object
 
@@ -89,7 +98,7 @@ def load(fp: TextIO, **kwargs) -> bioc.BioCCollection:
     return parse_collection(obj)
 
 
-def loads(s: str or bytes or bytearray, **kwargs) -> bioc.BioCCollection:
+def loads(s: str or bytes or bytearray, **kwargs) -> BioCCollection:
     """
     Deserialize s (a str, bytes or bytearray instance containing a JSON document) to a BioCCollection object.
 
