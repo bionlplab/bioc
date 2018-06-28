@@ -15,14 +15,14 @@ SENTENCE = 3
 
 
 def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
-                docid=None, level=PASSAGE) -> Generator[BioCAnnotation, None, None]:
+                docid: str=None, level: int=PASSAGE) -> Generator[BioCAnnotation, None, None]:
     """
     Get all annotations in document id.
 
     Args:
         obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
-        docid(str): document id. If None, all documents
-        level(int): one of DOCUMENT, PASSAGE, SENTENCE
+        docid: document id. If None, all documents
+        level: one of DOCUMENT, PASSAGE, SENTENCE
 
     Yields:
         one annotation

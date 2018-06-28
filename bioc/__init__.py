@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from typing import Generator, List, TextIO
+from typing import Generator, List, TextIO, Callable
 
 from .bioc import (
     BioCCollection,
@@ -41,7 +41,7 @@ __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', '
            'jsonload', 'jsonloads', 'get_text', 'pretty_print']
 
 
-def dumps(collection: BioCCollection, pretty_print=True) -> str:
+def dumps(collection: BioCCollection, pretty_print: bool=True) -> str:
     """
     Serialize ``collection`` to a BioC formatted ``str``.
 
@@ -55,7 +55,7 @@ def dumps(collection: BioCCollection, pretty_print=True) -> str:
     return BioCEncoder(pretty_print=pretty_print).encode(collection)
 
 
-def dump(collection: BioCCollection, fp: TextIO, pretty_print=True):
+def dump(collection: BioCCollection, fp: TextIO, pretty_print: bool=True):
     """
     Serialize ``collection`` as a BioC formatted stream to ``fp``.
 
@@ -94,7 +94,7 @@ def loads(s: str) -> BioCCollection:
     return BioCDecoder().decodes(s)
 
 
-def validate(collection, onerror=None):
+def validate(collection, onerror: Callable[[str, List], None]=None):
     BioCValidator(onerror).validate(collection)
 
 
