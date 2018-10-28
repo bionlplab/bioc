@@ -112,3 +112,7 @@ class BioCValidator(object):
             text = self.__fill_newline(text, passage.offset)
             text += self.__get_passage_text(passage)
         return text
+
+
+def validate(collection, onerror: Callable[[str, List], None] = None):
+    BioCValidator(onerror).validate(collection)

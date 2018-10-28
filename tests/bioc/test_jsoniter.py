@@ -3,7 +3,8 @@ import pytest
 from pathlib import Path
 
 import bioc
-import biocjson
+from bioc.biocjson import BioCJsonIterReader, BioCJsonIterWriter
+from bioc import biocjson
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -13,8 +14,8 @@ def test_document():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
-    tmp = tempfile.NamedTemporaryFile()
-    with biocjson.iterwrite(tmp.name) as writer:
+    tmp = tempfile.mktemp()
+    with BioCJsonIterWriter(tmp, level=bioc.DOCUMENT) as writer:
         for doc in collection.documents:
             writer.write(doc)
 
@@ -22,7 +23,7 @@ def test_document():
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    with biocjson.iterparse(tmp.name) as reader:
+    with BioCJsonIterReader(tmp, level=bioc.DOCUMENT) as reader:
         for obj in reader:
             collection.add_document(obj)
 
@@ -33,8 +34,8 @@ def test_passage():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
-    tmp = tempfile.NamedTemporaryFile()
-    with biocjson.iterwrite(tmp.name, level=bioc.PASSAGE) as writer:
+    tmp = tempfile.mktemp()
+    with BioCJsonIterWriter(tmp, level=bioc.PASSAGE) as writer:
         for p in collection.documents[0].passages:
             writer.write(p)
 
@@ -42,7 +43,7 @@ def test_passage():
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    with biocjson.iterparse(tmp.name, level=bioc.PASSAGE) as reader:
+    with BioCJsonIterReader(tmp, level=bioc.PASSAGE) as reader:
         for obj in reader:
             collection.documents[0].add_passage(obj)
 
@@ -53,8 +54,8 @@ def test_sentence():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
-    tmp = tempfile.NamedTemporaryFile()
-    with biocjson.iterwrite(tmp.name, level=bioc.SENTENCE) as writer:
+    tmp = tempfile.mktemp()
+    with BioCJsonIterWriter(tmp, level=bioc.SENTENCE) as writer:
         for s in collection.documents[1].passages[0].sentences:
             writer.write(s)
 
@@ -62,7 +63,7 @@ def test_sentence():
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    with biocjson.iterparse(tmp.name, level=bioc.SENTENCE) as reader:
+    with BioCJsonIterReader(tmp, level=bioc.SENTENCE) as reader:
         for obj in reader:
             collection.documents[1].passages[0].add_sentence(obj)
 

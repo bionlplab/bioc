@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 
-import biocjson
+from bioc import biocjson
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -23,10 +23,10 @@ def test_loads():
 def test_dump():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
-    tmp = tempfile.NamedTemporaryFile()
-    with open(tmp.name, 'w', encoding='utf8') as fp:
+    tmp = tempfile.mktemp()
+    with open(tmp, 'w', encoding='utf8') as fp:
         biocjson.dump(collection, fp)
-    with open(tmp.name, encoding='utf8') as fp:
+    with open(tmp, encoding='utf8') as fp:
         collection = biocjson.load(fp)
     assert_everything(collection)
 

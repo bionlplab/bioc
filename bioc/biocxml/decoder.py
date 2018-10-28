@@ -1,23 +1,127 @@
+import io
+from typing import TextIO
+
 import lxml.etree as etree
 
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation, \
     BioCLocation, BioCNode
 
 
-class BioCDecoderIter(object):
-    """
-    Code to read/write BioC XML in an incremental way.
-    """
+class BioCDecoder(object):
+    def __init__(self):
+        pass
 
-    def __init__(self, name: str):
+    def decodes(self, s: str) -> BioCCollection:
         """
-        Open an object of the BioCDecoderIter which can parse an BioC file
-        incrementally at document level.
+        Deserialize ``s`` to a BioC collection object.
 
         Args:
-            name: file name to be decoded
+            s: a "str" instance containing a BioC collection
+
+        Returns:
+            an object of BioCollection
         """
-        self.file = name
+        tree = etree.parse(io.BytesIO(bytes(s, encoding='UTF-8')))
+        collection = self.__parse_collection(tree.getroot())
+        collection.encoding = tree.docinfo.encoding
+        collection.standalone = tree.docinfo.standalone
+        collection.version = tree.docinfo.xml_version
+        return collection
+
+    def decode(self, fp: TextIO) -> BioCCollection:
+        """
+        Deserialize ``fp`` to a BioC collection object.
+
+        Args:
+            fp: a ``.read()``-supporting file-like object containing a BioC collection
+
+        Returns:
+            an object of BioCollection
+        """
+        # utf8_parser = etree.XMLParser(encoding='utf-8')
+        tree = etree.parse(fp)
+        collection = self.__parse_collection(tree.getroot())
+        collection.encoding = tree.docinfo.encoding
+        collection.standalone = tree.docinfo.standalone
+        collection.version = tree.docinfo.xml_version
+        return collection
+
+    def __parse_collection(self, tree):
+        collection = BioCCollection()
+        collection.source = tree.findtext('source')
+        collection.date = tree.findtext('date')
+        collection.key = tree.findtext('key')
+        collection.infons = self.__parse_infons(tree)
+        for child in tree.findall('document'):
+            collection.add_document(self.__parse_document(child))
+        return collection
+
+    def __parse_document(self, tree):
+        document = BioCDocument()
+        document.id = tree.findtext('id')
+        document.infons = self.__parse_infons(tree)
+        for child in tree.findall('passage'):
+            document.add_passage(self.__parse_passage(child))
+        for child in tree.findall('annotation'):
+            document.add_annotation(self.__parse_annotation(child))
+        for child in tree.findall('relation'):
+            document.add_relation(self.__parse_relation(child))
+        return document
+
+    def __parse_passage(self, tree):
+        passage = BioCPassage()
+        passage.offset = int(tree.findtext('offset'))
+        passage.infons = self.__parse_infons(tree)
+        if tree.find('text') is not None:
+            passage.text = tree.findtext('text')
+        for child in tree.findall('sentence'):
+            passage.add_sentence(self.__parse_sentence(child))
+        for child in tree.findall('annotation'):
+            passage.add_annotation(self.__parse_annotation(child))
+        for child in tree.findall('relation'):
+            passage.add_relation(self.__parse_relation(child))
+        return passage
+
+    def __parse_sentence(self, tree):
+        sentence = BioCSentence()
+        sentence.offset = int(tree.findtext('offset'))
+        sentence.text = tree.findtext('text')
+        sentence.infons = self.__parse_infons(tree)
+        for child in tree.findall('annotation'):
+            sentence.add_annotation(self.__parse_annotation(child))
+        for child in tree.findall('relation'):
+            sentence.add_relation(self.__parse_relation(child))
+        return sentence
+
+    def __parse_annotation(self, tree):
+        annotation = BioCAnnotation()
+        annotation.id = tree.attrib['id']
+        annotation.infons = self.__parse_infons(tree)
+        annotation.text = tree.findtext('text')
+        for child in tree.findall('location'):
+            annotation.add_location(
+                BioCLocation(int(child.attrib['offset']), int(child.attrib['length'])))
+        return annotation
+
+    def __parse_relation(self, tree):
+        relation = BioCRelation()
+        if 'id' in tree.attrib:
+            relation.id = tree.attrib['id']
+        relation.infons = self.__parse_infons(tree)
+        for child in tree.findall('node'):
+            relation.add_node(BioCNode(child.attrib['refid'], child.attrib['role']))
+        return relation
+
+    @classmethod
+    def __parse_infons(cls, tree):
+        return {child.attrib['key']: child.text for child in tree.findall('infon')}
+
+
+class BioCXMLDocumentReader(object):
+    def __init__(self, file):
+        if not isinstance(file, str):
+            file = str(file)
+        self.file = file
         self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
         self.__state = 0
         self.__read()
@@ -181,4 +285,38 @@ class BioCDecoderIter(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        return
+        self.close()
+
+    def close(self):
+        pass
+
+
+def load(fp) -> BioCCollection:
+    """
+    Deserialize ``fp`` to a BioC collection object.
+
+    Args:
+        fp: a ``.read()``-supporting file-like object containing a BioC collection
+
+    Returns:
+         a object of BioCollection
+    """
+    return BioCDecoder().decode(fp)
+
+
+def loads(s: str) -> BioCCollection:
+    """
+    Deserialize ``s`` to a BioC collection object.
+
+    Args:
+        s: a ``str`` instance containing a BioC collection
+
+    Returns:
+        an object of BioCollection
+    """
+    return BioCDecoder().decodes(s)
+
+
+def read_xml(file):
+    with open(file) as fp:
+        return load(fp)

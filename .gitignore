@@ -72,23 +72,23 @@ target/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
-# .idea/workspace.xml
-# .idea/tasks.xml
+# .idea/workspace.biocxml
+# .idea/tasks.biocxml
 # .idea/dictionaries
 
 # Sensitive or high-churn files:
 # .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
+# .idea/dataSources.biocxml
+# .idea/sqlDataSources.biocxml
+# .idea/dynamic.biocxml
+# .idea/uiDesigner.biocxml
 
 # Gradle:
-# .idea/gradle.xml
+# .idea/gradle.biocxml
 # .idea/libraries
 
 # Mongo Explorer plugin:
-# .idea/mongoSettings.xml
+# .idea/mongoSettings.biocxml
 
 ## File-based project format:
 *.ipr
