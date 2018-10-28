@@ -103,10 +103,32 @@ def loads(s, **kwargs):
     return parse_collection(obj)
 
 
-# class BioCJsonReader(object):
-#     def __init__(self, file, level):
-#         self.reader = jsonlines.open(file)
-#         self.level = level
-#
-#     def __iter__(self):
-#
+class BioCJsonDecoderIter(object):
+    def __init__(self, file, level):
+        if level not in {bioc.DOCUMENT, bioc.PASSAGE, bioc.SENTENCE}:
+            raise ValueError('Unrecognized level: %s' % level)
+
+        self.reader = jsonlines.open(file)
+        self.reader_iter = iter(self.reader)
+        self.level = level
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        obj = next(self.reader_iter)
+        if self.level == bioc.DOCUMENT:
+            return parse_doc(obj)
+        elif self.level == bioc.PASSAGE:
+            return parse_passage(obj)
+        elif self.level == bioc.SENTENCE:
+            return parse_sentence(obj)
+
+    def close(self):
+        self.reader.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()

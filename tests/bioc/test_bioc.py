@@ -1,28 +1,30 @@
-import tempfile
-
 import os
-import pytest
-from .utils import assert_everything
-from ..context import bioc
+import tempfile
+from pathlib import Path
 
-src = os.path.join(os.path.dirname(__file__), 'everything.xml')
+import pytest
+
+import bioc
+from tests.utils import assert_everything
+
+file = Path(__file__).parent / 'everything.xml'
 
 
 def test_load():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
     assert_everything(collection)
 
 
 def test_loads():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         s = fp.read()
     collection = bioc.loads(s)
     assert_everything(collection)
 
 
 def test_dump():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
     tmp = tempfile.NamedTemporaryFile()
     with open(tmp.name, 'w', encoding='utf8') as fp:
@@ -33,7 +35,7 @@ def test_dump():
 
 
 def test_dumps():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
     s = bioc.dumps(collection)
     collection = bioc.loads(s)
@@ -41,7 +43,7 @@ def test_dumps():
 
 
 def test_validate():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
     bioc.validate(collection)
 

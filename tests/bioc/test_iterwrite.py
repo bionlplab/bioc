@@ -1,14 +1,13 @@
 import tempfile
+from pathlib import Path
 
-import os
-
-from .utils import assert_everything
-from ..context import bioc
+import bioc
+from tests.utils import assert_everything
 
 
 def test_iterwrite():
-    src = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(src, encoding='utf8') as fp:
+    file = Path(__file__).parent / 'everything.xml'
+    with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
 
     tmp = tempfile.NamedTemporaryFile()

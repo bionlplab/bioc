@@ -1,39 +1,39 @@
 import tempfile
 from pathlib import Path
 
-import bioc
-from tests.bioc.utils import assert_everything
+import biocjson
+from tests.utils import assert_everything
 
-src = Path(__file__).parent / 'everything.json'
+file = Path(__file__).parent / 'everything.json'
 
 
 def test_load():
-    with open(src, encoding='utf8') as fp:
-        collection = bioc.jsonload(fp)
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
     assert_everything(collection)
 
 
 def test_loads():
-    with open(src, encoding='utf8') as fp:
+    with open(file, encoding='utf8') as fp:
         s = fp.read()
-    collection = bioc.jsonloads(s)
+    collection = biocjson.loads(s)
     assert_everything(collection)
 
 
 def test_dump():
-    with open(src, encoding='utf8') as fp:
-        collection = bioc.jsonload(fp)
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
     tmp = tempfile.NamedTemporaryFile()
     with open(tmp.name, 'w', encoding='utf8') as fp:
-        bioc.jsondump(collection, fp)
+        biocjson.dump(collection, fp)
     with open(tmp.name, encoding='utf8') as fp:
-        collection = bioc.jsonload(fp)
+        collection = biocjson.load(fp)
     assert_everything(collection)
 
 
 def test_dumps():
-    with open(src, encoding='utf8') as fp:
-        collection = bioc.jsonload(fp)
-    s = bioc.jsondumps(collection)
-    collection = bioc.jsonloads(s)
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
+    s = biocjson.dumps(collection)
+    collection = biocjson.loads(s)
     assert_everything(collection)

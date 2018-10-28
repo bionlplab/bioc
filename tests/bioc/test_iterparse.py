@@ -1,12 +1,12 @@
-import os
+from pathlib import Path
 
-from .utils import assert_everything
-from ..context import bioc
+import bioc
+from tests.utils import assert_everything
 
 
 def test_iterparse():
-    filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with bioc.iterparse(filename) as parser:
+    file = Path(__file__).parent / 'everything.xml'
+    with bioc.iterparse(file) as parser:
         collection = parser.get_collection_info()
         for document in parser:
             collection.add_document(document)

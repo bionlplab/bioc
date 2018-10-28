@@ -1,47 +1,69 @@
 import tempfile
-from copy import deepcopy
+import pytest
 from pathlib import Path
-
-import jsonlines
 
 import bioc
 import biocjson
-from tests.bioc.utils import assert_everything
+from tests.utils import assert_everything
 
-src = Path(__file__).parent / 'everything.json'
+file = Path(__file__).parent / 'everything.json'
 
 
-def test_iterparse():
-    with open(src, encoding='utf8') as fp:
-        collection = bioc.jsonload(fp)
+def test_document():
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
 
     tmp = tempfile.NamedTemporaryFile()
-    with biocjson.iterwrite(src) as writer:
+    with biocjson.iterwrite(tmp.name) as writer:
         for doc in collection.documents:
             writer.write(doc)
 
-    collection2 = deepcopy(collection)
-    del collection2.documents[:]
-    with biocjson.iterparse(src) as reader:
+    del collection.documents[:]
+    with pytest.raises(IndexError):
+        assert_everything(collection)
+
+    with biocjson.iterparse(tmp.name) as reader:
         for obj in reader:
-            collection2.add_document(obj)
+            collection.add_document(obj)
 
-    assert_everything(collection2)
+    assert_everything(collection)
 
 
-# def test_jsonlines():
-#     with open(src, encoding='utf8') as fp:
-#         collection = bioc.jsonload(fp)
-#
-#     tmp = tempfile.NamedTemporaryFile()
-#     with jsonlines.open(tmp.name, mode='w') as writer:
-#         for doc in collection.documents:
-#             writer.write(BioCJSONEncoder().default(doc))
-#
-#     collection2 = deepcopy(collection)
-#     del collection2.documents[:]
-#     with jsonlines.open(tmp.name) as reader:
-#         for obj in reader:
-#             doc = parse_doc(obj)
-#             collection2.add_document(doc)
-#     assert_everything(collection2)
+def test_passage():
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
+
+    tmp = tempfile.NamedTemporaryFile()
+    with biocjson.iterwrite(tmp.name, level=bioc.PASSAGE) as writer:
+        for p in collection.documents[0].passages:
+            writer.write(p)
+
+    del collection.documents[0].passages[:]
+    with pytest.raises(IndexError):
+        assert_everything(collection)
+
+    with biocjson.iterparse(tmp.name, level=bioc.PASSAGE) as reader:
+        for obj in reader:
+            collection.documents[0].add_passage(obj)
+
+    assert_everything(collection)
+
+
+def test_sentence():
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
+
+    tmp = tempfile.NamedTemporaryFile()
+    with biocjson.iterwrite(tmp.name, level=bioc.SENTENCE) as writer:
+        for s in collection.documents[1].passages[0].sentences:
+            writer.write(s)
+
+    del collection.documents[1].passages[0].sentences[:]
+    with pytest.raises(IndexError):
+        assert_everything(collection)
+
+    with biocjson.iterparse(tmp.name, level=bioc.SENTENCE) as reader:
+        for obj in reader:
+            collection.documents[1].passages[0].add_sentence(obj)
+
+    assert_everything(collection)

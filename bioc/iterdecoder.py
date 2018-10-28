@@ -34,21 +34,18 @@ class BioCDecoderIter(object):
         return self
 
     def __next__(self):
-        if self.__document is None:
-            raise StopIteration
-        else:
-            document = self.__document
-            self.__read()
-            return document
-
-    def next(self):
         """
         Reads one BioC document from the XML file.
 
         Returns:
             BioCDocument: the BioC document
         """
-        return self.__next__()
+        if self.__document is None:
+            raise StopIteration
+        else:
+            document = self.__document
+            self.__read()
+            return document
 
     def __read(self):
         while self.__has_next():
@@ -187,3 +184,9 @@ class BioCDecoderIter(object):
             BioCCollection: the BioC collection that contains only information
         """
         return self.__collection
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return

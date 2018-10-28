@@ -1,14 +1,16 @@
 import os
+from pathlib import Path
+
 import pytest
 
-from ..context import bioc
+import bioc
+
+file = Path(__file__).parent / 'everything.xml'
+with open(file, encoding='utf8') as fp:
+    collection = bioc.load(fp)
 
 
 def test_sentences():
-    filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename, encoding='utf8') as fp:
-        collection = bioc.load(fp)
-
     sentences = list(bioc.sentences(collection))
     assert 2 == len(sentences)
     assert 27 == sentences[0].offset
@@ -19,10 +21,6 @@ def test_sentences():
 
 
 def test_annotations():
-    filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename, encoding='utf8') as fp:
-        collection = bioc.load(fp)
-
     annotations = list(bioc.annotations(collection))
     assert 2 == len(annotations)
     assert '1' == annotations[0].id
@@ -38,10 +36,6 @@ def test_annotations():
 
 
 def test_relations():
-    filename = os.path.join(os.path.dirname(__file__), 'everything.xml')
-    with open(filename, encoding='utf8') as fp:
-        collection = bioc.load(fp)
-
     relations = list(bioc.relations(collection))
     assert 1 == len(relations)
     assert 'R1' == relations[0].id
