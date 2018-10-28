@@ -28,16 +28,10 @@ from .utils import (
     pretty_print
 )
 
-from .jsonencoder import dumps as jsondumps
-from .jsonencoder import dump as jsondump
-from .jsondecoder import load as jsonload
-from .jsondecoder import loads as jsonloads
-
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
-           'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'jsondumps', 'jsondump',
-           'jsonload', 'jsonloads', 'get_text', 'pretty_print']
+           'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'get_text', 'pretty_print']
 
 
 def dumps(collection, pretty_print=True):
@@ -118,14 +112,16 @@ def merge(dst, srcs):
         dump(collection, fp)
 
 
-@contextmanager
 def iterparse(file):
+    if not isinstance(file, str):
+        file = str(file)
     parser = BioCDecoderIter(file)
-    yield parser
+    return parser
 
 
-@contextmanager
 def iterwrite(file, collection=None):
+    if not isinstance(file, str):
+        file = str(file)
     writer = BioCEncoderIter(file, collection)
-    yield writer
-    writer.close()
+    return writer
+
