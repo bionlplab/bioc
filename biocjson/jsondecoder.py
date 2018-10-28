@@ -1,9 +1,11 @@
 import json
+
 import jsonlines
+
 import bioc
 
 
-def parse_collection(obj):
+def parse_collection(obj: dict) -> bioc.BioCCollection:
     collection = bioc.BioCCollection()
     collection.source = obj['source']
     collection.date = obj['date']
@@ -14,7 +16,7 @@ def parse_collection(obj):
     return collection
 
 
-def parse_annotation(obj):
+def parse_annotation(obj: dict) -> bioc.BioCAnnotation:
     ann = bioc.BioCAnnotation()
     ann.id = obj['id']
     ann.infons = obj['infons']
@@ -24,7 +26,7 @@ def parse_annotation(obj):
     return ann
 
 
-def parse_relation(obj):
+def parse_relation(obj: dict) -> bioc.BioCRelation:
     rel = bioc.BioCRelation()
     rel.id = obj['id']
     rel.infons = obj['infons']
@@ -33,7 +35,7 @@ def parse_relation(obj):
     return rel
 
 
-def parse_sentence(obj):
+def parse_sentence(obj: dict) -> bioc.BioCSentence:
     sentence = bioc.BioCSentence()
     sentence.offset = obj['offset']
     sentence.infons = obj['infons']
@@ -45,7 +47,7 @@ def parse_sentence(obj):
     return sentence
 
 
-def parse_passage(obj):
+def parse_passage(obj: dict) -> bioc.BioCPassage:
     passage = bioc.BioCPassage()
     passage.offset = obj['offset']
     passage.infons = obj['infons']
@@ -60,7 +62,7 @@ def parse_passage(obj):
     return passage
 
 
-def parse_doc(obj):
+def parse_doc(obj: dict) -> bioc.BioCDocument:
     doc = bioc.BioCDocument()
     doc.id = obj['id']
     doc.infons = obj['infons']
@@ -73,7 +75,7 @@ def parse_doc(obj):
     return doc
 
 
-def load(fp, **kwargs):
+def load(fp, **kwargs) -> bioc.BioCCollection:
     """
     Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to a BioCCollection object
 
@@ -88,7 +90,7 @@ def load(fp, **kwargs):
     return parse_collection(obj)
 
 
-def loads(s, **kwargs):
+def loads(s: str, **kwargs) -> bioc.BioCCollection:
     """
     Deserialize s (a str, bytes or bytearray instance containing a JSON document) to a BioCCollection object.
 
@@ -104,7 +106,7 @@ def loads(s, **kwargs):
 
 
 class BioCJsonDecoderIter(object):
-    def __init__(self, file, level):
+    def __init__(self, file: str, level: int):
         if level not in {bioc.DOCUMENT, bioc.PASSAGE, bioc.SENTENCE}:
             raise ValueError('Unrecognized level: %s' % level)
 

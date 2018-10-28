@@ -1,9 +1,14 @@
+from typing import Callable, List
+
+from bioc import BioCDocument, BioCCollection
+
+
 def default_error(msg, traceback):
     raise ValueError(msg)
 
 
 class BioCValidator(object):
-    def __init__(self, onerror=None):
+    def __init__(self, onerror: Callable[[str, List], None]=None):
         if onerror is None:
             self.onerror = default_error
         else:
@@ -11,7 +16,7 @@ class BioCValidator(object):
         self.current_docid = None
         self.traceback = []
 
-    def validate_doc(self, document):
+    def validate_doc(self, document: BioCDocument):
         annotations = []
         annotations.extend(document.annotations)
         annotations.extend(document.relations)
@@ -53,7 +58,7 @@ class BioCValidator(object):
             self.traceback.pop()
         self.traceback.pop()
 
-    def validate(self, collection):
+    def validate(self, collection: BioCCollection):
         for document in collection.documents:
             self.validate_doc(document)
 

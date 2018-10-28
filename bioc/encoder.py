@@ -1,25 +1,26 @@
 import lxml.etree as etree
+from bioc import BioCCollection
 
 
 class BioCEncoder(object):
-    def __init__(self, pretty_print=True):
+    def __init__(self, pretty_print: bool=True):
         """
         Constructor for BioCEncoder, with sensible defaults.
 
         Args:
-            pretty_print(boolean): enables formatted XML
+            pretty_print: enables formatted XML
         """
         self.pretty_print = pretty_print
 
-    def encode(self, collection):
+    def encode(self, collection: BioCCollection) -> str:
         """
         Return a BioC formatted string representation of a BioC collection structure.
 
         Args:
-            collection(BioCCollection): a BioC collection
+            collection: a BioC collection
 
         Returns:
-            str: a BioC formatted ``str``
+            a BioC formatted ``str``
         """
         doc = etree.ElementTree(BioCEncoder.to_element_tree(collection))
         s = etree.tostring(doc, pretty_print=self.pretty_print, encoding=collection.encoding,

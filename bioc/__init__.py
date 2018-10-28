@@ -1,66 +1,47 @@
-from contextlib import contextmanager
+from typing import List, TextIO, Callable
 
-from .bioc import (
-    BioCCollection,
-    BioCDocument,
-    BioCPassage,
-    BioCSentence,
-    BioCAnnotation,
-    BioCRelation,
-    BioCLocation,
-    BioCNode
-)
-from .decoder import BioCDecoder
-from .encoder import BioCEncoder
-from .iterdecoder import BioCDecoderIter
-from .iterencoder import BioCEncoderIter
-from .validator import BioCValidator
-from .biocitertools import (
-    PASSAGE,
-    SENTENCE,
-    DOCUMENT,
-    annotations,
-    relations,
-    sentences,
-)
-from .utils import (
-    get_text,
-    pretty_print
-)
-
+from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation, \
+    BioCLocation, BioCNode
+from bioc.biocitertools import PASSAGE, SENTENCE, DOCUMENT, annotations, relations, sentences
+from bioc.decoder import BioCDecoder
+from bioc.encoder import BioCEncoder
+from bioc.iterdecoder import BioCDecoderIter
+from bioc.iterencoder import BioCEncoderIter
+from bioc.utils import get_text, pretty_print
+from bioc.validator import BioCValidator
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
            'iterparse', 'merge', 'validate', 'iterwrite', 'annotations', 'sentences', 'get_text', 'pretty_print']
 
 
-def dumps(collection, pretty_print=True):
+def dumps(collection: BioCCollection, pretty_print: bool = True) -> str:
     """
     Serialize ``collection`` to a BioC formatted ``str``.
 
     Args:
-        collection (BioCollection): the BioC collection
-        pretty_print (boolean): enables formatted XML
+        collection: the BioC collection
+        pretty_print: enables formatted XML
 
     Returns:
-        str: a BioC formatted ``str``
+        a BioC formatted ``str``
     """
     return BioCEncoder(pretty_print=pretty_print).encode(collection)
 
 
-def dump(collection, fp, pretty_print=True):
+def dump(collection: BioCCollection, fp: TextIO, pretty_print: bool = True):
     """
     Serialize ``collection`` as a BioC formatted stream to ``fp``.
 
     Args:
-        collection (BioCollection): the BioC collection
+        collection: the BioC collection
         fp: a ``.write()``-supporting file-like object
-        pretty_print (boolean): enables formatted XML
+        pretty_print: enables formatted XML
     """
     fp.write(BioCEncoder(pretty_print=pretty_print).encode(collection))
 
 
-def load(fp):
+def load(fp: TextIO) -> BioCCollection:
     """
     Deserialize ``fp`` to a BioC collection object.
 
@@ -68,39 +49,38 @@ def load(fp):
         fp: a ``.read()``-supporting file-like object containing a BioC collection
 
     Returns:
-         BioCCollection: a object of BioCollection
+         a object of BioCollection
     """
     return BioCDecoder().decode(fp)
 
 
-def loads(s, encoding='UTF-8'):
+def loads(s: str) -> BioCCollection:
     """
     Deserialize ``s`` to a BioC collection object.
 
     Args:
-        s(str/bytes/bytearray): a ``str`` instance containing a BioC collection
-        encoding(str): The input encoding should be UTF-8, UTF-16 or UTF-32.
+        s: a ``str`` instance containing a BioC collection
 
     Returns:
-        BioCCollection: a object of BioCollection
+        an object of BioCollection
     """
     return BioCDecoder().decodes(s)
 
 
-def validate(collection, onerror=None):
+def validate(collection, onerror: Callable[[str, List], None] = None):
     BioCValidator(onerror).validate(collection)
 
 
-def merge(dst, srcs):
+def merge(output: str, *input: str):
     """
     Merge multiple BioC files into one.
 
     Args:
-        dst(str): output BioC file name
-        srcs(list): input BioC file names
+        output: output BioC file name
+        input: input BioC file names
     """
     collection = None
-    for src in srcs:
+    for src in input:
         with open(src) as fp:
             tmp = load(fp)
         if collection is None:
@@ -108,20 +88,19 @@ def merge(dst, srcs):
         else:
             for document in tmp.documents:
                 collection.add_document(document)
-    with open(dst, 'w') as fp:
+    with open(output, 'w') as fp:
         dump(collection, fp)
 
 
-def iterparse(file):
+def iterparse(file) -> BioCDecoderIter:
     if not isinstance(file, str):
         file = str(file)
     parser = BioCDecoderIter(file)
     return parser
 
 
-def iterwrite(file, collection=None):
+def iterwrite(file, collection=None) -> BioCEncoderIter:
     if not isinstance(file, str):
         file = str(file)
     writer = BioCEncoderIter(file, collection)
     return writer
-

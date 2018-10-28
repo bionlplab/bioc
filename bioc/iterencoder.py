@@ -1,6 +1,6 @@
 import lxml.etree as etree
-from .bioc import BioCCollection
-from .encoder import encode_infon, encode_document
+from bioc import BioCCollection, BioCDocument
+from bioc.encoder import encode_infon, encode_document
 
 
 class BioCEncoderIter(object):
@@ -17,13 +17,13 @@ class BioCEncoderIter(object):
                 except GeneratorExit:
                     pass
 
-    def __init__(self, name, collection=None):
+    def __init__(self, name: str, collection: BioCCollection=None):
         """
         Returns an object of the BioCEncoderIter which can write an BioC file
         incrementally at document level.
 
         Args:
-            name(str): file name to be decode
+            name: file name to be decode
         """
 
         self.file = name
@@ -52,7 +52,7 @@ class BioCEncoderIter(object):
     def close(self):
         self.w.close()
 
-    def writedocument(self, document):
+    def writedocument(self, document: BioCDocument):
         tree = encode_document(document)
         self.w.send(tree)
 

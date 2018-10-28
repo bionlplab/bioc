@@ -32,6 +32,9 @@ Installing ``bioc``
 
     $ pip install bioc
 
+XML
+~~~
+
 Encoding the BioC collection object ``collection``:
 
 .. code:: python
@@ -64,13 +67,13 @@ Decoding the BioC XML file:
 
 .. code:: python
 
-    import json
+    import bioc
     # Deserialize ``s`` to a BioC collection object.
     collection = bioc.loads(s)
 
     # Deserialize ``fp`` to a BioC collection object.
     with open(filename, 'r') as fp:
-        bioc.load(fp)
+        collection = bioc.load(fp)
 
 Incrementally decoding the BioC XML file:
 
@@ -83,7 +86,7 @@ Incrementally decoding the BioC XML file:
             # process document
             ...
 
-`get_collection_info` can be called after the construction of the `iterparse` anytime.
+``get_collection_info`` can be called after the construction of the ``iterparse`` anytime.
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
@@ -97,11 +100,67 @@ Together with Python coroutines, this can be used to generate BioC XML in an asy
                 ...
                 writer.writedocument(document)
 
+Json
+~~~~
+
+Encoding the BioC collection object ``collection``:
+
+.. code:: python
+
+    import biocjson
+    # Serialize ``collection`` to a BioC Json formatted ``str``.
+    biocjson.dumps(collection, indent=2)
+
+    # Serialize ``collection`` as a BioC Json formatted stream to ``fp``.
+    with open(filename, 'w') as fp
+        biocjson.dump(collection, fp, indent=2)
+
+Compact encoding:
+
+.. code:: python
+
+    import biocjson
+    biocjson.dumps(collection)
+
+Decoding the BioC Json file:
+
+.. code:: python
+
+    import biocjson
+    # Deserialize ``s`` to a BioC collection object.
+    collection = biocjson.loads(s)
+
+    # Deserialize ``fp`` to a BioC collection object.
+    with open(filename, 'r') as fp:
+        collection = biocjson.load(fp)
+
+Json Lines
+~~~~~~~~~~
+
+Incrementally encoding the BioC structure:
+
+.. code:: python
+
+    with biocjson.iterparse(filename, level=bioc.PASSAGE) as reader:
+        for passage in reader:
+            # process passage
+            ...
+
+Incrementally decoding the BioC Json lines file:
+
+.. code:: python
+
+    with biocjson.iterwrite(filename, level=bioc.PASSAGE) as writer:
+        for doc in collection.documents:
+             for passage in doc.passages:
+                 writer.write(passage)
+
 
 Requirements
 ------------
 
 -  lxml (http://lxml.de)
+-  jsonlines
 
 Developers
 ----------
