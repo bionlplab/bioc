@@ -126,7 +126,7 @@ def iterparse(file: str) -> Generator[BioCDecoderIter, None, None]:
 
 
 @contextmanager
-def iterwrite(file: str, collection=None) -> Generator[BioCEncoderIter, None, None]:
+def iterwrite(file: str, collection: BioCCollection=None) -> Generator[BioCEncoderIter, None, None]:
     writer = BioCEncoderIter(file, collection)
     yield writer
     writer.close()

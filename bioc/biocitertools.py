@@ -62,14 +62,14 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
 
 
 def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
-              docid=None, level=PASSAGE) -> Generator[BioCRelation, None, None]:
+              docid: str=None, level: int=PASSAGE) -> Generator[BioCRelation, None, None]:
     """
     Get all relations in document id.
 
     Args:
         obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
-        docid(str): document id. If None, all documents
-        level(int): one of DOCUMENT, PASSAGE, SENTENCE
+        docid: document id. If None, all documents
+        level: one of DOCUMENT, PASSAGE, SENTENCE
 
     Yields:
         one relation

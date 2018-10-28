@@ -1,3 +1,5 @@
+from typing import Callable, List
+
 from .bioc import BioCDocument, BioCCollection
 
 
@@ -6,7 +8,7 @@ def default_error(msg, traceback):
 
 
 class BioCValidator(object):
-    def __init__(self, onerror=None):
+    def __init__(self, onerror: Callable[[str, List], None]=None):
         if onerror is None:
             self.onerror = default_error
         else:

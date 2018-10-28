@@ -3,7 +3,7 @@ from .bioc import BioCCollection
 
 
 class BioCEncoder(object):
-    def __init__(self, pretty_print=True):
+    def __init__(self, pretty_print: bool=True):
         """
         Constructor for BioCEncoder, with sensible defaults.
 

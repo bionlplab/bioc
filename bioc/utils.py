@@ -8,7 +8,7 @@ from .bioc import (
 )
 
 
-def fill_char(text: str, offset: int, char='\n') -> str:
+def fill_char(text: str, offset: int, char: str='\n') -> str:
     dis = offset - len(text)
     if dis < 0:
         raise ValueError
