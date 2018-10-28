@@ -1,5 +1,5 @@
 import json
-
+import jsonlines
 import bioc
 
 
@@ -101,3 +101,12 @@ def loads(s, **kwargs):
     """
     obj = json.loads(s, **kwargs)
     return parse_collection(obj)
+
+
+# class BioCJsonReader(object):
+#     def __init__(self, file, level):
+#         self.reader = jsonlines.open(file)
+#         self.level = level
+#
+#     def __iter__(self):
+#

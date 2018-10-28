@@ -7,20 +7,20 @@ from tests.bioc.utils import assert_everything
 src = Path(__file__).parent / 'everything.json'
 
 
-def test_jsonload():
+def test_load():
     with open(src, encoding='utf8') as fp:
         collection = bioc.jsonload(fp)
     assert_everything(collection)
 
 
-def test_jsonloads():
+def test_loads():
     with open(src, encoding='utf8') as fp:
         s = fp.read()
     collection = bioc.jsonloads(s)
     assert_everything(collection)
 
 
-def test_jsondump():
+def test_dump():
     with open(src, encoding='utf8') as fp:
         collection = bioc.jsonload(fp)
     tmp = tempfile.NamedTemporaryFile()
@@ -31,7 +31,7 @@ def test_jsondump():
     assert_everything(collection)
 
 
-def test_jsondumps():
+def test_dumps():
     with open(src, encoding='utf8') as fp:
         collection = bioc.jsonload(fp)
     s = bioc.jsondumps(collection)
