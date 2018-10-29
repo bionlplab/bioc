@@ -2,9 +2,8 @@ from typing import Generator
 
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation
 
-DOCUMENT = 1
-PASSAGE = 2
-SENTENCE = 3
+
+from bioc.constants import PASSAGE, DOCUMENT, SENTENCE
 
 
 def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
@@ -22,32 +21,26 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
     """
     if isinstance(obj, BioCCollection):
         for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
-            for ann in annotations(document, level=level):
-                yield ann
+            yield from annotations(document, level=level)
     elif isinstance(obj, BioCDocument):
         if level == DOCUMENT:
-            for ann in obj.annotations:
-                yield ann
+            yield from obj.annotations
         elif level == PASSAGE or level == SENTENCE:
             for passage in obj.passages:
-                for ann in annotations(passage, level=level):
-                    yield ann
+                yield from annotations(passage, level=level)
         else:
             raise ValueError('level must be DOCUMENT, PASSAGE, or SENTENCE')
     elif isinstance(obj, BioCPassage):
         if level == PASSAGE:
-            for ann in obj.annotations:
-                yield ann
+            yield from obj.annotations
         elif level == SENTENCE:
             for sentence in obj.sentences:
-                for ann in annotations(sentence, level=level):
-                    yield ann
+                yield from annotations(sentence, level=level)
         else:
-            raise ValueError('level must be SENTENCE')
+            raise ValueError('level must be PASSAGE or SENTENCE')
     elif isinstance(obj, BioCSentence):
         if level == SENTENCE:
-            for ann in obj.annotations:
-                yield ann
+            yield from obj.annotations
         else:
             raise ValueError('level must be SENTENCE')
     else:
@@ -69,32 +62,26 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
     """
     if isinstance(obj, BioCCollection):
         for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
-            for rel in relations(document, level=level):
-                yield rel
+            yield from relations(document, level=level)
     elif isinstance(obj, BioCDocument):
         if level == DOCUMENT:
-            for rel in obj.relations:
-                yield rel
+            yield from obj.relations
         elif level == PASSAGE or level == SENTENCE:
             for passage in obj.passages:
-                for rel in relations(passage, level=level):
-                    yield rel
+                yield from relations(passage, level=level)
         else:
             raise ValueError('level must be DOCUMENT, PASSAGE, or SENTENCE')
     elif isinstance(obj, BioCPassage):
         if level == PASSAGE:
-            for rel in obj.relations:
-                yield rel
+            yield from obj.relations
         elif level == SENTENCE:
             for sentence in obj.sentences:
-                for rel in relations(sentence, level=level):
-                    yield rel
+                yield from relations(sentence, level=level)
         else:
-            raise ValueError('level must be SENTENCE')
+            raise ValueError('level must be PASSAGE or SENTENCE')
     elif isinstance(obj, BioCSentence):
         if level == SENTENCE:
-            for rel in obj.relations:
-                yield rel
+            yield from obj.relations
         else:
             raise ValueError('level must be SENTENCE')
     else:
@@ -114,14 +101,11 @@ def sentences(obj: BioCCollection or BioCDocument or BioCPassage) \
     """
     if isinstance(obj, BioCCollection):
         for document in obj.documents:
-            for sentence in sentences(document):
-                yield sentence
+            yield from sentences(document)
     elif isinstance(obj, BioCDocument):
         for passage in obj.passages:
-            for sentence in sentences(passage):
-                yield sentence
+            yield from sentences(passage)
     elif isinstance(obj, BioCPassage):
-        for sentence in obj.sentences:
-            yield sentence
+        yield from obj.sentences
     else:
         raise ValueError('obj must be BioCCollection, BioCDocument, or BioCPassage')

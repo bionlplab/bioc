@@ -67,7 +67,21 @@
           ]
         }
       ],
-      "annotations": [],
+      "annotations": [
+        {
+          "id": "5",
+          "infons": {
+            "annotation-infon-key": "annotation-infon-value"
+          },
+          "text": "fg",
+          "locations": [
+            {
+              "offset": 5,
+              "length": 2
+            }
+          ]
+        }
+      ],
       "relations": [
         {
           "id": "R2",

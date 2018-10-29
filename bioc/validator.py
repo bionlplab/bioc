@@ -34,8 +34,8 @@ class BioCValidator(object):
         self.__validate_ann(document.annotations, text, 0)
         for relation in document.relations:
             for node in relation.nodes:
-                assert self.__contains(annotations, node.refid), \
-                    'Cannot find node %s in document %s' % (str(node), document.id)
+                if not self.__contains(annotations, node.refid):
+                    self.onerror('Cannot find node %s in document %s' % (str(node), document.id), self.traceback)
 
         for passage in document.passages:
             self.traceback.append(passage)
@@ -44,16 +44,17 @@ class BioCValidator(object):
             self.__validate_ann(passage.annotations, text, passage.offset)
             for relation in passage.relations:
                 for node in relation.nodes:
-                    assert self.__contains(annotations, node.refid), \
-                        'Cannot find node %s in document %s' % (str(node), document.id)
+                    if not self.__contains(annotations, node.refid):
+                        self.onerror('Cannot find node %s in document %s' % (str(node), document.id), self.traceback)
 
             for sentence in passage.sentences:
                 self.traceback.append(sentence)
                 self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
                 for relation in sentence.relations:
                     for node in relation.nodes:
-                        assert self.__contains(annotations, node.refid), \
-                            'Cannot find node %s document %s' % (str(node), document.id)
+                        if not self.__contains(annotations, node.refid):
+                            self.onerror('Cannot find node %s in document %s' % (str(node), document.id),
+                                         self.traceback)
                 self.traceback.pop()
             self.traceback.pop()
         self.traceback.pop()
@@ -112,3 +113,7 @@ class BioCValidator(object):
             text = self.__fill_newline(text, passage.offset)
             text += self.__get_passage_text(passage)
         return text
+
+
+def validate(collection, onerror: Callable[[str, List], None] = None):
+    BioCValidator(onerror).validate(collection)

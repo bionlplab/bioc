@@ -59,9 +59,10 @@ Incremental BioC serialisation:
 .. code:: python
 
     import bioc
-    with bioc.iterwrite(filename, collection) as writer:
+    with bioc.BioCXMLDocumentWriter(filename) as writer:
+        writer.write_collection_info(collection)
         for document in collection.documents:
-            writer.writedocument(document)
+            writer.write_document(document)
 
 Decoding the BioC XML file:
 
@@ -80,9 +81,9 @@ Incrementally decoding the BioC XML file:
 .. code:: python
 
     import bioc
-    with bioc.iterparse(filename) as parser:
+    with bioc.BioCXMLDocumentReader(filename) as reader:
         collection_info = parser.get_collection_info()
-        for document in parser:
+        for document in reader:
             # process document
             ...
 
@@ -141,20 +142,21 @@ Incrementally encoding the BioC structure:
 
 .. code:: python
 
-    with biocjson.iterparse(filename, level=bioc.PASSAGE) as reader:
-        for passage in reader:
-            # process passage
-            ...
+    from bioc.biocjson import BioCJsonIterWriter
+    with BioCJsonIterWriter(filename, level=bioc.PASSAGE) as writer:
+        for doc in collection.documents:
+             for passage in doc.passages:
+                 writer.write(passage)
 
 Incrementally decoding the BioC Json lines file:
 
 .. code:: python
 
-    with biocjson.iterwrite(filename, level=bioc.PASSAGE) as writer:
-        for doc in collection.documents:
-             for passage in doc.passages:
-                 writer.write(passage)
-
+    from bioc.biocjson import BioCJsonIterReader
+    with BioCJsonIterReader(filename, level=bioc.PASSAGE) as reader:
+        for passage in reader:
+            # process passage
+            ...
 
 Requirements
 ------------
