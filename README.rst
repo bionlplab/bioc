@@ -22,7 +22,7 @@
    :target: https://opensource.org/licenses/BSD-3-Clause
 
 
-`BioC XML format <http://bioc.sourceforge.net/>`_ can be used to share
+`BioC XML / JSON format <http://bioc.sourceforge.net/>`_ can be used to share
 text documents and annotations.
 
 ``bioc`` exposes an API familiar to users of the standard library
