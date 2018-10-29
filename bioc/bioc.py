@@ -7,7 +7,7 @@ import time
 class InfonsMaxin(object):
     def __init__(self):
         super(InfonsMaxin, self).__init__()
-        self.infons = dict()
+        self.infons = {}
 
     def clear_infons(self):
         """
@@ -97,7 +97,7 @@ class BioCAnnotation(InfonsMaxin):
 
     def __init__(self):
         super(BioCAnnotation, self).__init__()
-        self.locations = list()
+        self.locations = []
         self.id = ''
         self.text = ''
 
@@ -120,20 +120,14 @@ class BioCAnnotation(InfonsMaxin):
         return s
 
     def __repr__(self):
-        s = 'BioCAnnotation['
-        s += 'id=%s,' % self.id
-        s += 'text=%s,' % self.text
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
-        s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
-        s += ']'
-        return s
+        return str(self)
 
     @property
     def total_span(self) -> BioCLocation:
         if len(self.locations) <= 0:
             raise ValueError('BioCAnnotation must have at least one location')
-        start = min((l.offset for l in self.locations))
-        end = max((l.offset + l.length for l in self.locations))
+        start = min(l.offset for l in self.locations)
+        end = max(l.end for l in self.locations)
         return BioCLocation(start, end - start)
 
     def __contains__(self, annotation):
@@ -152,7 +146,7 @@ class BioCRelation(InfonsMaxin):
     def __init__(self):
         super(BioCRelation, self).__init__()
         self.id = ''
-        self.nodes = list()
+        self.nodes = []
 
     def __str__(self):
         s = 'BioCRelation['
@@ -191,8 +185,8 @@ class BioCRelation(InfonsMaxin):
 class AnnotationMixin(object):
     def __init__(self):
         super(AnnotationMixin, self).__init__()
-        self.annotations = list()
-        self.relations = list()
+        self.annotations = []
+        self.relations = []
 
     def add_annotation(self, annotation: BioCAnnotation):
         """
@@ -252,14 +246,7 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
         return s
 
     def __repr__(self):
-        s = 'BioCSentence['
-        s += 'offset=%s,' % self.offset
-        s += 'text=%s,' % self.text
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
-        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
-        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
-        s += ']'
-        return s
+        return str(self)
 
 
 class BioCPassage(AnnotationMixin, InfonsMaxin):
@@ -279,7 +266,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
 
     def __str__(self):
         s = 'BioCPassage['
-        s += 'offset=%s,' % self.offset
+        s += 'offset=%d,' % self.offset
         if self.text is not None:
             s += 'text=%s,' % _shorten_text(self.text)
         s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
@@ -290,16 +277,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
         return s
 
     def __repr__(self):
-        s = 'BioCPassage['
-        s += 'offset=%s,' % self.offset
-        if self.text is not None:
-            s += 'text=%s,' % self.text
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
-        s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
-        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
-        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
-        s += ']'
-        return s
+        return str(self)
 
     def add_sentence(self, sentence: BioCSentence):
         """

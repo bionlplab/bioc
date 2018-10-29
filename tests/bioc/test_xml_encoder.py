@@ -11,10 +11,10 @@ file = Path(__file__).parent / 'everything.xml'
 def test_dump():
     with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
-    tmp = tempfile.NamedTemporaryFile()
-    with open(tmp.name, 'w', encoding='utf8') as fp:
+    tmp = tempfile.mktemp()
+    with open(tmp, 'w', encoding='utf8') as fp:
         bioc.dump(collection, fp)
-    with open(tmp.name, encoding='utf8') as fp:
+    with open(tmp, encoding='utf8') as fp:
         collection = bioc.load(fp)
     assert_everything(collection)
 

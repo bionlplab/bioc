@@ -52,11 +52,13 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
         raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
 
 
-def pretty_print(source: str, dest: str):
+def pretty_print(source, dest):
     """
     Pretty print the XML file
     """
     parser = etree.XMLParser(remove_blank_text=True)
+    if not isinstance(source, str):
+        source = str(source)
     tree = etree.parse(source, parser)
     docinfo = tree.docinfo
     with open(dest, 'wb') as fp:

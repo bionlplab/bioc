@@ -37,7 +37,7 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
             for sentence in obj.sentences:
                 yield from annotations(sentence, level=level)
         else:
-            raise ValueError('level must be SENTENCE')
+            raise ValueError('level must be PASSAGE or SENTENCE')
     elif isinstance(obj, BioCSentence):
         if level == SENTENCE:
             yield from obj.annotations
@@ -78,7 +78,7 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
             for sentence in obj.sentences:
                 yield from relations(sentence, level=level)
         else:
-            raise ValueError('level must be SENTENCE')
+            raise ValueError('level must be PASSAGE or SENTENCE')
     elif isinstance(obj, BioCSentence):
         if level == SENTENCE:
             yield from obj.relations

@@ -315,8 +315,3 @@ def loads(s: str) -> BioCCollection:
         an object of BioCollection
     """
     return BioCDecoder().decodes(s)
-
-
-def read_xml(file):
-    with open(file) as fp:
-        return load(fp)
