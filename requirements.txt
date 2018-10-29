@@ -3,3 +3,4 @@ docutils
 pytest
 jsonlines
 coveralls
+pytest-cov
