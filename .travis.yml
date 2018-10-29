@@ -6,7 +6,7 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - pytest --cov=bioc
+  - py.test --cov=bioc/
 # coverage
 after_success:
   - coveralls
