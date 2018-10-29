@@ -9,6 +9,14 @@
    :target: https://pypi.python.org/pypi/bioc
    :alt: Latest version on PyPI
 
+.. image:: https://img.shields.io/pypi/dm/bioc.svg
+   :alt: Downloads
+   :target: https://pypi.python.org/pypi/bioc
+   
+.. image:: https://coveralls.io/repos/github/yfpeng/bioc/badge.svg?branch=master
+   :alt: Coverage
+   :target: https://pypi.python.org/pypi/bioc
+
 .. image:: https://img.shields.io/pypi/l/bioc.svg
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
