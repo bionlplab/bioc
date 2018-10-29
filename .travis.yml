@@ -7,6 +7,9 @@ install:
 # command to run tests
 script:
   - py.test
+# coverage
+after_success:
+  - coveralls
 
 notifications:
   email:
