@@ -94,6 +94,8 @@ class BioCXMLEncoder():
             for d in obj.documents:
                 tree.append(self.default(d))
             return tree
+        else:
+            raise ValueError
 
     @staticmethod
     def encode_infon(tree, infons):
@@ -104,7 +106,7 @@ class BioCXMLEncoder():
 
 
 class BioCXMLDocumentWriter(object):
-    def __init__(self, file, encoding='utf8', standalone=True, **kwargs):
+    def __init__(self, file, encoding='utf8', standalone=True):
         self.encoding = encoding
         self.standalone = standalone
         self.file = file

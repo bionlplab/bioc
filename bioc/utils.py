@@ -17,10 +17,10 @@ def fill_char(text: str, offset: int, char: str = '\n') -> str:
 def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str]:
     """
     Return text with its offset in the document
-    
+
     Args:
         obj: BioCDocument, BioCPassage, or BioCSentence
-    
+
     Returns:
         offset, text
     """
@@ -29,16 +29,15 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
     elif isinstance(obj, BioCPassage):
         if obj.text:
             return obj.offset, obj.text
-        else:
-            text = ''
-            for sentence in obj.sentences:
-                try:
-                    text = fill_char(text, sentence.offset - obj.offset, ' ')
-                    assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
-                    text += sentence.text
-                except:
-                    raise ValueError('Overlapping sentences %d' % (sentence.offset))
-            return obj.offset, text
+        text = ''
+        for sentence in obj.sentences:
+            try:
+                text = fill_char(text, sentence.offset - obj.offset, ' ')
+                assert sentence.text, 'BioC sentence has no text: {}'.format(sentence.offset)
+                text += sentence.text
+            except:
+                raise ValueError('Overlapping sentences %d' % (sentence.offset))
+        return obj.offset, text
     elif isinstance(obj, BioCDocument):
         text = ''
         for passage in obj.passages:

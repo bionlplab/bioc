@@ -1,8 +1,10 @@
 import json
 
 import jsonlines
-from bioc.bioc import *
-from bioc.constants import *
+
+from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, BioCLocation, BioCPassage, \
+    BioCDocument
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: dict) -> BioCCollection:
@@ -125,6 +127,8 @@ class BioCJsonIterReader(object):
             return parse_passage(obj)
         elif self.level == SENTENCE:
             return parse_sentence(obj)
+        else:
+            raise ValueError
 
     def close(self):
         self.reader.close()
@@ -134,5 +138,3 @@ class BioCJsonIterReader(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
-
-
