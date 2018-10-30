@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import pytest
@@ -31,8 +30,22 @@ def test_annotations():
     assert '3' == annotations[0].id
     assert '4' == annotations[1].id
 
+    annotations = list(bioc.annotations(collection, level=bioc.DOCUMENT))
+    assert 1 == len(annotations)
+    assert '5' == annotations[0].id
+
     with pytest.raises(ValueError):
         next(bioc.annotations('Foo'))
+
+    with pytest.raises(ValueError):
+        next(bioc.annotations(collection, level=-1))
+
+    with pytest.raises(ValueError):
+        next(bioc.annotations(collection.documents[0].passages[0], level=bioc.DOCUMENT))
+
+    with pytest.raises(ValueError):
+        next(bioc.annotations(collection.documents[1].passages[0].sentences[0], level=bioc.DOCUMENT))
+        next(bioc.annotations(collection.documents[1].passages[0].sentences[0], level=bioc.PASSAGE))
 
 
 def test_relations():
@@ -50,3 +63,14 @@ def test_relations():
 
     with pytest.raises(ValueError):
         next(bioc.relations('Foo'))
+
+    with pytest.raises(ValueError):
+        next(bioc.relations(collection, level=-1))
+
+    with pytest.raises(ValueError):
+        next(bioc.relations(collection.documents[0].passages[0], level=bioc.DOCUMENT))
+
+    with pytest.raises(ValueError):
+        next(bioc.relations(collection.documents[1].passages[0].sentences[0], level=bioc.DOCUMENT))
+        next(bioc.relations(collection.documents[1].passages[0].sentences[0], level=bioc.PASSAGE))
+
