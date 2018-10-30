@@ -3,8 +3,8 @@ from typing import TextIO
 
 import lxml.etree as etree
 
-from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation, \
-    BioCLocation, BioCNode
+from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+    BioCRelation, BioCLocation, BioCNode
 
 
 class BioCXMLDecoder(object):

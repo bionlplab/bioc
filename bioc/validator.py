@@ -44,7 +44,8 @@ class BioCValidator(object):
         for relation in document.relations:
             for node in relation.nodes:
                 if not self.__contains(annotations, node.refid):
-                    self.onerror('Cannot find node %s in document %s' % (str(node), document.id), self.traceback)
+                    self.onerror(f'Cannot find node {node} in document {document.id}',
+                                 self.traceback)
 
         for passage in document.passages:
             self.traceback.append(passage)
@@ -54,7 +55,8 @@ class BioCValidator(object):
             for relation in passage.relations:
                 for node in relation.nodes:
                     if not self.__contains(annotations, node.refid):
-                        self.onerror('Cannot find node %s in document %s' % (str(node), document.id), self.traceback)
+                        self.onerror(f'Cannot find node {node} in document {document.id}',
+                                     self.traceback)
 
             for sentence in passage.sentences:
                 self.traceback.append(sentence)
@@ -62,7 +64,7 @@ class BioCValidator(object):
                 for relation in sentence.relations:
                     for node in relation.nodes:
                         if not self.__contains(annotations, node.refid):
-                            self.onerror('Cannot find node %s in document %s' % (str(node), document.id),
+                            self.onerror(f'Cannot find node {node} in document {document.id}',
                                          self.traceback)
                 self.traceback.pop()
             self.traceback.pop()
@@ -115,7 +117,7 @@ class BioCValidator(object):
                 text += sentence.text
             else:
                 self.onerror(
-                    '%s: BioC sentence has no text: %s' % (self.current_docid, sentence.offset),
+                    f'{self.current_docid}: BioC sentence has no text: {sentence.offset}',
                     self.traceback)
             self.traceback.pop()
         return text

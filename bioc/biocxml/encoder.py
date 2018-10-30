@@ -1,6 +1,7 @@
 import lxml.etree as etree
-from bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation, BioCAnnotation, BioCSentence, \
-    BioCPassage
+
+from bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation, \
+    BioCAnnotation, BioCSentence, BioCPassage
 
 
 def dump(collection: BioCCollection, fp, pretty_print: bool = True):
@@ -27,82 +28,132 @@ def dumps(collection: BioCCollection, pretty_print: bool = True) -> str:
         a BioC formatted ``str``
     """
     doc = etree.ElementTree(BioCXMLEncoder().default(collection))
-    s = etree.tostring(doc, pretty_print=pretty_print, encoding=collection.encoding, standalone=collection.standalone)
+    s = etree.tostring(doc, pretty_print=pretty_print, encoding=collection.encoding,
+                       standalone=collection.standalone)
     return s.decode(collection.encoding)
 
 
-class BioCXMLEncoder():
-    def default(self, obj):
-        if isinstance(obj, BioCLocation):
-            return etree.Element('location', {'offset': str(obj.offset), 'length': str(obj.length)})
-        elif isinstance(obj, BioCNode):
-            return etree.Element('node', {'refid': obj.refid, 'role': obj.role})
-        elif isinstance(obj, BioCRelation):
-            tree = etree.Element('relation', {'id': obj.id})
-            self.encode_infon(tree, obj.infons)
-            for n in obj.nodes:
-                tree.append(self.default(n))
-            return tree
-        elif isinstance(obj, BioCAnnotation):
-            tree = etree.Element('annotation', {'id': obj.id})
-            self.encode_infon(tree, obj.infons)
-            for l in obj.locations:
-                tree.append(self.default(l))
-            etree.SubElement(tree, 'text').text = obj.text
-            return tree
-        elif isinstance(obj, BioCSentence):
-            tree = etree.Element('sentence')
-            self.encode_infon(tree, obj.infons)
-            etree.SubElement(tree, 'offset').text = str(obj.offset)
-            if obj.text:
-                etree.SubElement(tree, 'text').text = obj.text
-            for a in obj.annotations:
-                tree.append(self.default(a))
-            for r in obj.relations:
-                tree.append(self.default(r))
-            return tree
-        elif isinstance(obj, BioCPassage):
-            tree = etree.Element('passage')
-            self.encode_infon(tree, obj.infons)
-            etree.SubElement(tree, 'offset').text = str(obj.offset)
-            if obj.text:
-                etree.SubElement(tree, 'text').text = obj.text
-            for s in obj.sentences:
-                tree.append(self.default(s))
-            for a in obj.annotations:
-                tree.append(self.default(a))
-            for r in obj.relations:
-                tree.append(self.default(r))
-            return tree
-        elif isinstance(obj, BioCDocument):
-            tree = etree.Element('document')
-            etree.SubElement(tree, 'id').text = obj.id
-            self.encode_infon(tree, obj.infons)
-            for p in obj.passages:
-                tree.append(self.default(p))
-            for a in obj.annotations:
-                tree.append(self.default(a))
-            for r in obj.relations:
-                tree.append(self.default(r))
-            return tree
-        elif isinstance(obj, BioCCollection):
-            tree = etree.Element('collection')
-            etree.SubElement(tree, 'source').text = obj.source
-            etree.SubElement(tree, 'date').text = obj.date
-            etree.SubElement(tree, 'key').text = obj.key
-            self.encode_infon(tree, obj.infons)
-            for d in obj.documents:
-                tree.append(self.default(d))
-            return tree
-        else:
-            raise ValueError
+def encode_location(obj):
+    return etree.Element('location', {'offset': str(obj.offset), 'length': str(obj.length)})
 
-    @staticmethod
-    def encode_infon(tree, infons):
-        for k, v in infons.items():
-            elem = etree.Element('infon', {'key': str(k)})
-            elem.text = str(v)
-            tree.append(elem)
+
+def encode_node(obj):
+    return etree.Element('node', {'refid': obj.refid, 'role': obj.role})
+
+
+def encode_relation(obj):
+    tree = etree.Element('relation', {'id': obj.id})
+    encode_infons(tree, obj.infons)
+    for n in obj.nodes:
+        tree.append(encode_node(n))
+    return tree
+
+
+def encode_infons(tree, infons):
+    for k, v in infons.items():
+        elem = encode_infon(k, v)
+        tree.append(elem)
+
+
+def encode_infon(k, v):
+    elem = etree.Element('infon', {'key': str(k)})
+    elem.text = str(v)
+    return elem
+
+
+def encode_annotation(obj):
+    tree = etree.Element('annotation', {'id': obj.id})
+    encode_infons(tree, obj.infons)
+    for l in obj.locations:
+        tree.append(encode_location(l))
+    etree.SubElement(tree, 'text').text = obj.text
+    return tree
+
+
+def encode_sentence(obj):
+    tree = etree.Element('sentence')
+    encode_infons(tree, obj.infons)
+    etree.SubElement(tree, 'offset').text = str(obj.offset)
+    if obj.text:
+        etree.SubElement(tree, 'text').text = obj.text
+    for a in obj.annotations:
+        tree.append(encode_annotation(a))
+    for r in obj.relations:
+        tree.append(encode_relation(r))
+    return tree
+
+
+def encode_passage(obj):
+    tree = etree.Element('passage')
+    encode_infons(tree, obj.infons)
+    etree.SubElement(tree, 'offset').text = str(obj.offset)
+    if obj.text:
+        etree.SubElement(tree, 'text').text = obj.text
+    for s in obj.sentences:
+        tree.append(encode_sentence(s))
+    for a in obj.annotations:
+        tree.append(encode_annotation(a))
+    for r in obj.relations:
+        tree.append(encode_relation(r))
+    return tree
+
+
+def encode_document(obj):
+    tree = etree.Element('document')
+    etree.SubElement(tree, 'id').text = obj.id
+    encode_infons(tree, obj.infons)
+    for p in obj.passages:
+        tree.append(encode_passage(p))
+    for a in obj.annotations:
+        tree.append(encode_annotation(a))
+    for r in obj.relations:
+        tree.append(encode_relation(r))
+    return tree
+
+
+def encode_collection(obj):
+    tree = etree.Element('collection')
+    etree.SubElement(tree, 'source').text = obj.source
+    etree.SubElement(tree, 'date').text = obj.date
+    etree.SubElement(tree, 'key').text = obj.key
+    encode_infons(tree, obj.infons)
+    for d in obj.documents:
+        tree.append(encode_document(d))
+    return tree
+
+
+class BioCXMLEncoder(object):
+    """
+    Extensible BioC XML encoder for BioC data structures.
+
+    To extend this to recognize other objects, subclass and implement a ``.default()`` method
+    with another method that returns an XML tree for ``o`` if possible, otherwise it should
+    call the superclass implementation.
+    """
+
+    def default(self, obj):
+        """Implement this method in a subclass such that it returns a tree for ``o``."""
+        if isinstance(obj, BioCLocation):
+            return encode_location(obj)
+        elif isinstance(obj, BioCNode):
+            return encode_node(obj)
+        elif isinstance(obj, BioCRelation):
+            return encode_relation(obj)
+        elif isinstance(obj, BioCAnnotation):
+            return encode_annotation(obj)
+        elif isinstance(obj, BioCSentence):
+            return encode_sentence(obj)
+        elif isinstance(obj, BioCPassage):
+            return encode_passage(obj)
+        elif isinstance(obj, BioCDocument):
+            return encode_document(obj)
+        elif isinstance(obj, BioCCollection):
+            return encode_collection(obj)
+        else:
+            raise TypeError(f'Object of type {obj.__class__.__name__} is not BioC XML serializable')
+
+    def encode(self, o):
+        return self.default(o)
 
 
 class BioCXMLDocumentWriter(object):

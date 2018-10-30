@@ -1,8 +1,7 @@
 from typing import Generator
 
-from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation
-
-
+from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+    BioCRelation
 from bioc.constants import PASSAGE, DOCUMENT, SENTENCE
 
 
@@ -44,7 +43,8 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
         else:
             raise ValueError('level must be SENTENCE')
     else:
-        raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
+        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
+                        f'BioCDocument, BioCPassage, or BioCSentence')
 
 
 def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
@@ -85,7 +85,8 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
         else:
             raise ValueError('level must be SENTENCE')
     else:
-        raise ValueError('obj must be BioCCollection, BioCDocument, BioCPassage, or BioCSentence')
+        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
+                        f'BioCDocument, BioCPassage, or BioCSentence')
 
 
 def sentences(obj: BioCCollection or BioCDocument or BioCPassage) \
@@ -108,4 +109,5 @@ def sentences(obj: BioCCollection or BioCDocument or BioCPassage) \
     elif isinstance(obj, BioCPassage):
         yield from obj.sentences
     else:
-        raise ValueError('obj must be BioCCollection, BioCDocument, or BioCPassage')
+        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
+                        f'BioCDocument, BioCPassage, or BioCSentence')

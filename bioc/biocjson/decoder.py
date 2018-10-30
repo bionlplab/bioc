@@ -2,8 +2,8 @@ import json
 
 import jsonlines
 
-from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, BioCLocation, BioCPassage, \
-    BioCDocument
+from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
+    BioCLocation, BioCPassage, BioCDocument
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
@@ -79,7 +79,8 @@ def parse_doc(obj: dict) -> BioCDocument:
 
 def load(fp, **kwargs) -> BioCCollection:
     """
-    Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to a BioCCollection object
+    Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to
+    a BioCCollection object
 
     Args:
         fp: a file containing a JSON document
@@ -94,7 +95,8 @@ def load(fp, **kwargs) -> BioCCollection:
 
 def loads(s: str, **kwargs) -> BioCCollection:
     """
-    Deserialize s (a str, bytes or bytearray instance containing a JSON document) to a BioCCollection object.
+    Deserialize s (a str, bytes or bytearray instance containing a JSON document) to
+    a BioCCollection object.
 
     Args:
         s(str):
@@ -110,7 +112,7 @@ def loads(s: str, **kwargs) -> BioCCollection:
 class BioCJsonIterReader(object):
     def __init__(self, file: str, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError('Unrecognized level: %s' % level)
+            raise ValueError(f'Unrecognized level: {level}')
 
         self.reader = jsonlines.open(file)
         self.reader_iter = iter(self.reader)

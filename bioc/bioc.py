@@ -25,7 +25,8 @@ class BioCNode(object):
         """
         Args:
             refid: the id of an annotated object or another relation
-            role: the role of how the referenced annotation or other relation participates in the current relation
+            role: the role of how the referenced annotation or other relation participates in
+            the current relation
         """
         self.refid = refid
         self.role = role

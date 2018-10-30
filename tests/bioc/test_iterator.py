@@ -15,7 +15,7 @@ def test_sentences():
     assert 27 == sentences[0].offset
     assert 34 == sentences[1].offset
 
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         next(bioc.sentences('Foo'))
 
 
@@ -34,7 +34,7 @@ def test_annotations():
     assert 1 == len(annotations)
     assert '5' == annotations[0].id
 
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         next(bioc.annotations('Foo'))
 
     with pytest.raises(ValueError):
@@ -61,7 +61,7 @@ def test_relations():
     assert 1 == len(relations)
     assert 'R2' == relations[0].id
 
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         next(bioc.relations('Foo'))
 
     with pytest.raises(ValueError):

@@ -2,8 +2,8 @@ import json
 
 import jsonlines
 
-from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, BioCSentence, BioCCollection, \
-    BioCDocument
+from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
+    BioCSentence, BioCCollection, BioCDocument
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
@@ -85,7 +85,7 @@ class BioCJSONEncoder(json.JSONEncoder):
 class BioCJsonIterWriter(object):
     def __init__(self, file, level):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError('Unrecognized level: %s' % level)
+            raise ValueError(f'Unrecognized level: {level}')
 
         self.writer = jsonlines.open(file, 'w')
         self.level = level
