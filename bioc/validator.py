@@ -1,16 +1,25 @@
+"""
+Validate BioC data structure
+"""
 from typing import Callable, List
 
-from bioc import BioCDocument, BioCCollection
+from bioc.bioc import BioCDocument, BioCCollection
 
 
-def default_error(msg, traceback):
+# pylint: disable=unused-argument
+def _default_error(msg, traceback):
+    """Default error handler that accepts two parameters: error message and traceback."""
     raise ValueError(msg)
 
 
 class BioCValidator(object):
-    def __init__(self, onerror: Callable[[str, List], None]=None):
+    """
+    Validate BioC data structure
+    """
+
+    def __init__(self, onerror: Callable[[str, List], None] = None):
         if onerror is None:
-            self.onerror = default_error
+            self.onerror = _default_error
         else:
             self.onerror = onerror
         self.current_docid = None
@@ -68,9 +77,12 @@ class BioCValidator(object):
             location = ann.total_span
             anntext = text[location.offset - offset: location.offset + location.length - offset]
             if anntext != ann.text:
-                self.onerror('%s: Annotation text is incorrect at %d.\n  Annotation: %s\n  Actual text: %s' %
-                             (self.current_docid, location.offset, anntext, ann.text),
-                             self.traceback)
+                self.onerror(
+                    '%s: Annotation text is incorrect at %d.\n'
+                    '  Annotation: %s\n'
+                    '  Actual text: %s' %
+                    (self.current_docid, location.offset, anntext, ann.text),
+                    self.traceback)
             self.traceback.pop()
 
     @classmethod
@@ -101,8 +113,9 @@ class BioCValidator(object):
             if sentence.text:
                 text += sentence.text
             else:
-                self.onerror('%s: BioC sentence has no text: {}'.format(self.current_docid, sentence.offset),
-                             self.traceback)
+                self.onerror(
+                    '%s: BioC sentence has no text: %s' % (self.current_docid, sentence.offset),
+                    self.traceback)
             self.traceback.pop()
         return text
 
