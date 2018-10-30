@@ -7,7 +7,7 @@ from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAn
     BioCLocation, BioCNode
 
 
-class BioCDecoder(object):
+class BioCXMLDecoder(object):
     def __init__(self):
         pass
 
@@ -124,6 +124,8 @@ class BioCXMLDocumentReader(object):
         self.file = file
         self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
         self.__state = 0
+        self.__event = None
+        self.__elem = None
         self.__read()
 
     def __iter__(self):
@@ -301,7 +303,7 @@ def load(fp) -> BioCCollection:
     Returns:
          a object of BioCollection
     """
-    return BioCDecoder().decode(fp)
+    return BioCXMLDecoder().decode(fp)
 
 
 def loads(s: str) -> BioCCollection:
@@ -314,4 +316,4 @@ def loads(s: str) -> BioCCollection:
     Returns:
         an object of BioCollection
     """
-    return BioCDecoder().decodes(s)
+    return BioCXMLDecoder().decodes(s)
