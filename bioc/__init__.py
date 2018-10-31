@@ -1,6 +1,8 @@
-
-from .bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, BioCRelation, \
-    BioCLocation, BioCNode
+"""
+BioC data structures and encoder/decoder for Python
+"""
+from .bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+    BioCRelation, BioCLocation, BioCNode
 from .biocitertools import annotations, relations, sentences
 from .biocxml import load, loads, BioCXMLDocumentReader, dumps, dump, BioCXMLDocumentWriter
 from .constants import PASSAGE, SENTENCE, DOCUMENT

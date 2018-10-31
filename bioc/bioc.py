@@ -4,7 +4,7 @@ Data structures and code to read/write BioC XML.
 import time
 
 
-class InfonsMaxin(object):
+class InfonsMaxin:
     def __init__(self):
         super(InfonsMaxin, self).__init__()
         self.infons = {}
@@ -16,7 +16,7 @@ class InfonsMaxin(object):
         self.infons.clear()
 
 
-class BioCNode(object):
+class BioCNode:
     """
     The annotations and/or other relations in the relation.
     """
@@ -32,7 +32,7 @@ class BioCNode(object):
         self.role = role
 
     def __str__(self):
-        return 'BioCNode[refid=%s,role=%s]' % (self.refid, self.role)
+        return f'BioCNode[refid={self.refid},role={self.role}]'
 
     def __repr__(self):
         return str(self)
@@ -49,7 +49,7 @@ class BioCNode(object):
         return hash((self.refid, self.role))
 
 
-class BioCLocation(object):
+class BioCLocation:
     """
     The connection to the original text can be made through the offset and length fields.
     """
@@ -64,7 +64,7 @@ class BioCLocation(object):
         self.length = length
 
     def __str__(self):
-        return 'BioCLocation[offset=%s,length=%s]' % (self.offset, self.length)
+        return f'BioCLocation[offset={self.offset},length={self.length}]'
 
     def __repr__(self):
         return str(self)
@@ -79,7 +79,7 @@ class BioCLocation(object):
 
     def __contains__(self, location):
         if not isinstance(location, BioCLocation):
-            raise TypeError('%s is not an instance of BioCLocation' % type(location))
+            raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
         return self.offset <= location.offset \
                and location.offset + location.length <= self.offset + self.length
 
@@ -88,6 +88,7 @@ class BioCLocation(object):
 
     @property
     def end(self):
+        """The end offset of annotation"""
         return self.offset + self.length
 
 
@@ -125,7 +126,8 @@ class BioCAnnotation(InfonsMaxin):
 
     @property
     def total_span(self) -> BioCLocation:
-        if len(self.locations) <= 0:
+        """The total span of this annotation. Discontinued locations will be merged."""
+        if not self.locations:
             raise ValueError('BioCAnnotation must have at least one location')
         start = min(l.offset for l in self.locations)
         end = max(l.end for l in self.locations)
@@ -133,7 +135,7 @@ class BioCAnnotation(InfonsMaxin):
 
     def __contains__(self, annotation):
         if not isinstance(annotation, BioCAnnotation):
-            raise TypeError('%s is not an instance of BioCAnnotation' % type(annotation))
+            raise TypeError(f'Object of type {annotation.__class__.__name__} is not BioCAnnotation')
         loc1 = self.total_span
         loc2 = annotation.total_span
         return loc2 in loc1
@@ -183,7 +185,7 @@ class BioCRelation(InfonsMaxin):
         return next((node for node in self.nodes if node.role == role), default)
 
 
-class AnnotationMixin(object):
+class AnnotationMixin:
     def __init__(self):
         super(AnnotationMixin, self).__init__()
         self.annotations = []

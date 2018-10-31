@@ -1,3 +1,7 @@
+"""
+This module implements a number of iterator building blocks.
+"""
+
 from typing import Generator
 
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
@@ -24,7 +28,7 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
     elif isinstance(obj, BioCDocument):
         if level == DOCUMENT:
             yield from obj.annotations
-        elif level == PASSAGE or level == SENTENCE:
+        elif level in (PASSAGE, SENTENCE):
             for passage in obj.passages:
                 yield from annotations(passage, level=level)
         else:
@@ -66,7 +70,7 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
     elif isinstance(obj, BioCDocument):
         if level == DOCUMENT:
             yield from obj.relations
-        elif level == PASSAGE or level == SENTENCE:
+        elif level in (PASSAGE, SENTENCE):
             for passage in obj.passages:
                 yield from relations(passage, level=level)
         else:

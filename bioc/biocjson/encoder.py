@@ -1,3 +1,7 @@
+"""
+BioC JSON encoder
+"""
+
 import json
 
 import jsonlines
@@ -22,75 +26,92 @@ def dump(obj, fp, **kwargs):
 
 
 class BioCJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, BioCLocation):
+    """
+    Extensible BioC JSON encoder for BioC data structures.
+    """
+
+    def default(self, o):
+        if isinstance(o, BioCLocation):
             return {
-                'offset': obj.offset,
-                'length': obj.length,
+                'offset': o.offset,
+                'length': o.length,
             }
-        elif isinstance(obj, BioCAnnotation):
+        if isinstance(o, BioCAnnotation):
             return {
-                'id': obj.id,
-                'infons': obj.infons,
-                'text': obj.text,
-                'locations': [self.default(l) for l in obj.locations],
+                'id': o.id,
+                'infons': o.infons,
+                'text': o.text,
+                'locations': [self.default(l) for l in o.locations],
             }
-        elif isinstance(obj, BioCNode):
+        if isinstance(o, BioCNode):
             return {
-                'refid': obj.refid,
-                'role': obj.role,
+                'refid': o.refid,
+                'role': o.role,
             }
-        elif isinstance(obj, BioCRelation):
+        if isinstance(o, BioCRelation):
             return {
-                'id': obj.id,
-                'infons': obj.infons,
-                'nodes': [self.default(n) for n in obj.nodes]
+                'id': o.id,
+                'infons': o.infons,
+                'nodes': [self.default(n) for n in o.nodes]
             }
-        elif isinstance(obj, BioCSentence):
+        if isinstance(o, BioCSentence):
             return {
-                'offset': obj.offset,
-                'infons': obj.infons,
-                'text': obj.text,
-                'annotations': [self.default(a) for a in obj.annotations],
-                'relations': [self.default(r) for r in obj.relations],
+                'offset': o.offset,
+                'infons': o.infons,
+                'text': o.text,
+                'annotations': [self.default(a) for a in o.annotations],
+                'relations': [self.default(r) for r in o.relations],
             }
-        elif isinstance(obj, BioCPassage):
+        if isinstance(o, BioCPassage):
             return {
-                'offset': obj.offset,
-                'infons': obj.infons,
-                'text': obj.text,
-                'sentences': [self.default(s) for s in obj.sentences],
-                'annotations': [self.default(a) for a in obj.annotations],
-                'relations': [self.default(r) for r in obj.relations],
+                'offset': o.offset,
+                'infons': o.infons,
+                'text': o.text,
+                'sentences': [self.default(s) for s in o.sentences],
+                'annotations': [self.default(a) for a in o.annotations],
+                'relations': [self.default(r) for r in o.relations],
             }
-        elif isinstance(obj, BioCDocument):
+        if isinstance(o, BioCDocument):
             return {
-                'id': obj.id,
-                'infons': obj.infons,
-                'passages': [self.default(p) for p in obj.passages],
-                'annotations': [self.default(a) for a in obj.annotations],
-                'relations': [self.default(r) for r in obj.relations],
+                'id': o.id,
+                'infons': o.infons,
+                'passages': [self.default(p) for p in o.passages],
+                'annotations': [self.default(a) for a in o.annotations],
+                'relations': [self.default(r) for r in o.relations],
             }
-        elif isinstance(obj, BioCCollection):
+        if isinstance(o, BioCCollection):
             return {
-                'source': obj.source,
-                'date': obj.date,
-                'key': obj.key,
-                'infons': obj.infons,
-                'documents': [self.default(d) for d in obj.documents],
+                'source': o.source,
+                'date': o.date,
+                'key': o.key,
+                'infons': o.infons,
+                'documents': [self.default(d) for d in o.documents],
             }
-        return json.JSONEncoder.default(self, obj)
+        return json.JSONEncoder.default(self, o)
 
 
-class BioCJsonIterWriter(object):
-    def __init__(self, file, level):
+class BioCJsonIterWriter:
+    """
+    Writer for the json lines format.
+    """
+
+    def __init__(self, file, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
             raise ValueError(f'Unrecognized level: {level}')
 
         self.writer = jsonlines.open(file, 'w')
         self.level = level
 
-    def write(self, obj):
+    def write(self, obj: BioCDocument or BioCPassage or BioCSentence):
+        """
+        Encode and write a single object.
+
+        Args:
+            obj: an instance of BioCDocument, BioCPassage, or BioCSentence
+
+        Returns:
+
+        """
         if self.level == DOCUMENT and not isinstance(obj, BioCDocument):
             raise ValueError
         if self.level == PASSAGE and not isinstance(obj, BioCPassage):
@@ -100,6 +121,7 @@ class BioCJsonIterWriter(object):
         self.writer.write(BioCJSONEncoder().default(obj))
 
     def close(self):
+        """Close this writer"""
         self.writer.close()
 
     def __enter__(self):

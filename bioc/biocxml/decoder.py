@@ -1,13 +1,21 @@
+"""
+BioC XML decoder
+"""
+
 import io
 from typing import TextIO
 
-import lxml.etree as etree
+from lxml import etree
 
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation, BioCLocation, BioCNode
 
 
-class BioCXMLDecoder(object):
+class BioCXMLDecoder:
+    """
+    Reader for the BioC XML format.
+    """
+
     def __init__(self):
         pass
 
@@ -117,7 +125,11 @@ class BioCXMLDecoder(object):
         return {child.attrib['key']: child.text for child in tree.findall('infon')}
 
 
-class BioCXMLDocumentReader(object):
+class BioCXMLDocumentReader:
+    """
+    Reader for the BioC XML format, one document per iteration.
+    """
+
     def __init__(self, file):
         if not isinstance(file, str):
             file = str(file)
@@ -290,6 +302,7 @@ class BioCXMLDocumentReader(object):
         self.close()
 
     def close(self):
+        """Close this reader"""
         pass
 
 

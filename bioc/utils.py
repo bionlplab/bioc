@@ -1,12 +1,16 @@
+"""
+Utilities
+"""
 from typing import Tuple
 
-import lxml.etree as etree
+from lxml import etree
 
 from bioc import BioCDocument, BioCPassage, BioCSentence
 
 
-def fill_char(text: str, offset: int, char: str = '\n') -> str:
-    dis = offset - len(text)
+def pad_char(text: str, width: int, char: str = '\n') -> str:
+    """Pads a text until length width."""
+    dis = width - len(text)
     if dis < 0:
         raise ValueError
     if dis > 0:
@@ -25,31 +29,30 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
         offset, text
     """
     if isinstance(obj, BioCSentence):
-        return obj.offset, obj.text,
-    elif isinstance(obj, BioCPassage):
+        return obj.offset, obj.text
+    if isinstance(obj, BioCPassage):
         if obj.text:
             return obj.offset, obj.text
         text = ''
         for sentence in obj.sentences:
             try:
-                text = fill_char(text, sentence.offset - obj.offset, ' ')
+                text = pad_char(text, sentence.offset - obj.offset, ' ')
                 assert sentence.text, f'BioC sentence has no text: {sentence.offset}'
                 text += sentence.text
             except:
                 raise ValueError(f'Overlapping sentences {sentence.offset}')
         return obj.offset, text
-    elif isinstance(obj, BioCDocument):
+    if isinstance(obj, BioCDocument):
         text = ''
         for passage in obj.passages:
             try:
-                text = fill_char(text, passage.offset)
+                text = pad_char(text, passage.offset)
                 text += get_text(passage)[1]
             except:
                 raise ValueError(f'{obj.id}: overlapping passages {passage.offset}')
         return 0, text
-    else:
-        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
-                        f'BioCDocument, BioCPassage, or BioCSentence')
+    raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
+                    f'BioCDocument, BioCPassage, or BioCSentence')
 
 
 def pretty_print(source, dest):

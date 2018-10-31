@@ -12,7 +12,7 @@ def _default_error(msg, traceback):
     raise ValueError(msg)
 
 
-class BioCValidator(object):
+class BioCValidator():
     """
     Validate BioC data structure
     """
@@ -26,6 +26,7 @@ class BioCValidator(object):
         self.traceback = []
 
     def validate_doc(self, document: BioCDocument):
+        """Validate a single document."""
         annotations = []
         annotations.extend(document.annotations)
         annotations.extend(document.relations)
@@ -71,6 +72,7 @@ class BioCValidator(object):
         self.traceback.pop()
 
     def validate(self, collection: BioCCollection):
+        """Validate a single collection."""
         for document in collection.documents:
             self.validate_doc(document)
 
@@ -89,9 +91,9 @@ class BioCValidator(object):
             self.traceback.pop()
 
     @classmethod
-    def __contains(cls, annotations, id):
+    def __contains(cls, annotations, ann_id):
         for ann in annotations:
-            if ann.id == id:
+            if ann.id == ann_id:
                 return True
         return False
 
@@ -131,4 +133,5 @@ class BioCValidator(object):
 
 
 def validate(collection, onerror: Callable[[str, List], None] = None):
+    """Validate BioC data structure."""
     BioCValidator(onerror).validate(collection)

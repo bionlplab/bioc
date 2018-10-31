@@ -127,8 +127,8 @@ disable=print-statement,
         dict-items-not-iterating,
         dict-keys-not-iterating,
         dict-values-not-iterating,
-        missing-docstring,
-        invalid-name,
+        # missing-docstring,
+        # invalid-name,
         too-many-return-statements,
         too-many-branches,
         too-many-instance-attributes,
@@ -238,9 +238,13 @@ function-naming-style=snake_case
 good-names=i,
            j,
            k,
+           v,
            ex,
            Run,
-           _
+           _,
+           s,
+           fp,
+           id
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
@@ -302,7 +306,7 @@ indent-after-paren=4
 indent-string='    '
 
 # Maximum number of characters on a single line.
-max-line-length=120
+# max-line-length=120
 
 # Maximum number of lines in a module
 max-module-lines=1000

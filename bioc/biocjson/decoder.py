@@ -1,3 +1,7 @@
+"""
+BioC JSON decoder
+"""
+
 import json
 
 import jsonlines
@@ -8,6 +12,7 @@ from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: dict) -> BioCCollection:
+    """Deserialize a dict obj to a BioCCollection object"""
     collection = BioCCollection()
     collection.source = obj['source']
     collection.date = obj['date']
@@ -19,6 +24,7 @@ def parse_collection(obj: dict) -> BioCCollection:
 
 
 def parse_annotation(obj: dict) -> BioCAnnotation:
+    """Deserialize a dict obj to a BioCAnnotation object"""
     ann = BioCAnnotation()
     ann.id = obj['id']
     ann.infons = obj['infons']
@@ -29,6 +35,7 @@ def parse_annotation(obj: dict) -> BioCAnnotation:
 
 
 def parse_relation(obj: dict) -> BioCRelation:
+    """Deserialize a dict obj to a BioCRelation object"""
     rel = BioCRelation()
     rel.id = obj['id']
     rel.infons = obj['infons']
@@ -38,6 +45,7 @@ def parse_relation(obj: dict) -> BioCRelation:
 
 
 def parse_sentence(obj: dict) -> BioCSentence:
+    """Deserialize a dict obj to a BioCSentence object"""
     sentence = BioCSentence()
     sentence.offset = obj['offset']
     sentence.infons = obj['infons']
@@ -50,6 +58,7 @@ def parse_sentence(obj: dict) -> BioCSentence:
 
 
 def parse_passage(obj: dict) -> BioCPassage:
+    """Deserialize a dict obj to a BioCPassage object"""
     passage = BioCPassage()
     passage.offset = obj['offset']
     passage.infons = obj['infons']
@@ -65,6 +74,7 @@ def parse_passage(obj: dict) -> BioCPassage:
 
 
 def parse_doc(obj: dict) -> BioCDocument:
+    """Deserialize a dict obj to a BioCDocument object"""
     doc = BioCDocument()
     doc.id = obj['id']
     doc.infons = obj['infons']
@@ -109,7 +119,11 @@ def loads(s: str, **kwargs) -> BioCCollection:
     return parse_collection(obj)
 
 
-class BioCJsonIterReader(object):
+class BioCJsonIterReader:
+    """
+    Reader for the jsonlines format.
+    """
+
     def __init__(self, file: str, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
             raise ValueError(f'Unrecognized level: {level}')
@@ -125,14 +139,14 @@ class BioCJsonIterReader(object):
         obj = next(self.reader_iter)
         if self.level == DOCUMENT:
             return parse_doc(obj)
-        elif self.level == PASSAGE:
+        if self.level == PASSAGE:
             return parse_passage(obj)
-        elif self.level == SENTENCE:
+        if self.level == SENTENCE:
             return parse_sentence(obj)
-        else:
-            raise ValueError
+        raise ValueError
 
     def close(self):
+        """Close this reader"""
         self.reader.close()
 
     def __enter__(self):
