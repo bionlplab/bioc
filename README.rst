@@ -90,7 +90,7 @@ Incrementally decoding the BioC XML file:
 
     import bioc
     with bioc.BioCXMLDocumentReader(filename) as reader:
-        collection_info = parser.get_collection_info()
+        collection_info = reader.get_collection_info()
         for document in reader:
             # process document
             ...
@@ -104,7 +104,7 @@ Together with Python coroutines, this can be used to generate BioC XML in an asy
     import bioc
     with bioc.BioCXMLDocumentReader(source) as reader, \
          bioc.BioCXMLDocumentWriter(dest) as writer:
-        collection_info = parser.get_collection_info()
+        collection_info = reader.get_collection_info()
         writer.write_collection_info(collection_info)
         for document in reader:
             # modify the document
