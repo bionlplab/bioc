@@ -95,19 +95,21 @@ Incrementally decoding the BioC XML file:
             # process document
             ...
 
-``get_collection_info`` can be called after the construction of the ``iterparse`` anytime.
+``get_collection_info`` can be called after the construction of the ``BioCXMLDocumentReader`` anytime.
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
 .. code:: python
 
     import bioc
-    with bioc.iterparse(filename) as parser:
-        with bioc.iterwrite(dst, parser.get_collection_info()) as writer:
-            for document in parser:
-                # modify the document
-                ...
-                writer.writedocument(document)
+    with bioc.BioCXMLDocumentReader(source) as reader, \
+         bioc.BioCXMLDocumentWriter(dest) as writer:
+        collection_info = parser.get_collection_info()
+        writer.write_collection_info(collection_info)
+        for document in reader:
+            # modify the document
+            ...
+            writer.write_document(document)
 
 Json
 ~~~~
