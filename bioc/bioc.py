@@ -3,6 +3,8 @@ Data structures and code to read/write BioC XML.
 """
 import time
 
+from bioc.utils import shorten_text
+
 
 class InfonsMaxin:
     def __init__(self):
@@ -115,7 +117,7 @@ class BioCAnnotation(InfonsMaxin):
     def __str__(self):
         s = 'BioCAnnotation['
         s += 'id=%s,' % self.id
-        s += 'text=%s,' % _shorten_text(self.text)
+        s += 'text=%s,' % shorten_text(self.text)
         s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
         s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
         s += ']'
@@ -241,7 +243,7 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
     def __str__(self):
         s = 'BioCSentence['
         s += 'offset=%s,' % self.offset
-        s += 'text=%s,' % _shorten_text(self.text)
+        s += 'text=%s,' % shorten_text(self.text)
         s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
         s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
@@ -271,7 +273,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
         s = 'BioCPassage['
         s += 'offset=%d,' % self.offset
         if self.text is not None:
-            s += 'text=%s,' % _shorten_text(self.text)
+            s += 'text=%s,' % shorten_text(self.text)
         s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
         s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
         s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
@@ -401,11 +403,3 @@ class BioCCollection(InfonsMaxin):
 
     def __repr__(self):
         return str(self)
-
-
-def _shorten_text(text: str):
-    if len(text) <= 40:
-        text = text
-    else:
-        text = text[:17] + ' ... ' + text[-17:]
-    return repr(text)

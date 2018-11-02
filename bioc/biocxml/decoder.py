@@ -256,7 +256,7 @@ class BioCXMLDocumentReader:
                     ann.add_location(BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
                 elif elem.tag == 'annotation':
                     return ann
-        raise RuntimeError("should not reach here")
+        raise RuntimeError("should not reach here")  # pragma: no cover
 
     def __read_relation(self, start_elem):
         rel = BioCRelation()
@@ -272,7 +272,7 @@ class BioCXMLDocumentReader:
                     rel.add_node(BioCNode(elem.get('refid'), elem.get('role')))
                 if elem.tag == 'relation':
                     return rel
-        raise RuntimeError("should not reach here")
+        raise RuntimeError("should not reach here")  # pragma: no cover
 
     def __has_next(self):
         try:

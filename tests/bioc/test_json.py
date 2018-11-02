@@ -1,3 +1,4 @@
+import collections
 import tempfile
 from pathlib import Path
 
@@ -41,6 +42,12 @@ def test_dumps():
     s = biocjson.dumps(collection)
     collection = biocjson.loads(s)
     assert_everything(collection)
+
+
+def test_dump_other_type():
+    foo = collections.namedtuple('Foo', ['foo'])
+    with pytest.raises(TypeError):
+        biocjson.dumps(foo)
 
 
 def test_document():

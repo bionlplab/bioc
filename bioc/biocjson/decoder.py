@@ -143,7 +143,7 @@ class BioCJsonIterReader:
             return parse_passage(obj)
         if self.level == SENTENCE:
             return parse_sentence(obj)
-        raise ValueError
+        raise RuntimeError("should not reach here")  # pragma: no cover
 
     def close(self):
         """Close this reader"""
