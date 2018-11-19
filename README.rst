@@ -195,34 +195,13 @@ and related to BioC.
 -  http://bioc.sourceforge.net/
 
 
-In BibTex format
-----------------
-
-If you use bioc in your research, we suggest you cite this.
-
-.. code:: bibtex
-
-    @misc{tensorflow2015-whitepaper,
-      title={ {bioc}: BioC data structures and encoder/decoder for Python},
-      url={https://pypi.org/project/bioc/},
-      note={Software available from https://pypi.org/project/bioc/},
-      author={Yifan Peng},
-      year = {2014}
-    }
-
-
 Reference
 ---------
 
--  Comeau,D.C., Doğan,R.I., Ciccarese,P., Cohen,K.B., Krallinger,M.,
-   Leitner,F., Lu,Z., Peng,Y., Rinaldi,F., Torii,M., Valencia,V.,
-   Verspoor,K., Wiegers,T.C., Wu,C.H., Wilbur,W.J. (2013) BioC: A
-   minimalist approach to interoperability for biomedical text
-   processing. Database: The Journal of Biological Databases and
-   Curation.
+If you use bioc in your research, please cite the following paper:
+
 -  Peng,Y., Tudor,C., Torii,M., Wu,C.H., Vijay-Shanker,K. (2014) iSimp
    in BioC standard format: Enhancing the interoperability of a sentence
    simplification system. Database: The Journal of Biological Databases
    and Curation.
--  Marques,M., Rinaldi,F. (2013) PyBioC: a python implementation of the
-   BioC core. In Proceedings of BioCreative IV workshop.
+
