@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pytest
 
-import bioc
+from bioc import bioc, biocxml
 
 file = Path(__file__).parent / 'everything.xml'
 with open(file, encoding='utf8') as fp:
-    collection = bioc.load(fp)
+    collection = biocxml.load(fp)
 
 
 def test_BioCLocation():

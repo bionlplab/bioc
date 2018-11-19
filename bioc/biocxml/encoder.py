@@ -31,7 +31,7 @@ def dumps(collection: BioCCollection, pretty_print: bool = True) -> str:
     Returns:
         a BioC formatted ``str``
     """
-    doc = etree.ElementTree(BioCXMLEncoder().default(collection))
+    doc = etree.ElementTree(BioCXMLEncoder().encode(collection))
     s = etree.tostring(doc, pretty_print=pretty_print, encoding=collection.encoding,
                        standalone=collection.standalone)
     return s.decode(collection.encoding)
@@ -146,18 +146,6 @@ class BioCXMLEncoder:
 
     def default(self, obj):
         """Implement this method in a subclass such that it returns a tree for ``o``."""
-        if isinstance(obj, BioCLocation):
-            return encode_location(obj)
-        if isinstance(obj, BioCNode):
-            return encode_node(obj)
-        if isinstance(obj, BioCRelation):
-            return encode_relation(obj)
-        if isinstance(obj, BioCAnnotation):
-            return encode_annotation(obj)
-        if isinstance(obj, BioCSentence):
-            return encode_sentence(obj)
-        if isinstance(obj, BioCPassage):
-            return encode_passage(obj)
         if isinstance(obj, BioCDocument):
             return encode_document(obj)
         if isinstance(obj, BioCCollection):
@@ -222,7 +210,7 @@ class BioCXMLDocumentWriter:
 
     def write_document(self, document: BioCDocument):
         """Encode and write a single document."""
-        tree = self.encoder.default(document)
+        tree = self.encoder.encode(document)
         self.__writer.send(tree)
 
     def __enter__(self):

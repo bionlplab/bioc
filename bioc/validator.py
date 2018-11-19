@@ -42,31 +42,21 @@ class BioCValidator:
 
         text = self.__get_doc_text(document)
         self.__validate_ann(document.annotations, text, 0)
-        for relation in document.relations:
-            for node in relation.nodes:
-                if not self.__contains(annotations, node.refid):
-                    self.onerror(f'Cannot find node {node} in document {document.id}',
-                                 self.traceback)
+        self.__validate_rel(annotations, document.relations, f'document {document.id}')
 
         for passage in document.passages:
             self.traceback.append(passage)
 
             text = self.__get_passage_text(passage)
             self.__validate_ann(passage.annotations, text, passage.offset)
-            for relation in passage.relations:
-                for node in relation.nodes:
-                    if not self.__contains(annotations, node.refid):
-                        self.onerror(f'Cannot find node {node} in document {document.id}',
-                                     self.traceback)
+            self.__validate_rel(annotations, passage.relations,
+                                f'document {document.id} --> passage {passage.offset}')
 
             for sentence in passage.sentences:
                 self.traceback.append(sentence)
                 self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
-                for relation in sentence.relations:
-                    for node in relation.nodes:
-                        if not self.__contains(annotations, node.refid):
-                            self.onerror(f'Cannot find node {node} in document {document.id}',
-                                         self.traceback)
+                self.__validate_rel(annotations, sentence.relations,
+                                    f'document {document.id} --> sentence {sentence.offset}')
                 self.traceback.pop()
             self.traceback.pop()
         self.traceback.pop()
@@ -75,6 +65,12 @@ class BioCValidator:
         """Validate a single collection."""
         for document in collection.documents:
             self.validate_doc(document)
+
+    def __validate_rel(self, annotations, relations, path):
+        for relation in relations:
+            for node in relation.nodes:
+                if not self.__contains(annotations, node.refid):
+                    self.onerror(f'Cannot find node {node} in {path}', self.traceback)
 
     def __validate_ann(self, annotations, text, offset):
         for ann in annotations:

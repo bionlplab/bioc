@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 import bioc
+# import bioc.utils
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.xml'
@@ -40,3 +41,11 @@ def test_pretty_print():
     with open(tmp, encoding='utf8') as fp:
         collection = bioc.load(fp)
     assert_everything(collection)
+
+
+def test_shorten_text():
+    s = 'a' * 10
+    assert bioc.utils.shorten_text(s) == repr(s)
+
+    s = 'a' * 50
+    assert bioc.utils.shorten_text(s) == repr('a'*17 + ' ... ' + 'a'*17)

@@ -1,7 +1,10 @@
 import tempfile
 from pathlib import Path
 
+import pytest
+
 import bioc
+from bioc.biocxml.encoder import BioCXMLEncoder
 from tests.utils import assert_everything
 
 
@@ -41,3 +44,8 @@ def test_BioCXMLDocumentWriter():
         collection = bioc.load(fp)
 
     assert_everything(collection)
+
+
+def test_BioCXMLEncoder():
+    with pytest.raises(TypeError):
+        BioCXMLEncoder().encode(None)

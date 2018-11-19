@@ -5,7 +5,7 @@ from typing import Tuple
 
 from lxml import etree
 
-from bioc import BioCDocument, BioCPassage, BioCSentence
+# from bioc.bioc import BioCDocument, BioCPassage, BioCSentence
 
 
 def pad_char(text: str, width: int, char: str = '\n') -> str:
@@ -18,7 +18,7 @@ def pad_char(text: str, width: int, char: str = '\n') -> str:
     return text
 
 
-def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str]:
+def get_text(obj) -> Tuple[int, str]:
     """
     Return text with its offset in the document
 
@@ -28,6 +28,8 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
     Returns:
         offset, text
     """
+    from bioc.bioc import BioCDocument, BioCPassage, BioCSentence
+
     if isinstance(obj, BioCSentence):
         return obj.offset, obj.text
     if isinstance(obj, BioCPassage):
@@ -67,3 +69,12 @@ def pretty_print(source, dest):
     with open(dest, 'wb') as fp:
         fp.write(etree.tostring(tree, pretty_print=True,
                                 encoding=docinfo.encoding, standalone=docinfo.standalone))
+
+
+def shorten_text(text: str):
+    """Return a short repr of text if it is longer than 40"""
+    if len(text) <= 40:
+        text = text
+    else:
+        text = text[:17] + ' ... ' + text[-17:]
+    return repr(text)
