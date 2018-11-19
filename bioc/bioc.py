@@ -81,7 +81,7 @@ class BioCLocation:
         if not isinstance(location, BioCLocation):
             raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
         return self.offset <= location.offset \
-               and location.offset + location.length <= self.offset + self.length
+            and location.offset + location.length <= self.offset + self.length
 
     def __hash__(self):
         return hash((self.offset, self.length))

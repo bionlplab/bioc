@@ -39,7 +39,7 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
                 text = pad_char(text, sentence.offset - obj.offset, ' ')
                 assert sentence.text, f'BioC sentence has no text: {sentence.offset}'
                 text += sentence.text
-            except:
+            except ValueError:
                 raise ValueError(f'Overlapping sentences {sentence.offset}')
         return obj.offset, text
     if isinstance(obj, BioCDocument):
@@ -48,7 +48,7 @@ def get_text(obj: BioCDocument or BioCPassage or BioCSentence) -> Tuple[int, str
             try:
                 text = pad_char(text, passage.offset)
                 text += get_text(passage)[1]
-            except:
+            except ValueError:
                 raise ValueError(f'{obj.id}: overlapping passages {passage.offset}')
         return 0, text
     raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
