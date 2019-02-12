@@ -357,6 +357,20 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
                 return passage
         return None
 
+    @classmethod
+    def of(cls, *passages: BioCPassage):
+        """
+        Returns a collection passages
+        """
+        if len(passages) <= 0:
+            raise ValueError("There has to be at least one passage.")
+        c = BioCDocument()
+        for passage in passages:
+            if passage is None:
+                raise ValueError('Passage is None')
+            c.add_passage(passage)
+        return c
+
 
 class BioCCollection(InfonsMaxin):
     """
@@ -401,6 +415,20 @@ class BioCCollection(InfonsMaxin):
 
     def __repr__(self):
         return str(self)
+
+    @classmethod
+    def of(cls, *documents: BioCDocument):
+        """
+        Returns a collection documents
+        """
+        if len(documents) <= 0:
+            raise ValueError("There has to be at least one document.")
+        c = BioCCollection()
+        for document in documents:
+            if document is None:
+                raise ValueError('Document is None')
+            c.add_document(document)
+        return c
 
 
 def _shorten_text(text: str):
