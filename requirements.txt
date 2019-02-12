@@ -1,6 +1,6 @@
-lxml
-docutils
-pytest
-jsonlines
-coveralls
-pytest-cov
+lxml==4.3.1
+docutils==0.14
+pytest==4.2
+jsonlines==1.2.0
+coveralls==1.5.1
+pytest-cov==2.0
