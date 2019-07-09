@@ -4,8 +4,7 @@ BioC XML encoder
 
 from lxml import etree
 
-from bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation, \
-    BioCAnnotation, BioCSentence, BioCPassage
+from bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation
 
 
 def dump(collection: BioCCollection, fp, pretty_print: bool = True):
