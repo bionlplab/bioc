@@ -1,6 +1,7 @@
 """
 Data structures and code to read/write BioC XML.
 """
+import sys
 import time
 
 
@@ -114,9 +115,9 @@ class BioCAnnotation(InfonsMaxin):
 
     def __str__(self):
         s = 'BioCAnnotation['
-        s += 'id=%s,' % self.id
-        s += 'text=%s,' % _shorten_text(self.text)
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += f'id={self.id},'
+        s += f'text={_shorten_text(self.text)},'
+        s += 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
         s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
         s += ']'
         return s
@@ -128,7 +129,7 @@ class BioCAnnotation(InfonsMaxin):
     def total_span(self) -> BioCLocation:
         """The total span of this annotation. Discontinued locations will be merged."""
         if not self.locations:
-            raise ValueError('BioCAnnotation must have at least one location')
+            raise ValueError(f'{self.id}: annotation must have at least one location')
         start = min(l.offset for l in self.locations)
         end = max(l.end for l in self.locations)
         return BioCLocation(start, end - start)
@@ -306,6 +307,22 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
                 return sentence
         return None
 
+    @classmethod
+    def of(cls, *sentences: BioCSentence) -> 'BioCPassage':
+        """
+        Returns a passage containing the sentences
+        """
+        if len(sentences) <= 0:
+            raise ValueError("There has to be at least one sentence.")
+        p = BioCPassage()
+        p.offset = sys.maxsize
+        for sentence in sentences:
+            if sentence is None:
+                raise ValueError('Passage is None')
+            p.add_sentence(sentence)
+            p.offset = min(p.offset, sentence.offset)
+        return p
+
 
 class BioCDocument(AnnotationMixin, InfonsMaxin):
     """
@@ -358,9 +375,9 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
         return None
 
     @classmethod
-    def of(cls, *passages: BioCPassage):
+    def of(cls, *passages: BioCPassage) -> 'BioCDocument':
         """
-        Returns a collection passages
+        Returns a document containing the passages
         """
         if len(passages) <= 0:
             raise ValueError("There has to be at least one passage.")
@@ -417,9 +434,9 @@ class BioCCollection(InfonsMaxin):
         return str(self)
 
     @classmethod
-    def of(cls, *documents: BioCDocument):
+    def of(cls, *documents: BioCDocument) -> 'BioCCollection':
         """
-        Returns a collection documents
+        Returns a collection containing the documents
         """
         if len(documents) <= 0:
             raise ValueError("There has to be at least one document.")
