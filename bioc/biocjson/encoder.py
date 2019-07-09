@@ -3,7 +3,7 @@ BioC JSON encoder
 """
 
 import json
-from typing import Dict
+from typing import Dict, Union, TextIO
 
 import jsonlines
 
@@ -19,7 +19,7 @@ def dumps(obj, **kwargs) -> str:
     return json.dumps(obj, cls=BioCJSONEncoder, **kwargs)
 
 
-def dump(obj, fp, **kwargs):
+def dump(obj, fp: TextIO, **kwargs):
     """
     Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object)
     """
@@ -105,7 +105,7 @@ class BioCJsonIterWriter:
         self.level = level
         self.file = file
 
-    def write(self, obj: BioCDocument or BioCPassage or BioCSentence):
+    def write(self, obj: Union[BioCDocument, BioCPassage, BioCSentence]):
         """
         Encode and write a single object.
 

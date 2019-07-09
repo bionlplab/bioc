@@ -3,6 +3,7 @@ BioC JSON decoder
 """
 
 import json
+from typing import TextIO, Dict, Union
 
 import jsonlines
 
@@ -11,7 +12,7 @@ from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
-def parse_collection(obj: dict) -> BioCCollection:
+def parse_collection(obj: Dict) -> BioCCollection:
     """Deserialize a dict obj to a BioCCollection object"""
     collection = BioCCollection()
     collection.source = obj['source']
@@ -23,7 +24,7 @@ def parse_collection(obj: dict) -> BioCCollection:
     return collection
 
 
-def parse_annotation(obj: dict) -> BioCAnnotation:
+def parse_annotation(obj: Dict) -> BioCAnnotation:
     """Deserialize a dict obj to a BioCAnnotation object"""
     ann = BioCAnnotation()
     ann.id = obj['id']
@@ -34,7 +35,7 @@ def parse_annotation(obj: dict) -> BioCAnnotation:
     return ann
 
 
-def parse_relation(obj: dict) -> BioCRelation:
+def parse_relation(obj: Dict) -> BioCRelation:
     """Deserialize a dict obj to a BioCRelation object"""
     rel = BioCRelation()
     rel.id = obj['id']
@@ -44,7 +45,7 @@ def parse_relation(obj: dict) -> BioCRelation:
     return rel
 
 
-def parse_sentence(obj: dict) -> BioCSentence:
+def parse_sentence(obj: Dict) -> BioCSentence:
     """Deserialize a dict obj to a BioCSentence object"""
     sentence = BioCSentence()
     sentence.offset = obj['offset']
@@ -57,7 +58,7 @@ def parse_sentence(obj: dict) -> BioCSentence:
     return sentence
 
 
-def parse_passage(obj: dict) -> BioCPassage:
+def parse_passage(obj: Dict) -> BioCPassage:
     """Deserialize a dict obj to a BioCPassage object"""
     passage = BioCPassage()
     passage.offset = obj['offset']
@@ -73,7 +74,7 @@ def parse_passage(obj: dict) -> BioCPassage:
     return passage
 
 
-def parse_doc(obj: dict) -> BioCDocument:
+def parse_doc(obj: Dict) -> BioCDocument:
     """Deserialize a dict obj to a BioCDocument object"""
     doc = BioCDocument()
     doc.id = obj['id']
@@ -87,14 +88,14 @@ def parse_doc(obj: dict) -> BioCDocument:
     return doc
 
 
-def load(fp, **kwargs) -> BioCCollection:
+def load(fp: TextIO, **kwargs) -> BioCCollection:
     """
     Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to
     a BioCCollection object
 
     Args:
         fp: a file containing a JSON document
-        **kwargs:
+        **kwargs: arguments passed to json
 
     Returns:
         BioCCollection: a collection
@@ -119,12 +120,15 @@ def loads(s: str, **kwargs) -> BioCCollection:
     return parse_collection(obj)
 
 
-def fromJSON(o, level):
+def fromJSON(o, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
+    if level not in {DOCUMENT, PASSAGE, SENTENCE}:
+        raise ValueError(f'Unrecognized level {level}')
+
     if level == DOCUMENT:
         return parse_doc(o)
-    if level == PASSAGE:
+    elif level == PASSAGE:
         return parse_passage(o)
-    if level == SENTENCE:
+    elif level == SENTENCE:
         return parse_sentence(o)
     raise RuntimeError("should not reach here")  # pragma: no cover
 

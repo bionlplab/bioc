@@ -158,6 +158,17 @@ Incrementally encoding the BioC structure:
              for passage in doc.passages:
                  writer.write(passage)
 
+or
+
+.. code:: python
+
+    from bioc.biocjson import toJSON
+    import jsonlines
+    with jsonlines.open(filename, 'w') as writer:
+        for doc in collection.documents:
+             for passage in doc.passages:
+                 writer.write(toJSON(passage))
+
 Incrementally decoding the BioC Json lines file:
 
 .. code:: python
@@ -168,11 +179,16 @@ Incrementally decoding the BioC Json lines file:
             # process passage
             ...
 
-Requirements
-------------
+or
 
--  lxml (http://lxml.de)
--  jsonlines
+.. code:: python
+
+    from bioc.biocjson import fromJSON
+    import jsonlines
+    with jsonlines.open(filename) as reader:
+        for obj in reader:
+            passage = fromJSON(obj, level=bioc.PASSAGE)
+            ...
 
 Developers
 ----------

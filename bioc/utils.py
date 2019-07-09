@@ -5,7 +5,7 @@ from typing import Tuple
 
 from lxml import etree
 
-# from bioc.bioc import BioCDocument, BioCPassage, BioCSentence
+import bioc
 
 
 def pad_char(text: str, width: int, char: str = '\n') -> str:
@@ -32,7 +32,7 @@ def get_text(obj) -> Tuple[int, str]:
 
     if isinstance(obj, BioCSentence):
         return obj.offset, obj.text
-    if isinstance(obj, BioCPassage):
+    elif isinstance(obj, BioCPassage):
         if obj.text:
             return obj.offset, obj.text
         text = ''
@@ -44,7 +44,7 @@ def get_text(obj) -> Tuple[int, str]:
             except ValueError:
                 raise ValueError(f'Overlapping sentences {sentence.offset}')
         return obj.offset, text
-    if isinstance(obj, BioCDocument):
+    elif isinstance(obj, BioCDocument):
         text = ''
         for passage in obj.passages:
             try:
@@ -53,20 +53,21 @@ def get_text(obj) -> Tuple[int, str]:
             except ValueError:
                 raise ValueError(f'{obj.id}: overlapping passages {passage.offset}')
         return 0, text
-    raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
-                    f'BioCDocument, BioCPassage, or BioCSentence')
+    else:
+        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
+                        f'BioCDocument, BioCPassage, or BioCSentence')
 
 
-def pretty_print(source, dest):
+def pretty_print(src, dst):
     """
     Pretty print the XML file
     """
     parser = etree.XMLParser(remove_blank_text=True)
-    if not isinstance(source, str):
-        source = str(source)
-    tree = etree.parse(source, parser)
+    if not isinstance(src, str):
+        src = str(src)
+    tree = etree.parse(src, parser)
     docinfo = tree.docinfo
-    with open(dest, 'wb') as fp:
+    with open(dst, 'wb') as fp:
         fp.write(etree.tostring(tree, pretty_print=True,
                                 encoding=docinfo.encoding, standalone=docinfo.standalone))
 
@@ -78,3 +79,23 @@ def shorten_text(text: str):
     else:
         text = text[:17] + ' ... ' + text[-17:]
     return repr(text)
+
+
+def as_document(text: str, level: int=bioc.PASSAGE) -> bioc.BioCDocument:
+    """
+    Returns a document containing the specified text
+    """
+    if level not in {bioc.PASSAGE, bioc.SENTENCE}:
+        raise ValueError(f'Unrecognized level: {level}')
+    d = bioc.BioCDocument()
+    p = bioc.BioCPassage()
+    p.offset = 0
+    if level == bioc.PASSAGE:
+        p.text = text
+    elif level == bioc.SENTENCE:
+        s = bioc.BioCSentence()
+        s.offset = 0
+        s.text = text
+        p.add_sentence(s)
+    d.add_passage(p)
+    return d
