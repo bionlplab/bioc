@@ -194,18 +194,14 @@ and related to BioC.
 -  http://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/BioC/
 -  http://bioc.sourceforge.net/
 
+
 Reference
 ---------
 
--  Comeau,D.C., Doğan,R.I., Ciccarese,P., Cohen,K.B., Krallinger,M.,
-   Leitner,F., Lu,Z., Peng,Y., Rinaldi,F., Torii,M., Valencia,V.,
-   Verspoor,K., Wiegers,T.C., Wu,C.H., Wilbur,W.J. (2013) BioC: A
-   minimalist approach to interoperability for biomedical text
-   processing. Database: The Journal of Biological Databases and
-   Curation.
+If you use bioc in your research, please cite the following paper:
+
 -  Peng,Y., Tudor,C., Torii,M., Wu,C.H., Vijay-Shanker,K. (2014) iSimp
    in BioC standard format: Enhancing the interoperability of a sentence
    simplification system. Database: The Journal of Biological Databases
    and Curation.
--  Marques,M., Rinaldi,F. (2012) PyBioC: a python implementation of the
-   BioC core. In Proceedings of BioCreative IV workshop.
+

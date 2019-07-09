@@ -12,7 +12,7 @@ def _default_error(msg, traceback):
     raise ValueError(msg)
 
 
-class BioCValidator():
+class BioCValidator:
     """
     Validate BioC data structure
     """

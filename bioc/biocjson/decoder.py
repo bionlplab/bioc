@@ -119,6 +119,16 @@ def loads(s: str, **kwargs) -> BioCCollection:
     return parse_collection(obj)
 
 
+def fromJSON(o, level):
+    if level == DOCUMENT:
+        return parse_doc(o)
+    if level == PASSAGE:
+        return parse_passage(o)
+    if level == SENTENCE:
+        return parse_sentence(o)
+    raise RuntimeError("should not reach here")  # pragma: no cover
+
+
 class BioCJsonIterReader:
     """
     Reader for the jsonlines format.
@@ -126,7 +136,7 @@ class BioCJsonIterReader:
 
     def __init__(self, file: str, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'Unrecognized level: {level}')
+            raise ValueError(f'{file}: Unrecognized level {level}')
 
         self.reader = jsonlines.open(file)
         self.reader_iter = iter(self.reader)

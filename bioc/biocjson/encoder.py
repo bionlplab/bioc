@@ -3,6 +3,7 @@ BioC JSON encoder
 """
 
 import json
+from typing import Dict
 
 import jsonlines
 
@@ -98,10 +99,11 @@ class BioCJsonIterWriter:
 
     def __init__(self, file, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'Unrecognized level: {level}')
+            raise ValueError(f'{file}: Unrecognized level {level}')
 
         self.writer = jsonlines.open(file, 'w')
         self.level = level
+        self.file = file
 
     def write(self, obj: BioCDocument or BioCPassage or BioCSentence):
         """
@@ -114,11 +116,14 @@ class BioCJsonIterWriter:
 
         """
         if self.level == DOCUMENT and not isinstance(obj, BioCDocument):
-            raise ValueError
+            raise ValueError(f'{self.file}: can only write BioCDocument '
+                             f'because of the level {self.level}')
         if self.level == PASSAGE and not isinstance(obj, BioCPassage):
-            raise ValueError
+            raise ValueError(f'{self.file}: can only write BioCPassage '
+                             f'because of the level {self.level}')
         if self.level == SENTENCE and not isinstance(obj, BioCSentence):
-            raise ValueError
+            raise ValueError(f'{self.file}: can only write BioCSentence '
+                             f'because of the level {self.level}')
         self.writer.write(BioCJSONEncoder().default(obj))
 
     def close(self):
@@ -130,3 +135,7 @@ class BioCJsonIterWriter:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
+
+
+def toJSON(o) -> Dict:
+    return BioCJSONEncoder().default(o)

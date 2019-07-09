@@ -5,7 +5,7 @@ channels:
   - auto
 dependencies:
   - python=3.6
-  - lxml
-  - docutils
-  - pytest
-  - jsonlines
+  - lxml=4.3.1
+  - docutils=0.14
+  - pytest=4.2
+  - jsonlines=1.2.0
