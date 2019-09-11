@@ -5,6 +5,10 @@
    :alt: Build status
    :target: https://travis-ci.org/yfpeng/bioc
 
+.. image:: https://github.com/yfpeng/bioc/workflows/bioc/badge.svg
+   :alt: Build status
+   :target: https://github.com/yfpeng/bioc/
+
 .. image:: https://img.shields.io/pypi/v/bioc.svg
    :target: https://pypi.python.org/pypi/bioc
    :alt: Latest version on PyPI
