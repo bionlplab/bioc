@@ -20,6 +20,10 @@
 .. image:: https://coveralls.io/repos/github/yfpeng/bioc/badge.svg?branch=master
    :alt: Coverage
    :target: https://pypi.python.org/pypi/bioc
+   
+.. image:: https://requires.io/github/yfpeng/bioc/requirements.svg?branch=master
+   :target: https://requires.io/github/yfpeng/bioc/requirements/?branch=master
+   :alt: Requirements Status
 
 .. image:: https://img.shields.io/pypi/l/bioc.svg
    :alt: License
