@@ -1,5 +1,6 @@
 MANIFEST
 pylint.html
+coverage_html_report
 
 .vscode
 
