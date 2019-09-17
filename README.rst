@@ -1,9 +1,9 @@
 `bioc` - BioC data structures and encoder/decoder for Python
 =============================================================
 
-.. image:: https://img.shields.io/travis/yfpeng/bioc.svg
-   :alt: Build status
-   :target: https://travis-ci.org/yfpeng/bioc
+.. .. image:: https://img.shields.io/travis/yfpeng/bioc.svg
+..    :alt: Build status
+..    :target: https://travis-ci.org/yfpeng/bioc
 
 .. image:: https://github.com/yfpeng/bioc/workflows/bioc/badge.svg
    :alt: Build status
@@ -17,9 +17,13 @@
    :alt: Downloads
    :target: https://pypi.python.org/pypi/bioc
    
-.. image:: https://coveralls.io/repos/github/yfpeng/bioc/badge.svg?branch=master
+..  .. image:: https://coveralls.io/repos/github/yfpeng/bioc/badge.svg?branch=master
+..    :alt: Coverage
+..    :target: https://pypi.python.org/pypi/bioc
+   
+.. image:: https://codecov.io/gh/yfpeng/bioc/branch/master/graph/badge.svg
    :alt: Coverage
-   :target: https://pypi.python.org/pypi/bioc
+   :target: https://codecov.io/gh/yfpeng/bioc
    
 .. image:: https://requires.io/github/yfpeng/bioc/requirements.svg?branch=master
    :target: https://requires.io/github/yfpeng/bioc/requirements/?branch=master
