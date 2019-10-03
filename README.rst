@@ -33,7 +33,7 @@
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
    
-.. image:https://hits.dwyl.com/yfpeng/bioc.svg
+.. image:: https://hits.dwyl.com/yfpeng/bioc.svg
    :alt: Hits
    :target: https://hits.dwyl.com/yfpeng/bioc
 
