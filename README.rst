@@ -32,6 +32,12 @@
 .. image:: https://img.shields.io/pypi/l/bioc.svg
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
+   
+.. image:https://hits.dwyl.com/yfpeng/bioc.svg
+   :alt: Hits
+   :target: https://hits.dwyl.com/yfpeng/bioc
+
+
 
 
 `BioC XML / JSON format <http://bioc.sourceforge.net/>`_ can be used to share
