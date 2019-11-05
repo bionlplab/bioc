@@ -79,23 +79,3 @@ def shorten_text(text: str):
     else:
         text = text[:17] + ' ... ' + text[-17:]
     return repr(text)
-
-
-def as_document(text: str, level: int=bioc.PASSAGE) -> bioc.BioCDocument:
-    """
-    Returns a document containing the specified text
-    """
-    if level not in {bioc.PASSAGE, bioc.SENTENCE}:
-        raise ValueError(f'Unrecognized level: {level}')
-    d = bioc.BioCDocument()
-    p = bioc.BioCPassage()
-    p.offset = 0
-    if level == bioc.PASSAGE:
-        p.text = text
-    elif level == bioc.SENTENCE:
-        s = bioc.BioCSentence()
-        s.offset = 0
-        s.text = text
-        p.add_sentence(s)
-    d.add_passage(p)
-    return d

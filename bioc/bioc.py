@@ -4,6 +4,8 @@ Data structures and code to read/write BioC XML.
 import sys
 import time
 
+from .utils import shorten_text
+
 
 class InfonsMaxin:
     def __init__(self):
@@ -15,6 +17,9 @@ class InfonsMaxin:
         Clears all information.
         """
         self.infons.clear()
+
+    def __str__infons__(self):
+        return 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
 
 
 class BioCNode:
@@ -82,7 +87,7 @@ class BioCLocation:
         if not isinstance(location, BioCLocation):
             raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
         return self.offset <= location.offset \
-            and location.offset + location.length <= self.offset + self.length
+               and location.offset + location.length <= self.offset + self.length
 
     def __hash__(self):
         return hash((self.offset, self.length))
@@ -116,8 +121,8 @@ class BioCAnnotation(InfonsMaxin):
     def __str__(self):
         s = 'BioCAnnotation['
         s += f'id={self.id},'
-        s += f'text={_shorten_text(self.text)},'
-        s += 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
+        s += f'text={shorten_text(self.text)},'
+        s += self.__str__infons__()
         s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
         s += ']'
         return s
@@ -155,7 +160,7 @@ class BioCRelation(InfonsMaxin):
     def __str__(self):
         s = 'BioCRelation['
         s += 'id=%s,' % self.id
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += self.__str__infons__()
         s += 'nodes=[%s],' % ','.join(str(n) for n in self.nodes)
         s += ']'
         return s
@@ -222,6 +227,11 @@ class AnnotationMixin:
         """
         self.relations.append(relation)
 
+    def __str__anns__(self):
+        s = 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
+        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        return s
+
 
 class BioCSentence(AnnotationMixin, InfonsMaxin):
     """
@@ -242,10 +252,9 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
     def __str__(self):
         s = 'BioCSentence['
         s += 'offset=%s,' % self.offset
-        s += 'text=%s,' % _shorten_text(self.text)
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
-        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
-        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        s += 'text=%s,' % shorten_text(self.text)
+        s += self.__str__infons__()
+        s += self.__str__anns__()
         s += ']'
         return s
 
@@ -272,11 +281,10 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
         s = 'BioCPassage['
         s += 'offset=%d,' % self.offset
         if self.text is not None:
-            s += 'text=%s,' % _shorten_text(self.text)
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+            s += 'text=%s,' % shorten_text(self.text)
+        s += self.__str__infons__()
         s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
-        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
-        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        s += self.__str__anns__()
         s += ']'
         return s
 
@@ -308,7 +316,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
         return None
 
     @classmethod
-    def of(cls, *sentences: BioCSentence) -> 'BioCPassage':
+    def of_sentences(cls, *sentences: BioCSentence) -> 'BioCPassage':
         """
         Returns a passage containing the sentences
         """
@@ -340,10 +348,9 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
     def __str__(self):
         s = 'BioCDocument['
         s += 'id=%s,' % self.id
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += self.__str__infons__()
         s += 'passages=[%s],' % ','.join(str(p) for p in self.passages)
-        s += 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
-        s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
+        s += self.__str__anns__()
         s += ']'
         return s
 
@@ -375,18 +382,28 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
         return None
 
     @classmethod
-    def of(cls, *passages: BioCPassage) -> 'BioCDocument':
+    def of_passages(cls, *passages: BioCPassage) -> 'BioCDocument':
         """
         Returns a document containing the passages
         """
         if len(passages) <= 0:
             raise ValueError("There has to be at least one passage.")
-        c = BioCDocument()
+        document = BioCDocument()
         for passage in passages:
             if passage is None:
                 raise ValueError('Passage is None')
-            c.add_passage(passage)
-        return c
+            document.add_passage(passage)
+        return document
+
+    @classmethod
+    def of_text(cls, text: str) -> 'BioCDocument':
+        """
+        Returns a document containing one passage with the text
+        """
+        passage = BioCPassage()
+        passage.text = text
+        passage.offset = 0
+        return cls.of_passages(passage)
 
 
 class BioCCollection(InfonsMaxin):
@@ -425,7 +442,7 @@ class BioCCollection(InfonsMaxin):
         s += 'source=%s,' % self.source
         s += 'date=%s,' % self.date
         s += 'key=%s,' % self.key
-        s += 'infons=[%s],' % ','.join('%s=%s' % (k, v) for (k, v) in self.infons.items())
+        s += self.__str__infons__()
         s += 'documents=[%s],' % ','.join(str(d) for d in self.documents)
         s += ']'
         return s
@@ -434,7 +451,7 @@ class BioCCollection(InfonsMaxin):
         return str(self)
 
     @classmethod
-    def of(cls, *documents: BioCDocument) -> 'BioCCollection':
+    def of_documents(cls, *documents: BioCDocument) -> 'BioCCollection':
         """
         Returns a collection containing the documents
         """
@@ -448,9 +465,9 @@ class BioCCollection(InfonsMaxin):
         return c
 
 
-def _shorten_text(text: str):
-    if len(text) <= 40:
-        text = text
-    else:
-        text = text[:17] + ' ... ' + text[-17:]
-    return repr(text)
+# def _shorten_text(text: str):
+#     if len(text) <= 40:
+#         text = text
+#     else:
+#         text = text[:17] + ' ... ' + text[-17:]
+#     return repr(text)

@@ -34,6 +34,10 @@ def test_annotations():
     assert 1 == len(annotations)
     assert '5' == annotations[0].id
 
+    annotations = list(bioc.annotations(collection.documents[1], level=bioc.SENTENCE))
+    assert 2 == len(annotations)
+    assert '4' == annotations[1].id
+
     with pytest.raises(TypeError):
         next(bioc.annotations('Foo'))
 
