@@ -81,8 +81,9 @@ def parse_doc(obj: Dict) -> BioCDocument:
     doc.infons = obj['infons']
     for passage in obj['passages']:
         doc.add_passage(parse_passage(passage))
-    for annotation in obj['annotations']:
-        doc.add_annotation(parse_annotation(annotation))
+    if 'annotations' in obj:
+        for annotation in obj['annotations']:
+            doc.add_annotation(parse_annotation(annotation))
     for relation in obj['relations']:
         doc.add_relation(parse_relation(relation))
     return doc
