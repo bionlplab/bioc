@@ -16,7 +16,7 @@ def dump(collection: BioCCollection, fp: TextIO, *, pretty_print: bool = True):
         fp: a ``.write()``-supporting file-like object
         pretty_print: enables formatted XML
     """
-    fp.write(dumps(collection, pretty_print))
+    fp.write(dumps(collection, pretty_print=pretty_print))
 
 
 def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:

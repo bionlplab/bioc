@@ -13,7 +13,7 @@ from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: Dict) -> BioCCollection:
-    """Deserialize a dict obj to a BioCCollection object"""
+    """Deserialize a dict ``obj`` to a BioCCollection object"""
     collection = BioCCollection()
     collection.source = obj['source']
     collection.date = obj['date']
@@ -92,14 +92,7 @@ def parse_doc(obj: Dict) -> BioCDocument:
 def load(fp: TextIO, **kwargs) -> BioCCollection:
     """
     Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to
-    a BioCCollection object
-
-    Args:
-        fp: a file containing a JSON document
-        **kwargs: arguments passed to json
-
-    Returns:
-        BioCCollection: a collection
+    a BioCCollection object. kwargs are passed to json.
     """
     obj = json.load(fp, **kwargs)
     return parse_collection(obj)
@@ -108,14 +101,7 @@ def load(fp: TextIO, **kwargs) -> BioCCollection:
 def loads(s: str, **kwargs) -> BioCCollection:
     """
     Deserialize s (a str, bytes or bytearray instance containing a JSON document) to
-    a BioCCollection object.
-
-    Args:
-        s(str):
-        **kwargs:
-
-    Returns:
-        BioCCollection: a collection
+    a BioCCollection object. kwargs are passed to json.
     """
     obj = json.loads(s, **kwargs)
     return parse_collection(obj)

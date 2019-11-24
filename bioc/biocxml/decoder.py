@@ -21,13 +21,8 @@ class BioCXMLDecoder:
 
     def decodes(self, s: str) -> BioCCollection:
         """
-        Deserialize ``s`` to a BioC collection object.
-
-        Args:
-            s: a "str" instance containing a BioC collection
-
-        Returns:
-            an object of BioCollection
+        Deserialize ``s`` (a ``str`` instance containing a BioC collection) to a BioC collection
+        object.
         """
         tree = etree.parse(io.BytesIO(bytes(s, encoding='UTF-8')))
         collection = self.__parse_collection(tree.getroot())
@@ -38,13 +33,8 @@ class BioCXMLDecoder:
 
     def decode(self, fp: TextIO) -> BioCCollection:
         """
-        Deserialize ``fp`` to a BioC collection object.
-
-        Args:
-            fp: a ``.read()``-supporting file-like object containing a BioC collection
-
-        Returns:
-            an object of BioCollection
+        Deserialize ``fp`` (a ``.read()``-supporting file-like object containing a BioC collection)
+        to a BioC collection object.
         """
         # utf8_parser = etree.XMLParser(encoding='utf-8')
         tree = etree.parse(fp)
@@ -286,12 +276,12 @@ class BioCXMLDocumentReader:
     def __next_event(self):
         return self.__event, self.__elem
 
-    def get_collection_info(self):
+    def get_collection_info(self) -> BioCCollection:
         """
         Reads the collection information: encoding, version, DTD, source, date, key, infons, etc.
 
         Returns:
-            BioCCollection: the BioC collection that contains only information
+            the BioC collection that contains only information
         """
         return self.__collection
 
@@ -308,25 +298,14 @@ class BioCXMLDocumentReader:
 
 def load(fp: TextIO) -> BioCCollection:
     """
-    Deserialize ``fp`` to a BioC collection object.
-
-    Args:
-        fp: a ``.read()``-supporting file-like object containing a BioC collection
-
-    Returns:
-         a object of BioCollection
+    Deserialize ``fp`` (a ``.read()``-supporting file-like object containing a BioC collection)
+    to a BioC collection object.
     """
     return BioCXMLDecoder().decode(fp)
 
 
 def loads(s: str) -> BioCCollection:
     """
-    Deserialize ``s`` to a BioC collection object.
-
-    Args:
-        s: a ``str`` instance containing a BioC collection
-
-    Returns:
-        an object of BioCollection
+    Deserialize ``s`` (a ``str`` instance containing a BioC collection) to a BioC collection object.
     """
     return BioCXMLDecoder().decodes(s)

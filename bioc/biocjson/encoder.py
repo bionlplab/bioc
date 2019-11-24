@@ -21,7 +21,7 @@ def dumps(obj, **kwargs) -> str:
 
 def dump(obj, fp: TextIO, **kwargs):
     """
-    Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object)
+    Serialize obj as a JSON formatted stream to ``fp`` (a ``.write()``-supporting file-like object)
     """
     return json.dump(obj, fp, cls=BioCJSONEncoder, **kwargs)
 
