@@ -3,6 +3,7 @@ Data structures and code to read/write BioC XML.
 """
 import sys
 import time
+from typing import List
 
 from .utils import shorten_text
 
@@ -105,7 +106,7 @@ class BioCAnnotation(InfonsMaxin):
 
     def __init__(self):
         super(BioCAnnotation, self).__init__()
-        self.locations = []
+        self.locations = []  # type: List[BioCLocation]
         self.id = ''
         self.text = ''
 
@@ -194,8 +195,8 @@ class BioCRelation(InfonsMaxin):
 class AnnotationMixin:
     def __init__(self):
         super(AnnotationMixin, self).__init__()
-        self.annotations = []
-        self.relations = []
+        self.annotations = []  # type: List[BioCAnnotation]
+        self.relations = []  # type: List[BioCRelation]
 
     def add_annotation(self, annotation: BioCAnnotation):
         """
@@ -246,8 +247,8 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
 
     def __init__(self):
         super(BioCSentence, self).__init__()
-        self.offset = -1
-        self.text = ''
+        self.offset = -1  # type: int
+        self.text = ''  # type: str
 
     def __str__(self):
         s = 'BioCSentence['
@@ -273,9 +274,9 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
 
     def __init__(self):
         super(BioCPassage, self).__init__()
-        self.offset = -1
-        self.text = ''
-        self.sentences = list()
+        self.offset = -1  # type: int
+        self.text = ''  # type: str
+        self.sentences = []  # type: List[BioCSentence]
 
     def __str__(self):
         s = 'BioCPassage['
@@ -343,7 +344,7 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
     def __init__(self):
         super(BioCDocument, self).__init__()
         self.id = ''
-        self.passages = list()
+        self.passages = []  # type: List[BioCPassage]
 
     def __str__(self):
         s = 'BioCDocument['
@@ -420,13 +421,13 @@ class BioCCollection(InfonsMaxin):
         super(BioCCollection, self).__init__()
         self.encoding = 'utf-8'
         self.version = '1.0'
-        self.standalone = True
+        self.standalone = True  # type: bool
 
         self.source = ''
         self.date = time.strftime("%Y-%m-%d")
         self.key = ''
 
-        self.documents = list()
+        self.documents = []  # type: List[BioCDocument]
 
     def add_document(self, document: BioCDocument):
         """
