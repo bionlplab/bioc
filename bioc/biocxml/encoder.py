@@ -1,13 +1,13 @@
 """
 BioC XML encoder
 """
-
+from typing import TextIO
 from lxml import etree
 
 from bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation
 
 
-def dump(collection: BioCCollection, fp, pretty_print: bool = True):
+def dump(collection: BioCCollection, fp: TextIO, *, pretty_print: bool = True):
     """
     Serialize ``collection`` as a BioC formatted stream to ``fp``.
 
@@ -19,7 +19,7 @@ def dump(collection: BioCCollection, fp, pretty_print: bool = True):
     fp.write(dumps(collection, pretty_print))
 
 
-def dumps(collection: BioCCollection, pretty_print: bool = True) -> str:
+def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:
     """
     Serialize ``collection`` to a BioC formatted ``str``.
 

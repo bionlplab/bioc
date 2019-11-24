@@ -306,7 +306,7 @@ class BioCXMLDocumentReader:
         pass
 
 
-def load(fp) -> BioCCollection:
+def load(fp: TextIO) -> BioCCollection:
     """
     Deserialize ``fp`` to a BioC collection object.
 
