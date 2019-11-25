@@ -29,7 +29,7 @@ def test_loads():
 
 def test_fromJSON():
     with pytest.raises(ValueError):
-        fromJSON(None, level=5)
+        fromJSON({}, level=5)
 
     with open(file, encoding='utf8') as fp:
         obj = json.load(fp)

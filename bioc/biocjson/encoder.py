@@ -10,14 +10,17 @@ from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCR
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
-def dumps(obj, **kwargs) -> str:
+BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]
+
+
+def dumps(obj: BIOC_OBJ, **kwargs) -> str:
     """
     Serialize a BioC ``obj`` to a JSON formatted ``str``.
     """
     return json.dumps(obj, cls=BioCJSONEncoder, **kwargs)
 
 
-def dump(obj, fp: TextIO, **kwargs):
+def dump(obj: BIOC_OBJ, fp: TextIO, **kwargs):
     """
     Serialize obj as a JSON formatted stream to ``fp`` (a ``.write()``-supporting file-like object)
     """

@@ -105,7 +105,7 @@ def loads(s: str, **kwargs) -> BioCCollection:
     return parse_collection(obj)
 
 
-def fromJSON(o, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
+def fromJSON(o: Dict, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
     if level == DOCUMENT:
         return parse_doc(o)
     elif level == PASSAGE:

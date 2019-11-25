@@ -3,6 +3,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from bioc.biocjson.encoder import toJSON
 
 import bioc
 from bioc import biocjson
@@ -49,3 +50,14 @@ def test_level():
     with pytest.raises(ValueError):
         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.DOCUMENT)
         writer.write(collection.documents[0].passages[0])
+
+
+def test_toJSON():
+    with open(file, encoding='utf8') as fp:
+        collection = biocjson.load(fp)
+    obj = toJSON(collection)
+    assert obj['documents'][0]['id'] == '1'
+
+    with pytest.raises(TypeError):
+        toJSON({})
+
