@@ -21,9 +21,16 @@ def test_loads():
 
 
 def test_BioCXMLDocumentReader():
-    with bioc.BioCXMLDocumentReader(file) as reader:
+    with open(file, 'rb') as fp:
+        reader = bioc.BioCXMLDocumentReader(fp)
         collection = reader.get_collection_info()
         for document in reader:
             collection.add_document(document)
+    assert_everything(collection)
+
+    reader = bioc.BioCXMLDocumentReader(str(file))
+    collection = reader.get_collection_info()
+    for document in reader:
+        collection.add_document(document)
     assert_everything(collection)
 

@@ -3,7 +3,7 @@ BioC XML decoder
 """
 
 import io
-from typing import TextIO
+from typing import TextIO, Union, BinaryIO
 
 from lxml import etree
 
@@ -120,10 +120,10 @@ class BioCXMLDocumentReader:
     Reader for the BioC XML format, one document per iteration.
     """
 
-    def __init__(self, file):
-        if not isinstance(file, str):
-            file = str(file)
-        self.file = file
+    def __init__(self, source: Union[str, BinaryIO]):
+        # if not isinstance(file, str):
+        #     file = str(file)
+        self.file = source
         self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
         self.__state = 0
         self.__event = None
@@ -284,16 +284,6 @@ class BioCXMLDocumentReader:
             the BioC collection that contains only information
         """
         return self.__collection
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    def close(self):
-        """Close this reader"""
-        pass
 
 
 def load(fp: TextIO) -> BioCCollection:

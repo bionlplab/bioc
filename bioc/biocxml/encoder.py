@@ -170,7 +170,7 @@ class BioCXMLDocumentWriter:
         next(self.__writer)  # start writing (run up to 'yield')
 
     def __writer__(self):
-        with etree.xmlfile(self.file, encoding=self.encoding, close=True) as xf:
+        with etree.xmlfile(self.file, encoding=self.encoding) as xf:
             xf.write_declaration(standalone=self.standalone)
             with xf.element('collection'):
                 try:
@@ -206,6 +206,7 @@ class BioCXMLDocumentWriter:
     def close(self):
         """Close this writer"""
         self.__writer.close()
+        # pass
 
     def write_document(self, document: BioCDocument):
         """Encode and write a single document."""
