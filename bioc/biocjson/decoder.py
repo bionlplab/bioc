@@ -89,8 +89,8 @@ def parse_doc(obj: Dict) -> BioCDocument:
 
 def load(fp: TextIO, **kwargs) -> BioCCollection:
     """
-    Deserialize fp (a .read()-supporting text file or binary file containing a JSON document) to
-    a BioCCollection object. kwargs are passed to json.
+    Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
+    a JSON document) to a BioCCollection object. kwargs are passed to json.
     """
     obj = json.load(fp, **kwargs)
     return parse_collection(obj)
@@ -98,14 +98,18 @@ def load(fp: TextIO, **kwargs) -> BioCCollection:
 
 def loads(s: str, **kwargs) -> BioCCollection:
     """
-    Deserialize s (a str, bytes or bytearray instance containing a JSON document) to
-    a BioCCollection object. kwargs are passed to json.
+    Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+    containing a JSON document) to a BioCCollection object. kwargs are passed to json.
     """
     obj = json.loads(s, **kwargs)
     return parse_collection(obj)
 
 
 def fromJSON(o: Dict, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
+    """
+    Convert a Python ``dict`` to a BioC object (a ``BioCDocument``, ``BioCPassage``, or
+    ``BioCSentence`` instance)
+    """
     if level == DOCUMENT:
         return parse_doc(o)
     elif level == PASSAGE:

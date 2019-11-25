@@ -15,14 +15,15 @@ BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]
 
 def dumps(obj: BIOC_OBJ, **kwargs) -> str:
     """
-    Serialize a BioC ``obj`` to a JSON formatted ``str``.
+    Serialize a BioC ``obj`` to a JSON formatted ``str``. kwargs are passed to json.
     """
     return json.dumps(obj, cls=BioCJSONEncoder, **kwargs)
 
 
 def dump(obj: BIOC_OBJ, fp: TextIO, **kwargs):
     """
-    Serialize obj as a JSON formatted stream to ``fp`` (a ``.write()``-supporting file-like object)
+    Serialize ``obj`` as a JSON formatted stream to ``fp``
+    (a ``.write()``-supporting file-like object). kwargs are passed to json.
     """
     return json.dump(obj, fp, cls=BioCJSONEncoder, **kwargs)
 
@@ -107,13 +108,7 @@ class BioCJsonIterWriter:
 
     def write(self, obj: Union[BioCDocument, BioCPassage, BioCSentence]):
         """
-        Encode and write a single object.
-
-        Args:
-            obj: an instance of BioCDocument, BioCPassage, or BioCSentence
-
-        Returns:
-
+        Encode and write a BioC obj (an instance of BioCDocument, BioCPassage, or BioCSentence).
         """
         if self.level == DOCUMENT and not isinstance(obj, BioCDocument):
             raise ValueError(f'{self.fp}: can only write BioCDocument '
@@ -128,4 +123,8 @@ class BioCJsonIterWriter:
 
 
 def toJSON(o) -> Dict:
+    """
+    Convert a BioC obj (an instance of BioCDocument, BioCPassage, or BioCSentence)
+    to a Python `dict`
+    """
     return BioCJSONEncoder().default(o)
