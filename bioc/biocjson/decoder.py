@@ -108,16 +108,13 @@ def loads(s: str, **kwargs) -> BioCCollection:
 
 
 def fromJSON(o, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
-    if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-        raise ValueError(f'Unrecognized level {level}')
-
     if level == DOCUMENT:
         return parse_doc(o)
     elif level == PASSAGE:
         return parse_passage(o)
     elif level == SENTENCE:
         return parse_sentence(o)
-    raise RuntimeError("should not reach here")  # pragma: no cover
+    raise ValueError(f'Unrecognized level {level}')
 
 
 class BioCJsonIterReader:

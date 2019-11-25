@@ -1,11 +1,14 @@
+import json
 import tempfile
 from pathlib import Path
 
 import pytest
+from bioc.biocjson.encoder import BioCJsonIterWriter
+
+from bioc import biocjson
 
 import bioc
-from bioc import biocjson
-from bioc.biocjson import BioCJsonIterReader, BioCJsonIterWriter
+from bioc.biocjson.decoder import fromJSON, BioCJsonIterReader
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -24,26 +27,24 @@ def test_loads():
     assert_everything(collection)
 
 
-def test_dump():
+def test_fromJSON():
+    with pytest.raises(ValueError):
+        fromJSON(None, level=5)
+
     with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
-    tmp = tempfile.mktemp()
-    with open(tmp, 'w', encoding='utf8') as fp:
-        biocjson.dump(collection, fp)
-    with open(tmp, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
-    assert_everything(collection)
+        obj = json.load(fp)
+
+    d = fromJSON(obj['documents'][0], bioc.DOCUMENT)
+    assert d.id == '1'
+
+    p = fromJSON(obj['documents'][0]['passages'][0], bioc.PASSAGE)
+    assert p.text == 'abcdefghijklmnopqrstuvwxyz'
+
+    s = fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], bioc.SENTENCE)
+    assert s.offset == 27
 
 
-def test_dumps():
-    with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
-    s = biocjson.dumps(collection)
-    collection = biocjson.loads(s)
-    assert_everything(collection)
-
-
-def test_document():
+def test_BioCJsonIterReader_document():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
@@ -63,7 +64,7 @@ def test_document():
     assert_everything(collection)
 
 
-def test_passage():
+def test_BioCJsonIterReader_passage():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
@@ -83,7 +84,7 @@ def test_passage():
     assert_everything(collection)
 
 
-def test_sentence():
+def test_BioCJsonIterReader_sentence():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
@@ -101,26 +102,3 @@ def test_sentence():
             collection.documents[1].passages[0].add_sentence(obj)
 
     assert_everything(collection)
-
-
-def test_level():
-    with pytest.raises(ValueError):
-        BioCJsonIterReader('', level=-1)
-    with pytest.raises(ValueError):
-        BioCJsonIterWriter('', level=-1)
-
-    with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
-
-    tmp = tempfile.mktemp()
-    with pytest.raises(ValueError):
-        with BioCJsonIterWriter(tmp, level=bioc.SENTENCE) as writer:
-            writer.write(collection.documents[0])
-
-    with pytest.raises(ValueError):
-        with BioCJsonIterWriter(tmp, level=bioc.PASSAGE) as writer:
-            writer.write(collection.documents[0])
-
-    with pytest.raises(ValueError):
-        with BioCJsonIterWriter(tmp, level=bioc.DOCUMENT) as writer:
-            writer.write(collection.documents[0].passages[0])
