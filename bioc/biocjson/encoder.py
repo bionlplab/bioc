@@ -5,8 +5,6 @@ BioC JSON encoder
 import json
 from typing import Dict, Union, TextIO
 
-import jsonlines
-
 from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
@@ -97,13 +95,12 @@ class BioCJsonIterWriter:
     Writer for the json lines format.
     """
 
-    def __init__(self, file, level: int):
+    def __init__(self, fp: TextIO, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'{file}: Unrecognized level {level}')
+            raise ValueError(f'Unrecognized level {level}')
 
-        self.writer = jsonlines.open(file, 'w')
+        self.fp = fp
         self.level = level
-        self.file = file
 
     def write(self, obj: Union[BioCDocument, BioCPassage, BioCSentence]):
         """
@@ -116,25 +113,15 @@ class BioCJsonIterWriter:
 
         """
         if self.level == DOCUMENT and not isinstance(obj, BioCDocument):
-            raise ValueError(f'{self.file}: can only write BioCDocument '
+            raise ValueError(f'{self.fp}: can only write BioCDocument '
                              f'because of the level {self.level}')
         if self.level == PASSAGE and not isinstance(obj, BioCPassage):
-            raise ValueError(f'{self.file}: can only write BioCPassage '
+            raise ValueError(f'{self.fp}: can only write BioCPassage '
                              f'because of the level {self.level}')
         if self.level == SENTENCE and not isinstance(obj, BioCSentence):
-            raise ValueError(f'{self.file}: can only write BioCSentence '
+            raise ValueError(f'{self.fp}: can only write BioCSentence '
                              f'because of the level {self.level}')
-        self.writer.write(BioCJSONEncoder().default(obj))
-
-    def close(self):
-        """Close this writer"""
-        self.writer.close()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+        self.fp.write(json.dumps(BioCJSONEncoder().default(obj)) + '\n')
 
 
 def toJSON(o) -> Dict:

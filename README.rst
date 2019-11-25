@@ -66,6 +66,7 @@ Encoding the BioC collection object ``collection``:
 .. code:: python
 
     import bioc
+
     # Serialize ``collection`` to a BioC formatted ``str``.
     bioc.dumps(collection)
 
@@ -95,6 +96,7 @@ Decoding the BioC XML file:
 .. code:: python
 
     import bioc
+
     # Deserialize ``s`` to a BioC collection object.
     collection = bioc.loads(s)
 
@@ -137,6 +139,7 @@ Encoding the BioC collection object ``collection``:
 .. code:: python
 
     import biocjson
+
     # Serialize ``collection`` to a BioC Json formatted ``str``.
     biocjson.dumps(collection, indent=2)
 
@@ -156,6 +159,7 @@ Decoding the BioC Json file:
 .. code:: python
 
     import biocjson
+
     # Deserialize ``s`` to a BioC collection object.
     collection = biocjson.loads(s)
 
@@ -171,7 +175,8 @@ Incrementally encoding the BioC structure:
 .. code:: python
 
     from bioc.biocjson import BioCJsonIterWriter
-    with BioCJsonIterWriter(filename, level=bioc.PASSAGE) as writer:
+    with open(filename, 'w', encoding='utf8') as fp:
+        writer = BioCJsonIterWriter(fp, level=bioc.PASSAGE)
         for doc in collection.documents:
              for passage in doc.passages:
                  writer.write(passage)
@@ -192,7 +197,8 @@ Incrementally decoding the BioC Json lines file:
 .. code:: python
 
     from bioc.biocjson import BioCJsonIterReader
-    with BioCJsonIterReader(filename, level=bioc.PASSAGE) as reader:
+    with open(filename, 'r', encoding='utf8') as fp:
+        reader = BioCJsonIterReader(fp, level=bioc.PASSAGE)
         for passage in reader:
             # process passage
             ...

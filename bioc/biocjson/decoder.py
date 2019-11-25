@@ -5,8 +5,6 @@ BioC JSON decoder
 import json
 from typing import TextIO, Dict, Union
 
-import jsonlines
-
 from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
     BioCLocation, BioCPassage, BioCDocument
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
@@ -122,33 +120,26 @@ class BioCJsonIterReader:
     Reader for the jsonlines format.
     """
 
-    def __init__(self, file: str, level: int):
+    def __init__(self, fp: TextIO, level: int):
         if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'{file}: Unrecognized level {level}')
+            raise ValueError(f'Unrecognized level {level}')
 
-        self.reader = jsonlines.open(file)
-        self.reader_iter = iter(self.reader)
+        self.fp = fp
         self.level = level
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        obj = next(self.reader_iter)
-        if self.level == DOCUMENT:
-            return parse_doc(obj)
-        if self.level == PASSAGE:
-            return parse_passage(obj)
-        if self.level == SENTENCE:
-            return parse_sentence(obj)
-        raise RuntimeError("should not reach here")  # pragma: no cover
+        s = self.fp.readline()
+        if s:
+            obj = json.loads(s)
+            if self.level == DOCUMENT:
+                return parse_doc(obj)
+            elif self.level == PASSAGE:
+                return parse_passage(obj)
+            else:
+                return parse_sentence(obj)
+        else:
+            raise StopIteration
 
-    def close(self):
-        """Close this reader"""
-        self.reader.close()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
