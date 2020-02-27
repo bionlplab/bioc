@@ -111,7 +111,7 @@ Incrementally decoding the BioC XML file:
     import bioc
 
     # read from a file
-    with bioc.BioCXMLDocumentReader(filename, 'r') as reader:
+    with bioc.BioCXMLDocumentReader(filename) as reader:
         collection_info = reader.get_collection_info()
         for document in reader:
             # process document
