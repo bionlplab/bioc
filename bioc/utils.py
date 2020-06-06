@@ -5,8 +5,6 @@ from typing import Tuple
 
 from lxml import etree
 
-import bioc
-
 
 def pad_char(text: str, width: int, char: str = '\n') -> str:
     """Pads a text until length width."""
@@ -72,10 +70,11 @@ def pretty_print(src, dst):
                                 encoding=docinfo.encoding, standalone=docinfo.standalone))
 
 
-def shorten_text(text: str):
+def shorten_text(text: str, maxlen=40):
     """Return a short repr of text if it is longer than 40"""
-    if len(text) <= 40:
+    if len(text) <= maxlen:
         text = text
     else:
-        text = text[:17] + ' ... ' + text[-17:]
+        offset = int((maxlen - 5) / 2)
+        text = text[:offset] + ' ... ' + text[-offset:]
     return repr(text)

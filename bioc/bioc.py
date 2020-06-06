@@ -1,5 +1,5 @@
 """
-Data structures and code to read/write BioC XML.
+Data structures.
 """
 import sys
 import time
@@ -262,6 +262,16 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
     def __repr__(self):
         return str(self)
 
+    @classmethod
+    def of_text(cls, text: str, offset: int=0) -> 'BioCSentence':
+        """
+        Returns a sentence with the text
+        """
+        sentence = BioCSentence()
+        sentence.text = text
+        sentence.offset = offset
+        return sentence
+
 
 class BioCPassage(AnnotationMixin, InfonsMaxin):
     """
@@ -331,6 +341,16 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
             p.add_sentence(sentence)
             p.offset = min(p.offset, sentence.offset)
         return p
+
+    @classmethod
+    def of_text(cls, text: str, offset: int = 0) -> 'BioCPassage':
+        """
+        Returns a passage with the text
+        """
+        passage = BioCPassage()
+        passage.text = text
+        passage.offset = offset
+        return passage
 
 
 class BioCDocument(AnnotationMixin, InfonsMaxin):
@@ -464,11 +484,3 @@ class BioCCollection(InfonsMaxin):
                 raise ValueError('Document is None')
             c.add_document(document)
         return c
-
-
-# def _shorten_text(text: str):
-#     if len(text) <= 40:
-#         text = text
-#     else:
-#         text = text[:17] + ' ... ' + text[-17:]
-#     return repr(text)

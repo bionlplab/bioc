@@ -101,6 +101,18 @@ def test_BioCPassage():
     with pytest.raises(ValueError):
         bioc.BioCPassage.of_sentences(None)
 
+    p = collection.documents[0].passages[0]
+    p_copy = bioc.BioCPassage.of_text(p.text, p.offset)
+    assert p.text == p_copy.text
+    assert p.offset == p_copy.offset
+
+
+def test_BioCSentence():
+    s = collection.documents[1].passages[0].sentences[0]
+    s_copy = bioc.BioCSentence.of_text(s.text, s.offset)
+    assert s.text == s_copy.text
+    assert s.offset == s_copy.offset
+
 
 def test_BioCDocument():
     d = collection.documents[0]
