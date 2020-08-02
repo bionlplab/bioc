@@ -5,9 +5,9 @@
 ..    :alt: Build status
 ..    :target: https://travis-ci.org/yfpeng/bioc
 
-.. image:: https://github.com/yfpeng/bioc/workflows/bioc/badge.svg
+.. image:: https://github.com/bionlplab/bioc/workflows/bioc/badge.svg
    :alt: Build status
-   :target: https://github.com/yfpeng/bioc/
+   :target: https://github.com/bionlplab/bioc/
 
 .. image:: https://img.shields.io/pypi/v/bioc.svg
    :target: https://pypi.python.org/pypi/bioc
@@ -21,21 +21,21 @@
 ..    :alt: Coverage
 ..    :target: https://pypi.python.org/pypi/bioc
    
-.. image:: https://codecov.io/gh/yfpeng/bioc/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/bionlplab/bioc/branch/master/graph/badge.svg
    :alt: Coverage
-   :target: https://codecov.io/gh/yfpeng/bioc
+   :target: https://codecov.io/gh/bionlplab/bioc
    
-.. image:: https://requires.io/github/yfpeng/bioc/requirements.svg?branch=master
-   :target: https://requires.io/github/yfpeng/bioc/requirements/?branch=master
+.. image:: https://requires.io/github/bionlplab/bioc/requirements.svg?branch=master
+   :target: https://requires.io/github/bionlplab/bioc/requirements/?branch=master
    :alt: Requirements Status
 
 .. image:: https://img.shields.io/pypi/l/bioc.svg
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
    
-.. image:: https://hits.dwyl.com/yfpeng/bioc.svg
+.. image:: https://hits.dwyl.com/bionlplab/bioc.svg
    :alt: Hits
-   :target: https://hits.dwyl.com/yfpeng/bioc
+   :target: https://hits.dwyl.com/bionlplab/bioc
 
 
 
@@ -47,7 +47,7 @@ text documents and annotations.
 ``marshal`` and ``pickle`` modules.
 
 Development of ``bioc`` happens on GitHub:
-https://github.com/yfpeng/bioc
+https://github.com/bionlplab/bioc
 
 Getting started
 ---------------
@@ -227,7 +227,7 @@ or
 Developers
 ----------
 
--  Yifan Peng (yifan.peng@nih.gov)
+-  Yifan Peng (yip4002@med.cornell.edu)
 
 Acknowledgment
 --------------
