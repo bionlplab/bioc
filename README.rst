@@ -21,9 +21,9 @@
 ..    :alt: Coverage
 ..    :target: https://pypi.python.org/pypi/bioc
    
-.. image:: https://codecov.io/gh/bionlplab/bioc/branch/master/graph/badge.svg
-   :alt: Coverage
-   :target: https://codecov.io/gh/bionlplab/bioc
+.. .. image:: https://codecov.io/gh/bionlplab/bioc/branch/master/graph/badge.svg
+..   :alt: Coverage
+..   :target: https://codecov.io/gh/bionlplab/bioc
    
 .. .. image:: https://requires.io/github/bionlplab/bioc/requirements.svg?branch=master
 ..    :target: https://requires.io/github/bionlplab/bioc/requirements/?branch=master
