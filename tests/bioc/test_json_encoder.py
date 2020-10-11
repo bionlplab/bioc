@@ -3,10 +3,11 @@ import tempfile
 from pathlib import Path
 
 import pytest
+
+from bioc import BioCFileType
 from bioc.biocjson.encoder import toJSON
 
 import bioc
-from bioc import biocjson
 from bioc.biocjson import BioCJsonIterWriter
 from tests.utils import assert_everything
 
@@ -15,20 +16,20 @@ file = Path(__file__).parent / 'everything.json'
 
 def test_dump():
     with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
     tmp = tempfile.mktemp()
     with open(tmp, 'w', encoding='utf8') as fp:
-        biocjson.dump(collection, fp)
+        bioc.dump(collection, fp, BioCFileType.BIOC_JSON)
     with open(tmp, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
     assert_everything(collection)
 
 
 def test_dumps():
     with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
-    s = biocjson.dumps(collection)
-    collection = biocjson.loads(s)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+    s = bioc.dumps(collection, BioCFileType.BIOC_JSON)
+    collection = bioc.loads(s, BioCFileType.BIOC_JSON)
     assert_everything(collection)
 
 
@@ -37,7 +38,7 @@ def test_level():
         BioCJsonIterWriter(io.StringIO(), level=-1)
 
     with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
 
     with pytest.raises(ValueError):
         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.SENTENCE)
@@ -54,7 +55,7 @@ def test_level():
 
 def test_toJSON():
     with open(file, encoding='utf8') as fp:
-        collection = biocjson.load(fp)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
     obj = toJSON(collection)
     assert obj['documents'][0]['id'] == '1'
 
