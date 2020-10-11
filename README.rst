@@ -1,5 +1,5 @@
 `bioc` - BioC data structures and encoder/decoder for Python
-=============================================================
+============================================================
 
 .. .. image:: https://img.shields.io/travis/yfpeng/bioc.svg
 ..    :alt: Build status
@@ -148,34 +148,34 @@ Encoding the BioC collection object ``collection``:
 
 .. code:: python
 
-    import biocjson
+    import bioc
 
     # Serialize ``collection`` to a BioC Json formatted ``str``.
-    biocjson.dumps(collection, indent=2)
+    bioc.dumps(collection, BioCFileType.BIOC_JSON, indent=2)
 
     # Serialize ``collection`` as a BioC Json formatted stream to ``fp``.
     with open(filename, 'w') as fp
-        biocjson.dump(collection, fp, indent=2)
+        bioc.dump(collection, BioCFileType.BIOC_JSON, fp, indent=2)
 
 Compact encoding:
 
 .. code:: python
 
-    import biocjson
-    biocjson.dumps(collection)
+    import bioc
+    bioc.dumps(collection, BioCFileType.BIOC_JSON)
 
 Decoding the BioC Json file:
 
 .. code:: python
 
-    import biocjson
+    import bioc
 
     # Deserialize ``s`` to a BioC collection object.
-    collection = biocjson.loads(s)
+    collection = bioc.loads(s, BioCFileType.BIOC_JSON)
 
     # Deserialize ``fp`` to a BioC collection object.
     with open(filename, 'r') as fp:
-        collection = biocjson.load(fp)
+        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
 
 Json Lines
 ~~~~~~~~~~
@@ -184,7 +184,7 @@ Incrementally encoding the BioC structure:
 
 .. code:: python
 
-    from bioc.biocjson import BioCJsonIterWriter
+    from bioc import BioCJsonIterWriter
     with open(filename, 'w', encoding='utf8') as fp:
         writer = BioCJsonIterWriter(fp, level=bioc.PASSAGE)
         for doc in collection.documents:
@@ -195,7 +195,7 @@ or
 
 .. code:: python
 
-    from bioc.biocjson import toJSON
+    from bioc import toJSON
     import jsonlines
     with jsonlines.open(filename, 'w') as writer:
         for doc in collection.documents:
@@ -206,7 +206,7 @@ Incrementally decoding the BioC Json lines file:
 
 .. code:: python
 
-    from bioc.biocjson import BioCJsonIterReader
+    from bioc import BioCJsonIterReader
     with open(filename, 'r', encoding='utf8') as fp:
         reader = BioCJsonIterReader(fp, level=bioc.PASSAGE)
         for passage in reader:
@@ -217,7 +217,7 @@ or
 
 .. code:: python
 
-    from bioc.biocjson import fromJSON
+    from bioc import fromJSON
     import jsonlines
     with jsonlines.open(filename) as reader:
         for obj in reader:
@@ -250,8 +250,7 @@ Reference
 
 If you use bioc in your research, please cite the following paper:
 
--  Peng,Y., Tudor,C., Torii,M., Wu,C.H., Vijay-Shanker,K. (2014) iSimp
+-  Peng Y, Tudor CO, Torii M, Wu CH, Vijay-Shanker K. iSimp
    in BioC standard format: Enhancing the interoperability of a sentence
-   simplification system. Database: The Journal of Biological Databases
-   and Curation.
+   simplification system. Database (Oxford). 2014, 1-8. bau038.
 
