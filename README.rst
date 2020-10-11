@@ -1,5 +1,5 @@
 `bioc` - BioC data structures and encoder/decoder for Python
-=============================================================
+============================================================
 
 .. .. image:: https://img.shields.io/travis/yfpeng/bioc.svg
 ..    :alt: Build status
