@@ -12,4 +12,4 @@ from .validator import validate
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'load', 'loads', 'dump', 'dumps',
            'validate', 'annotations', 'sentences', 'get_text', 'pretty_print',
-           'BioCXMLDocumentWriter', 'BioCXMLDocumentReader', 'biocjson']
+           'BioCXMLDocumentWriter', 'BioCXMLDocumentReader', 'biocjson', 'biocxml']
