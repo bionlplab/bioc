@@ -60,6 +60,6 @@ setup(
     packages=find_packages(exclude=["tests.*", "tests"]),
     install_requires=[
         'docutils==0.15.2',
-        'lxml==4.4.1',
+        'lxml==4.6.2',
         'jsonlines==1.2.0'],
 )
