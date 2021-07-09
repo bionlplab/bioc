@@ -133,7 +133,7 @@ Together with Python coroutines, this can be used to generate BioC XML in an asy
 
     import bioc
     reader = bioc.BioCXMLDocumentReader(source)
-    writer = bioc.BioCXMLDocumentWriter(dest) as writer:
+    writer = bioc.BioCXMLDocumentWriter(dest)
     
     collection_info = reader.get_collection_info()
     writer.write_collection_info(collection_info)
