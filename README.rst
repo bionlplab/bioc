@@ -86,10 +86,11 @@ Incremental BioC serialisation:
 .. code:: python
 
     import bioc
-    with bioc.BioCXMLDocumentWriter(filename) as writer:
-        writer.write_collection_info(collection)
-        for document in collection.documents:
-            writer.write_document(document)
+    writer = bioc.BioCXMLDocumentWriter(filename)
+    writer.write_collection_info(collection)
+    for document in collection.documents:
+       writer.write_document(document)
+    writer.close()
 
 Decoding the BioC XML file:
 
@@ -111,19 +112,18 @@ Incrementally decoding the BioC XML file:
     import bioc
 
     # read from a file
-    with bioc.BioCXMLDocumentReader(filename) as reader:
-        collection_info = reader.get_collection_info()
-        for document in reader:
-            # process document
-            ...
+    reader = bioc.BioCXMLDocumentReader(filename)
+    collection_info = reader.get_collection_info()
+    for document in reader:
+        # process document
+        ...
 
     # read from a ByteIO
-    with open(filename, 'rb') as fp:
-        reader = bioc.BioCXMLDocumentReader(fp)
-        collection_info = reader.get_collection_info()
-        for document in reader:
-            # process document
-            ...
+    reader = bioc.BioCXMLDocumentReader(open(filename, 'rb'))
+    collection_info = reader.get_collection_info()
+    for document in reader:
+        # process document
+        ...
 
 ``get_collection_info`` can be called after the construction of the ``BioCXMLDocumentReader`` anytime.
 
@@ -132,14 +132,16 @@ Together with Python coroutines, this can be used to generate BioC XML in an asy
 .. code:: python
 
     import bioc
-    with bioc.BioCXMLDocumentReader(source) as reader, \
-         bioc.BioCXMLDocumentWriter(dest) as writer:
-        collection_info = reader.get_collection_info()
-        writer.write_collection_info(collection_info)
-        for document in reader:
-            # modify the document
-            ...
-            writer.write_document(document)
+    reader = bioc.BioCXMLDocumentReader(source)
+    writer = bioc.BioCXMLDocumentWriter(dest) as writer:
+    
+    collection_info = reader.get_collection_info()
+    writer.write_collection_info(collection_info)
+    for document in reader:
+        # modify the document
+        ...
+        writer.write_document(document)
+    writer.close()
 
 Json
 ~~~~
