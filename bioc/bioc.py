@@ -93,6 +93,9 @@ class BioCLocation:
     def __hash__(self):
         return hash((self.offset, self.length))
 
+    def contains(self, offset):
+        return self.offset <= offset < self.end
+
     @property
     def end(self):
         """The end offset of annotation"""
