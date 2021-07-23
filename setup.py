@@ -18,14 +18,14 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.3.6',
+    version='1.3.7',
 
     description='BioC data structures and encoder/decoder for Python',
     long_description=long_description,
     long_description_content_type='text/x-rst',
 
     # The project's main homepage.
-    url='https://github.com/yfpeng/bioc',
+    url='https://github.com/bionlplab/bioc',
 
     # Author details
     author='Yifan Peng',
@@ -59,7 +59,7 @@ setup(
 
     packages=find_packages(exclude=["tests.*", "tests"]),
     install_requires=[
-        'docutils==0.15.2',
+        'docutils>=0.15.2',
         'lxml>=4.6.3',
-        'jsonlines==1.2.0'],
+        'jsonlines>=1.2.0'],
 )

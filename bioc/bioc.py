@@ -231,6 +231,18 @@ class AnnotationMixin:
         """
         self.relations.append(relation)
 
+    def get_annotation(self, refid: str) -> BioCAnnotation:
+        """
+        Gets annotation with reference id
+
+        Args:
+            refid: node reference id
+        """
+        for ann in self.annotations:
+            if ann.id == refid:
+                return ann
+        raise ValueError('%s: Cannot find refid' % refid)
+
     def __str__anns__(self):
         s = 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)

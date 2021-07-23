@@ -16,15 +16,15 @@
 .. image:: https://img.shields.io/pypi/dm/bioc.svg
    :alt: Downloads
    :target: https://pypi.python.org/pypi/bioc
-   
+
 ..  .. image:: https://coveralls.io/repos/github/yfpeng/bioc/badge.svg?branch=master
 ..    :alt: Coverage
 ..    :target: https://pypi.python.org/pypi/bioc
-   
+
 .. .. image:: https://codecov.io/gh/bionlplab/bioc/branch/master/graph/badge.svg
 ..   :alt: Coverage
 ..   :target: https://codecov.io/gh/bionlplab/bioc
-   
+
 .. .. image:: https://requires.io/github/bionlplab/bioc/requirements.svg?branch=master
 ..    :target: https://requires.io/github/bionlplab/bioc/requirements/?branch=master
 ..    :alt: Requirements Status
@@ -32,7 +32,7 @@
 .. image:: https://img.shields.io/pypi/l/bioc.svg
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
-   
+
 .. .. image:: https://hits.dwyl.com/yfpeng/bioc.svg
 ..    :alt: Hits
 ..    :target: https://hits.dwyl.com/yfpeng/bioc
