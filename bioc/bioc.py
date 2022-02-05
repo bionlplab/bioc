@@ -461,6 +461,7 @@ class BioCCollection(InfonsMaxin):
         self.source = ''
         self.date = time.strftime("%Y-%m-%d")
         self.key = ''
+        self.version = '1.0'
 
         self.documents = []  # type: List[BioCDocument]
 

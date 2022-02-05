@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "definitions": {
+    "annotation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "infons": {
+          "type": "object"
+        },
+        "text": {
+          "type": "string"
+        },
+        "locations": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "length": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "offset",
+                "length"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "locations"
+      ]
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "infons": {
+          "type": "object"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "refid": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "refid",
+              "role"
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "nodes"
+      ]
+    }
+  },
+  "properties": {
+    "source": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "infons": {
+      "type": "object"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "infons": {
+            "type": "object"
+          },
+          "passages": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "infons": {
+                  "type": "object"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "sentences": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer"
+                      },
+                      "infons": {
+                        "type": "object"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "annotations": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/annotation"
+                        }
+                      },
+                      "relations": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/relation"
+                        }
+                      }
+                    },
+                    "required": [
+                      "offset",
+                      "text"
+                    ]
+                  }
+                },
+                "annotations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/annotation"
+                  }
+                },
+                "relations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/relation"
+                  }
+                }
+              },
+              "required": [
+                "offset"
+              ]
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/annotation"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/relation"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "passages"
+        ]
+      }
+    }
+  },
+  "required": [
+    "source",
+    "date",
+    "key",
+    "documents"
+  ]
+}
+

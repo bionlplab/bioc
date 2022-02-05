@@ -16,6 +16,7 @@ def parse_collection(obj: Dict) -> BioCCollection:
     collection.source = obj['source']
     collection.date = obj['date']
     collection.key = obj['key']
+    collection.version = obj['version']
     collection.infons = obj['infons']
     for doc in obj['documents']:
         collection.add_document(parse_doc(doc))

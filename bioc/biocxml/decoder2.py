@@ -28,7 +28,7 @@ class BioCXMLDecoder:
         collection = self.__parse_collection(tree.getroot())
         collection.encoding = tree.docinfo.encoding
         collection.standalone = tree.docinfo.standalone
-        collection.version = '1.0' # tree.docinfo.xml_version
+        # collection.version = tree.docinfo.xml_version
         return collection
 
     def decode(self, fp: TextIO) -> BioCCollection:
@@ -41,7 +41,7 @@ class BioCXMLDecoder:
         collection = self.__parse_collection(tree.getroot())
         collection.encoding = tree.docinfo.encoding
         collection.standalone = tree.docinfo.standalone
-        collection.version = tree.docinfo.xml_version
+        # collection.version = tree.docinfo.xml_version
         return collection
 
     def __parse_collection(self, tree):
@@ -49,6 +49,7 @@ class BioCXMLDecoder:
         collection.source = tree.findtext('source')
         collection.date = tree.findtext('date')
         collection.key = tree.findtext('key')
+        collection.version = tree.findtext('version')
         collection.infons = self.__parse_infons(tree)
         for child in tree.findall('document'):
             collection.add_document(self.__parse_document(child))
@@ -56,7 +57,7 @@ class BioCXMLDecoder:
 
     def __parse_document(self, tree):
         document = BioCDocument()
-        document.id = tree.findtext('id')
+        document.id = tree.attrib['id']
         document.infons = self.__parse_infons(tree)
         for child in tree.findall('passage'):
             document.add_passage(self.__parse_passage(child))
@@ -68,7 +69,7 @@ class BioCXMLDecoder:
 
     def __parse_passage(self, tree):
         passage = BioCPassage()
-        passage.offset = int(tree.findtext('offset'))
+        passage.offset = int(tree.attrib['offset'])
         passage.infons = self.__parse_infons(tree)
         if tree.find('text') is not None:
             passage.text = tree.findtext('text')
@@ -82,8 +83,7 @@ class BioCXMLDecoder:
 
     def __parse_sentence(self, tree):
         sentence = BioCSentence()
-        sentence.offset = int(tree.findtext('offset'))
-        sentence.text = tree.findtext('text')
+        sentence.offset = int(tree.attrib['offset'])
         sentence.infons = self.__parse_infons(tree)
         for child in tree.findall('annotation'):
             sentence.add_annotation(self.__parse_annotation(child))
@@ -103,8 +103,7 @@ class BioCXMLDecoder:
 
     def __parse_relation(self, tree):
         relation = BioCRelation()
-        if 'id' in tree.attrib:
-            relation.id = tree.attrib['id']
+        relation.id = tree.attrib['id']
         relation.infons = self.__parse_infons(tree)
         for child in tree.findall('node'):
             relation.add_node(BioCNode(child.attrib['refid'], child.attrib['role']))
@@ -155,11 +154,12 @@ class BioCXMLDocumentReader:
                     if elem.tag == 'collection':
                         self.__state = 1
                         self.__collection = BioCCollection()
-                        # collection information
+            # collection
             elif self.__state == 1:
                 if event == 'start':
                     if elem.tag == 'document':
                         self.__document = BioCDocument()
+                        self.__document.id = elem.get('id')
                         self.__state = 2
                 elif event == 'end':
                     if elem.tag == 'source':
@@ -168,6 +168,8 @@ class BioCXMLDocumentReader:
                         self.__collection.date = elem.text
                     elif elem.tag == 'key':
                         self.__collection.key = elem.text
+                    elif elem.tag == 'version':
+                        self.__collection.version = elem.text
                     elif elem.tag == 'infon':
                         self.__collection.infons[elem.get('key')] = elem.text
                     elif elem.tag == 'collection':
@@ -175,36 +177,36 @@ class BioCXMLDocumentReader:
                         self.__document = None
                         self.__passage = None
                         self.__sentence = None
+            # document
             elif self.__state == 2:
                 if event == 'start':
                     if elem.tag == 'passage':
                         self.__passage = BioCPassage()
+                        self.__passage.offset = int(elem.get('offset'))
                         self.__state = 3
                     elif elem.tag == 'annotation':
                         self.__document.add_annotation(self.__read_annotation(elem))
                     elif elem.tag == 'relation':
                         self.__document.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'id':
-                        self.__document.id = elem.text
-                    elif elem.tag == 'infon':
+                    if elem.tag == 'infon':
                         self.__document.infons[elem.get('key')] = elem.text
                     elif elem.tag == 'document':
                         self.__state = 1
                         return
+            # passage
             elif self.__state == 3:
                 if event == 'start':
                     if elem.tag == 'sentence':
                         self.__sentence = BioCSentence()
+                        self.__sentence.offset = int(elem.get('offset'))
                         self.__state = 4
                     elif elem.tag == 'annotation':
                         self.__passage.add_annotation(self.__read_annotation(elem))
                     elif elem.tag == 'relation':
                         self.__passage.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'offset':
-                        self.__passage.offset = int(elem.text)
-                    elif elem.tag == 'text':
+                    if elem.tag == 'text':
                         self.__passage.text = elem.text
                     elif elem.tag == 'infon':
                         self.__passage.infons[elem.get('key')] = elem.text
@@ -212,6 +214,7 @@ class BioCXMLDocumentReader:
                         self.__state = 2
                         if self.__passage is not None:
                             self.__document.add_passage(self.__passage)
+            # sentence
             elif self.__state == 4:
                 if event == 'start':
                     if elem.tag == 'annotation':
@@ -219,9 +222,7 @@ class BioCXMLDocumentReader:
                     elif elem.tag == 'relation':
                         self.__sentence.add_relation(self.__read_relation(elem))
                 elif event == 'end':
-                    if elem.tag == 'offset':
-                        self.__sentence.offset = int(elem.text)
-                    elif elem.tag == 'text':
+                    if elem.tag == 'text':
                         self.__sentence.text = elem.text
                     elif elem.tag == 'infon':
                         self.__sentence.infons[elem.get('key')] = elem.text
