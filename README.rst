@@ -33,11 +33,6 @@
    :alt: License
    :target: https://opensource.org/licenses/BSD-3-Clause
 
-.. .. image:: https://hits.dwyl.com/yfpeng/bioc.svg
-..    :alt: Hits
-..    :target: https://hits.dwyl.com/yfpeng/bioc
-
-
 
 
 `BioC XML / JSON format <http://bioc.sourceforge.net/>`_ can be used to share
@@ -85,12 +80,12 @@ Incremental BioC serialisation:
 
 .. code:: python
 
-    import bioc
-    writer = bioc.BioCXMLDocumentWriter(filename)
-    writer.write_collection_info(collection)
-    for document in collection.documents:
-       writer.write_document(document)
-    writer.close()
+    from bioc import biocxml
+    with biocxml.iterwrite(filename) as writer:
+        writer.write_collection_info(collection)
+        for document in collection.documents:
+           writer.write_document(document)
+
 
 Decoding the BioC XML file:
 
@@ -109,39 +104,37 @@ Incrementally decoding the BioC XML file:
 
 .. code:: python
 
-    import bioc
+    from bioc import biocxml
 
     # read from a file
-    reader = bioc.BioCXMLDocumentReader(filename)
-    collection_info = reader.get_collection_info()
-    for document in reader:
-        # process document
-        ...
+    with biocxml.iterparse(filename) as reader:
+        collection_info = reader.get_collection_info()
+        for document in reader:
+            # process document
+            ...
 
     # read from a ByteIO
-    reader = bioc.BioCXMLDocumentReader(open(filename, 'rb'))
-    collection_info = reader.get_collection_info()
-    for document in reader:
-        # process document
-        ...
+    with biocxml.iterparse(open(filename, 'rb')) as reader:
+        collection_info = reader.get_collection_info()
+        for document in reader:
+            # process document
+            ...
 
-``get_collection_info`` can be called after the construction of the ``BioCXMLDocumentReader`` anytime.
+``get_collection_info`` can be called after the ``with`` statement.
 
 Together with Python coroutines, this can be used to generate BioC XML in an asynchronous, non-blocking fashion.
 
 .. code:: python
 
-    import bioc
-    reader = bioc.BioCXMLDocumentReader(source)
-    writer = bioc.BioCXMLDocumentWriter(dest)
-    
-    collection_info = reader.get_collection_info()
-    writer.write_collection_info(collection_info)
-    for document in reader:
-        # modify the document
-        ...
-        writer.write_document(document)
-    writer.close()
+    from bioc import biocxml
+
+    with biocxml.iterparse(source) as reader, biocxml.iterwrite(dest) as writer:
+        collection_info = reader.get_collection_info()
+        writer.write_collection_info(collection_info)
+        for document in reader:
+            # modify the document
+            ...
+            writer.write_document(document)
 
 Json
 ~~~~
@@ -230,11 +223,6 @@ Developers
 ----------
 
 -  Yifan Peng (yip4002@med.cornell.edu)
-
-Acknowledgment
---------------
-
--  Hernani Marques (https://github.com/2mh/PyBioC)
 
 Webpage
 -------

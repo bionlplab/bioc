@@ -5,31 +5,31 @@ from bioc import biocxml
 from tests.utils import assert_everything
 
 
-file = Path(__file__).parent / 'everything.xml'
+file = Path(__file__).parent / 'everything_v2.xml'
 
 
 def test_load():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp)
+        collection = bioc.load(fp, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 
 def test_loads():
     with open(file, encoding='utf8') as fp:
         s = fp.read()
-    collection = bioc.loads(s)
+    collection = bioc.loads(s, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 
 def test_BioCXMLDocumentReader():
     with open(file, 'rb') as fp:
-        reader = bioc.BioCXMLDocumentReader(fp)
+        reader = bioc.BioCXMLDocumentReader2(fp)
         collection = reader.get_collection_info()
         for document in reader:
             collection.add_document(document)
     assert_everything(collection)
 
-    reader = bioc.BioCXMLDocumentReader(str(file))
+    reader = bioc.BioCXMLDocumentReader2(str(file))
     collection = reader.get_collection_info()
     for document in reader:
         collection.add_document(document)
@@ -37,13 +37,13 @@ def test_BioCXMLDocumentReader():
 
 
 def test_iterparse():
-    with biocxml.iterparse(open(file, 'rb')) as reader:
+    with biocxml.iterparse(open(file, 'rb'), version=bioc.BioCVersion.V2) as reader:
         collection = reader.get_collection_info()
         for document in reader:
             collection.add_document(document)
     assert_everything(collection)
 
-    with biocxml.iterparse(str(file)) as reader:
+    with biocxml.iterparse(str(file), version=bioc.BioCVersion.V2) as reader:
         collection = reader.get_collection_info()
         for document in reader:
             collection.add_document(document)

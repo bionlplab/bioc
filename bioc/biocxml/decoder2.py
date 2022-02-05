@@ -85,6 +85,7 @@ class BioCXMLDecoder:
         sentence = BioCSentence()
         sentence.offset = int(tree.attrib['offset'])
         sentence.infons = self.__parse_infons(tree)
+        sentence.text = tree.findtext('text')
         for child in tree.findall('annotation'):
             sentence.add_annotation(self.__parse_annotation(child))
         for child in tree.findall('relation'):

@@ -6,26 +6,16 @@ from typing import TextIO
 from .bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation, BioCLocation, BioCNode
 from .biocitertools import annotations, relations, sentences
-from .biocjson import \
-    decoder as biocjsondecoder, \
-    encoder as biocjsonencoder, \
-    BioCJsonIterWriter, toJSON, BioCJsonIterReader, fromJSON
-from .biocxml import \
-    decoder as biocxmldecoder, \
-    encoder as biocxmlencoder, \
-    BioCXMLDocumentReader, \
-    BioCXMLDocumentWriter
-from .biocxml import \
-    decoder2 as biocxmldecoder2, \
-    encoder2 as biocxmlencoder2, \
-    BioCXMLDocumentReader as BioCXMLDocumentReader2, \
-    BioCXMLDocumentWriter as BioCXMLDocumentWriter2
+from .biocjson import BioCJsonIterWriter, toJSON, BioCJsonIterReader, fromJSON
+from .biocjson import load as jsonload, loads as jsonloads, dump as jsondump, dumps as jsondumps
+from .biocxml import BioCXMLDocumentReader, BioCXMLDocumentWriter, BioCXMLDocumentReader2, BioCXMLDocumentWriter2
+from .biocxml import load as xmlload, loads as xmlloads, dump as xmldump, dumps as xmldumps
 from .constants import PASSAGE, SENTENCE, DOCUMENT, BioCFileType, BioCVersion
 from .utils import get_text, pretty_print
 from .validator import validate
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
-           'BioCPassage', 'BioCRelation', 'BioCSentence', 'BioCFileType',
+           'BioCPassage', 'BioCRelation', 'BioCSentence', 'BioCFileType', 'BioCVersion',
            'validate', 'annotations', 'sentences', 'get_text', 'pretty_print',
            'biocxml', 'BioCXMLDocumentWriter', 'BioCXMLDocumentReader',
            'BioCXMLDocumentWriter2', 'BioCXMLDocumentReader2',
@@ -39,14 +29,9 @@ def load(fp: TextIO, filetype: BioCFileType = BioCFileType.BIOC_XML, version: Bi
     to a BioC collection object.
     """
     if filetype == BioCFileType.BIOC_XML:
-        if version == BioCVersion.V1:
-            return biocxmldecoder.load(fp)
-        elif version == BioCVersion.V2:
-            return biocxmldecoder2.load(fp)
-        else:
-            raise ValueError
+        return xmlload(fp, version)
     elif filetype == BioCFileType.BIOC_JSON:
-        return biocjsondecoder.load(fp, **kwargs)
+        return jsonload(fp, **kwargs)
     else:
         raise ValueError
 
@@ -57,14 +42,9 @@ def loads(s: str, filetype: BioCFileType = BioCFileType.BIOC_XML, version: BioCV
     Deserialize ``s`` (a ``str`` instance containing a BioC collection) to a BioC collection object.
     """
     if filetype == BioCFileType.BIOC_XML:
-        if version == BioCVersion.V1:
-            return biocxmldecoder.loads(s)
-        elif version == BioCVersion.V2:
-            return biocxmldecoder2.loads(s)
-        else:
-            raise ValueError
+        return xmlloads(s, version)
     elif filetype == BioCFileType.BIOC_JSON:
-        return biocjsondecoder.loads(s, **kwargs)
+        return jsonloads(s, **kwargs)
     else:
         raise ValueError
 
@@ -75,14 +55,9 @@ def dump(collection: BioCCollection, fp: TextIO, filetype: BioCFileType = BioCFi
     Serialize ``collection`` as a BioC formatted stream to ``fp``.
     """
     if filetype == BioCFileType.BIOC_XML:
-        if version == BioCVersion.V1:
-            return biocxmlencoder.dump(collection, fp, **kwargs)
-        elif version == BioCVersion.V2:
-            return biocxmlencoder2.dump(collection, fp, **kwargs)
-        else:
-            raise ValueError
+        return xmldump(collection, fp, version, **kwargs)
     elif filetype == BioCFileType.BIOC_JSON:
-        return biocjsonencoder.dump(collection, fp, **kwargs)
+        return jsondump(collection, fp, **kwargs)
     else:
         raise ValueError
 
@@ -93,13 +68,8 @@ def dumps(collection: BioCCollection, filetype: BioCFileType = BioCFileType.BIOC
     Serialize ``collection`` to a BioC formatted ``str``.
     """
     if filetype == BioCFileType.BIOC_XML:
-        if version == BioCVersion.V1:
-            return biocxmlencoder.dumps(collection, **kwargs)
-        elif version == BioCVersion.V2:
-            return biocxmlencoder2.dumps(collection, **kwargs)
-        else:
-            raise ValueError
+        return xmldumps(collection, version, **kwargs)
     elif filetype == BioCFileType.BIOC_JSON:
-        return biocjsonencoder.dumps(collection, **kwargs)
+        return jsondumps(collection, **kwargs)
     else:
         raise ValueError
