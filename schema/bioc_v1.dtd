@@ -1,0 +1,27 @@
+<!ELEMENT collection ( source, date, key, infon*, document+ ) >
+<!ELEMENT source (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT infon (#PCDATA)>
+<!ATTLIST infon key CDATA #REQUIRED >
+
+<!ELEMENT document ( id, infon*, passage+, annotation*, relation* ) >
+<!ELEMENT id (#PCDATA)>
+
+<!ELEMENT passage ( infon*, offset, ( text | sentence* ), annotation*, relation* ) >
+<!ELEMENT offset (#PCDATA)>
+<!ELEMENT text (#PCDATA)>
+
+<!ELEMENT sentence ( infon*, offset, text, annotation*, relation* ) >
+
+<!ELEMENT annotation ( infon*, location*, text ) >
+<!ATTLIST annotation id CDATA #IMPLIED >
+<!ELEMENT location EMPTY>
+<!ATTLIST location offset CDATA #REQUIRED >
+<!ATTLIST location length CDATA #REQUIRED >
+
+<!ELEMENT relation ( infon*, node* ) >
+<!ATTLIST relation id CDATA #IMPLIED >
+<!ELEMENT node EMPTY>
+<!ATTLIST node refid CDATA #REQUIRED >
+<!ATTLIST node role CDATA #REQUIRED >

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <!-- definition of simple elements -->
+  <xs:element name="offset" type="xs:nonNegativeInteger"/>
+  <xs:element name="text" type="xs:string"/>
+
+  <xs:element name="collection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="source" type="xs:string"/>
+        <xs:element name="date" type="xs:string"/>
+        <xs:element name="key" type="xs:string"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element maxOccurs="unbounded" ref="document"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="infon">
+    <xs:complexType mixed="true">
+      <xs:attribute name="key" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:string"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element maxOccurs="unbounded" ref="passage"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="annotation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="relation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="passage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element ref="offset"/>
+        <xs:choice>
+          <xs:element minOccurs="0" ref="text"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="sentence"/>
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="annotation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="relation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="sentence">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element ref="offset"/>
+        <xs:element minOccurs="0" ref="text"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="annotation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="relation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="annotation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="location"/>
+        <xs:element ref="text"/>
+      </xs:sequence>
+      <xs:attribute name="id"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="location">
+    <xs:complexType>
+      <xs:attribute name="offset" use="required"/>
+      <xs:attribute name="length" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="relation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="node"/>
+      </xs:sequence>
+      <xs:attribute name="id"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="node">
+    <xs:complexType>
+      <xs:attribute name="refid" use="required"/>
+      <xs:attribute name="role" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

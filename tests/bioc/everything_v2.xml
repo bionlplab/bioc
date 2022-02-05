@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<collection>
+    <source>source</source>
+    <date>date</date>
+    <key>key</key>
+    <version>2.0</version>
+    <infon key="collection-infon-key">collection-infon-value</infon>
+    <document id="1">
+        <infon key="document-infon-key">document-infon-value</infon>
+        <passage offset="0">
+            <infon key="passage-infon-key">passage-infon-value</infon>
+            <text>abcdefghijklmnopqrstuvwxyz</text>
+            <annotation id="1">
+                <infon key="annotation-infon-key">annotation-infon-value</infon>
+                <location offset="1" length="2"/>
+                <text>bc</text>
+            </annotation>
+            <annotation id="2">
+                <infon key="annotation-infon-key">annotation-infon-value</infon>
+                <location offset="5" length="2"/>
+                <text>fg</text>
+            </annotation>
+            <relation id="R1">
+                <infon key="relation-infon-key">relation-infon-value</infon>
+                <node refid="1" role="role1"/>
+                <node refid="2" role="role2"/>
+            </relation>
+        </passage>
+        <annotation id="5">
+            <infon key="annotation-infon-key">annotation-infon-value</infon>
+            <location offset="5" length="2"/>
+            <text>fg</text>
+        </annotation>
+        <relation id="R2">
+            <infon key="relation-infon-key">relation-infon-value</infon>
+            <node refid="1" role="role1"/>
+            <node refid="2" role="role2"/>
+        </relation>
+    </document>
+    <document id="2">
+        <passage offset="27">
+            <sentence offset="27">
+                <infon key="sentence-infon-key">sentence-infon-value</infon>
+                <text>abcdefg</text>
+                <annotation id="3">
+                    <infon key="annotation-infon-key">annotation-infon-value</infon>
+                    <location offset="28" length="2"/>
+                    <text>bc</text>
+                </annotation>
+                <relation id="R3">
+                    <infon key="relation-infon-key">relation-infon-value</infon>
+                    <node refid="3" role="role1"/>
+                </relation>
+            </sentence>
+            <sentence offset="34">
+                <infon key="sentence-infon-key">sentence-infon-value</infon>
+                <text>测试Non-ASCII</text>
+                <annotation id="4">
+                    <infon key="annotation-infon-key">annotation-infon-value</infon>
+                    <location offset="34" length="2"/>
+                    <text>测试</text>
+                </annotation>
+            </sentence>
+        </passage>
+    </document>
+</collection>
