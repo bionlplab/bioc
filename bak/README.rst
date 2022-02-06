@@ -244,6 +244,8 @@ don’t limit its scope to a particular project, since you are creating a new pr
    $ python -m build
    $ python -m twine upload --repository testpypi dist\*
 
+Using TestPyPI with pip
+
 
 Developers
 ----------
