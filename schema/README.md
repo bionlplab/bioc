@@ -15,5 +15,5 @@ $ xmllint --noout --dtdvalid schema/bioc_v2.dtd tests/bioc/everything_v2.xml
 ## Validate JSON schema
 ```shell
 $ pip install jsonschema
-$ jsonschema --instance .\tests\bioc\everything.json .\schema\bioc_schema.json
+$ jsonschema --instance ./tests/bioc/everything.json ./schema/bioc_schema.json
 ```
