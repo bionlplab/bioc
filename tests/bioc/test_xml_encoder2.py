@@ -30,34 +30,6 @@ def test_dumps():
     assert_everything(collection)
 
 
-def test_BioCXMLDocumentWriter_io():
-    collection = _get_collection()
-
-    f = io.BytesIO()
-    writer = bioc.BioCXMLDocumentWriter2(f)
-    writer.write_collection_info(collection)
-    for document in collection.documents:
-        writer.write_document(document)
-    writer.close()
-    collection = bioc.loads(f.getvalue().decode('utf-8'), version=bioc.BioCVersion.V2)
-    assert_everything(collection)
-
-
-def test_BioCXMLDocumentWriter_file():
-    collection = _get_collection()
-
-    tmp = tempfile.mktemp()
-    with bioc.BioCXMLDocumentWriter2(tmp) as writer:
-        writer.write_collection_info(collection)
-        for document in collection.documents:
-            writer.write_document(document)
-
-    with open(tmp, encoding='utf8') as fp:
-        collection = bioc.load(fp, version=bioc.BioCVersion.V2)
-
-    assert_everything(collection)
-
-
 def test_iterwrite_file():
     collection = _get_collection()
 

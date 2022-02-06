@@ -15,9 +15,7 @@ from .encoder import dump as dump1, dumps as dumps1
 from .encoder2 import BioCXMLDocumentWriter as BioCXMLDocumentWriter2
 from .encoder2 import dump as dump2, dumps as dumps2
 
-__all__ = ['load', 'loads', 'dump', 'dumps', 'iterparse',
-           'BioCXMLDocumentReader', 'BioCXMLDocumentWriter',
-           'BioCXMLDocumentReader2', 'BioCXMLDocumentWriter2']
+__all__ = ['load', 'loads', 'dump', 'dumps', 'iterparse']
 
 
 def load(fp: TextIO, version: BioCVersion = BioCVersion.V1) -> BioCCollection:

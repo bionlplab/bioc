@@ -3,6 +3,7 @@ Constants
 """
 from enum import Enum
 
+
 DOCUMENT = 1
 PASSAGE = 2
 SENTENCE = 3

@@ -10,7 +10,7 @@ Options:
 """
 from docopt import docopt
 import tqdm
-from src import bioc
+import bioc
 
 
 def split(source, *, prefix: str, num_doc: int, additional_suffix: str = '.xml',

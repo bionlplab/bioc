@@ -21,21 +21,6 @@ def test_loads():
     assert_everything(collection)
 
 
-def test_BioCXMLDocumentReader():
-    with open(file, 'rb') as fp:
-        reader = bioc.BioCXMLDocumentReader(fp)
-        collection = reader.get_collection_info()
-        for document in reader:
-            collection.add_document(document)
-    assert_everything(collection)
-
-    reader = bioc.BioCXMLDocumentReader(str(file))
-    collection = reader.get_collection_info()
-    for document in reader:
-        collection.add_document(document)
-    assert_everything(collection)
-
-
 def test_iterparse():
     with biocxml.iterparse(open(file, 'rb')) as reader:
         collection = reader.get_collection_info()

@@ -17,11 +17,8 @@ class BioCValidator:
     Validate BioC data structure
     """
 
-    def __init__(self, onerror: Callable[[str, List], None] = None):
-        if onerror is None:
-            self.onerror = _default_error
-        else:
-            self.onerror = onerror
+    def __init__(self, onerror: Callable[[str, List], None] = _default_error):
+        self.onerror = onerror
         self.current_docid = None
         self.traceback = []
 
@@ -128,6 +125,6 @@ class BioCValidator:
         return text
 
 
-def validate(collection, onerror: Callable[[str, List], None] = None):
+def validate(collection, onerror: Callable[[str, List], None] = _default_error):
     """Validate BioC data structure."""
     BioCValidator(onerror).validate(collection)

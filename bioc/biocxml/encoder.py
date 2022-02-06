@@ -30,7 +30,7 @@ def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:
     Returns:
         a BioC formatted ``str``
     """
-    doc = etree.ElementTree(BioCXMLEncoder().encode(collection))
+    doc = etree.ElementTree(encode_collection(collection))
     s = etree.tostring(doc, pretty_print=pretty_print, encoding=collection.encoding,
                        standalone=collection.standalone)
     return s.decode(collection.encoding)
@@ -134,28 +134,6 @@ def encode_collection(collection):
     return tree
 
 
-class BioCXMLEncoder:
-    """
-    Extensible BioC XML encoder for BioC data structures.
-
-    To extend this to recognize other objects, subclass and implement a ``.default()`` method
-    with another method that returns an XML tree for ``o`` if possible, otherwise it should
-    call the superclass implementation.
-    """
-
-    def default(self, obj):
-        """Implement this method in a subclass such that it returns a tree for ``o``."""
-        if isinstance(obj, BioCDocument):
-            return encode_document(obj)
-        if isinstance(obj, BioCCollection):
-            return encode_collection(obj)
-        raise TypeError(f'Object of type {obj.__class__.__name__} is not BioC XML serializable')
-
-    def encode(self, obj):
-        """Encode an obj to an element tree"""
-        return self.default(obj)
-
-
 class BioCXMLDocumentWriter:
     """
     Writer for the BioC XML format, one document at a time.
@@ -165,7 +143,6 @@ class BioCXMLDocumentWriter:
         self.encoding = encoding
         self.standalone = standalone
         self.file = file
-        self.encoder = BioCXMLEncoder()
         self.__writer = self.__writer__()
         next(self.__writer)  # start writing (run up to 'yield')
 
@@ -206,15 +183,14 @@ class BioCXMLDocumentWriter:
     def close(self):
         """Close this writer"""
         self.__writer.close()
-        # pass
 
     def write_document(self, document: BioCDocument):
         """Encode and write a single document."""
-        tree = self.encoder.encode(document)
+        tree = encode_document(document)
         self.__writer.send(tree)
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+    # def __enter__(self):
+    #     return self
+    #
+    # def __exit__(self, exc_type, exc_val, exc_tb):
+    #     self.close()

@@ -1,7 +1,7 @@
 """
 BioC XML decoder
 """
-
+import codecs
 import io
 from typing import TextIO, Union, BinaryIO
 
