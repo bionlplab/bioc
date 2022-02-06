@@ -1,12 +1,17 @@
-name: Validate BioC
+name: Validate BioC schema
 on: [push]
 jobs:
   test:
-    name: Test BioC package
+    name: Validate BioC schema
     runs-on: ubuntu-latest
     steps:
-      - name: Chgeckout repository code
+      - name: Checkout repository code
         uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
 
       - name: Install dependencies
         run: |
