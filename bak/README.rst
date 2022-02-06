@@ -203,11 +203,11 @@ or
             passage = fromJSON(obj, level=bioc.PASSAGE)
             ...
 
-Development
------------
+Developer guide
+---------------
 
-Test
-~~~~
+Testing the code
+~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
@@ -227,6 +227,8 @@ don’t limit its scope to a particular project, since you are creating a new pr
 
    $ python -m build
    $ python -m twine upload --repository testpypi dist\*
+
+Using TestPyPI with pip
 
 
 Developers

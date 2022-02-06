@@ -42,7 +42,7 @@ def split(source, *, prefix: str, num_doc: int, additional_suffix: str = '.xml',
             bioc.dump(newc, fp)
 
 
-if __name__ == '__main__':
+def main():
     args = docopt(__doc__)
     print(args)
     split(args['INPUT'],
@@ -50,3 +50,7 @@ if __name__ == '__main__':
           num_doc=int(args['--documents']),
           suffix_length=int(args['--suffix-length']),
           additional_suffix=args['--additional-suffix'])
+
+
+if __name__ == '__main__':
+    main()
