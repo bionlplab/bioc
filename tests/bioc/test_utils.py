@@ -48,4 +48,4 @@ def test_shorten_text():
     assert bioc.utils.shorten_text(s) == repr(s)
 
     s = 'a' * 50
-    assert bioc.utils.shorten_text(s) == repr('a'*17 + ' ... ' + 'a'*17)
+    assert bioc.utils.shorten_text(s) == repr('a' * 17 + ' ... ' + 'a' * 17)

@@ -5,7 +5,7 @@ BioC JSON encoder
 import json
 from typing import Dict, Union, TextIO
 
-from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
+from bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 

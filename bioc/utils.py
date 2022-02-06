@@ -26,7 +26,7 @@ def get_text(obj) -> Tuple[int, str]:
     Returns:
         offset, text
     """
-    from bioc.bioc import BioCDocument, BioCPassage, BioCSentence
+    from bioc import BioCDocument, BioCPassage, BioCSentence
 
     if isinstance(obj, BioCSentence):
         return obj.offset, obj.text

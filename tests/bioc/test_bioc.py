@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from bioc import bioc, biocxml
+from bioc import biocxml, bioc
 
 file = Path(__file__).parent / 'everything.xml'
 with open(file, encoding='utf8') as fp:

@@ -3,11 +3,11 @@ import json
 from pathlib import Path
 
 import pytest
-from bioc.biocjson.encoder import BioCJsonIterWriter
 
 import bioc
-from bioc.constants import BioCFileType
-from bioc.biocjson.decoder import fromJSON, BioCJsonIterReader
+from bioc import BioCFileType
+from bioc import BioCJsonIterWriter
+from bioc import fromJSON, BioCJsonIterReader
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'

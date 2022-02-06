@@ -1,8 +1,8 @@
 """
 BioC JSON and JSON lines encoder and decoder
 """
-from bioc.biocjson.decoder import loads, load, BioCJsonIterReader, fromJSON
-from bioc.biocjson.encoder import dumps, dump, BioCJsonIterWriter, toJSON
+from .encoder import dumps, dump, BioCJsonIterWriter, toJSON
+from .decoder import loads, load, BioCJsonIterReader, fromJSON
 
 __all__ = ['BioCJsonIterReader', 'BioCJsonIterWriter',
            'dumps', 'dump', 'load', 'loads', 'toJSON', 'fromJSON']

@@ -4,11 +4,10 @@ from pathlib import Path
 
 import pytest
 
-from bioc import BioCFileType
-from bioc.biocjson.encoder import toJSON
-
 import bioc
-from bioc.biocjson import BioCJsonIterWriter
+from bioc import BioCFileType
+from bioc import BioCJsonIterWriter
+from bioc import toJSON
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'

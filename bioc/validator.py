@@ -3,7 +3,7 @@ Validate BioC data structure
 """
 from typing import Callable, List
 
-from bioc.bioc import BioCDocument, BioCCollection
+from bioc import BioCDocument, BioCCollection
 
 
 # pylint: disable=unused-argument
