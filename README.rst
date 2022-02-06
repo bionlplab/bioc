@@ -219,11 +219,11 @@ or
             passage = fromJSON(obj, level=bioc.PASSAGE)
             ...
 
-Development
------------
+Developer guide
+---------------
 
-Test
-~~~~
+Testing the code
+~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
