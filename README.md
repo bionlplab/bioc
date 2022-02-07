@@ -200,7 +200,7 @@ $ pip install pytest pytest-cov
 Test the code
 
 ```shell
-$ pytest cov=bioc tests
+$ pytest --cov-report html --cov=bioc tests
 ```
 
 ### Publish BioC to PyPI and TestPyPI
