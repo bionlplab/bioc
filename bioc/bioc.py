@@ -1,6 +1,7 @@
 """
 Data structures.
 """
+import copy
 import sys
 import time
 from typing import List
@@ -461,9 +462,18 @@ class BioCCollection(InfonsMaxin):
         self.source = ''
         self.date = time.strftime("%Y-%m-%d")
         self.key = ''
-        self.version = '1.0'
 
         self.documents = []  # type: List[BioCDocument]
+
+    def copy_infon(self, another: 'BioCCollection'):
+        self.encoding = another.encoding
+        self.version = another.version
+        self.standalone = another.standalone
+        self.source = another.source
+        self.date = another.date
+        self.key = another.key
+        self.infons = copy.deepcopy(another.infons)
+        return self
 
     def add_document(self, document: BioCDocument):
         """
