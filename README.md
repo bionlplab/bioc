@@ -197,14 +197,6 @@ with jsonlines.open(filename) as reader:
 
 ### Testing the code
 
-Install pytest and pytest-cov
-
-```shell
-$ pip install pytest pytest-cov
-```
-
-Test the code
-
 ```shell
 $ pytest cov=bioc tests
 ```
