@@ -5,7 +5,8 @@ This module implements a number of iterator building blocks.
 from typing import Generator, Collection, Union
 
 from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
-    BioCRelation, DOCUMENT, PASSAGE, SENTENCE
+    BioCRelation
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 class BioCResult:

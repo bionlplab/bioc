@@ -6,7 +6,9 @@ import json
 from typing import Dict, Union, TextIO
 
 from bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
-    BioCSentence, BioCCollection, BioCDocument, DOCUMENT, PASSAGE, SENTENCE
+    BioCSentence, BioCCollection, BioCDocument
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+
 
 BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]
 
