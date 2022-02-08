@@ -197,8 +197,16 @@ with jsonlines.open(filename) as reader:
 
 ### Testing the code
 
+Install pytest and pytest-cov
+
 ```shell
-$ pytest cov=bioc tests
+$ pip install pytest pytest-cov
+```
+
+Test the code
+
+```shell
+$ pytest --cov-report html --cov=bioc tests
 ```
 
 ### Publish BioC to PyPI and TestPyPI
