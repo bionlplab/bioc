@@ -1,6 +1,7 @@
 """
 BioC data structures and encoder/decoder for Python
 """
+from enum import Enum
 from typing import TextIO
 
 from .bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
@@ -9,13 +10,26 @@ from .biocitertools import annotations, relations, sentences
 from .biocjson import BioCJsonIterWriter, toJSON, BioCJsonIterReader, fromJSON
 from .biocjson import load as jsonload, loads as jsonloads, dump as jsondump, dumps as jsondumps
 from .biocxml import load as xmlload, loads as xmlloads, dump as xmldump, dumps as xmldumps
-from .constants import PASSAGE, SENTENCE, DOCUMENT, BioCFileType, BioCVersion
 from .utils import get_text, pretty_print
 from .validator import validate
 
+DOCUMENT = 1
+PASSAGE = 2
+SENTENCE = 3
+
+
+class BioCFileType(Enum):
+    BIOC_XML = 1
+    BIOC_JSON = 2
+
+
+class BioCVersion(Enum):
+    V1 = 1
+    V2 = 2
+
+
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
-           'BioCPassage', 'BioCRelation', 'BioCSentence', 'BioCFileType', 'BioCVersion',
-           'validate', 'annotations', 'sentences', 'get_text', 'pretty_print',
+           'BioCPassage', 'BioCRelation', 'BioCSentence', 'validate', 'annotations', 'sentences', 'get_text', 'pretty_print',
            'biocxml', 'biocjson',
            'BioCJsonIterWriter', 'toJSON', 'BioCJsonIterReader', 'fromJSON', 'biocjson']
 
@@ -71,3 +85,5 @@ def dumps(collection: BioCCollection, filetype: BioCFileType = BioCFileType.BIOC
         return jsondumps(collection, **kwargs)
     else:
         raise ValueError
+
+
