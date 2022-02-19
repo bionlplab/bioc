@@ -27,8 +27,8 @@ jobs:
           pip install pytest
           pytest --cov=./ --cov-report=xml tests
 
-     - name: Upload coverage to Codecov
-       uses: codecov/codecov-action@v2
-       with:
-         file: ./coverage.xml
-         name: codecov-umbrella
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+          name: codecov-umbrella
