@@ -6,6 +6,7 @@ status](https://github.com/bionlplab/bioc/actions/workflows/pytest.yml/badge.svg
 PyPI](https://img.shields.io/pypi/v/bioc.svg)](https://pypi.python.org/pypi/bioc)
 [![Downloads](https://img.shields.io/pypi/dm/bioc.svg)](https://pypi.python.org/pypi/bioc)
 [![License](https://img.shields.io/pypi/l/bioc.svg)](https://opensource.org/licenses/MIT)
+[![codecov](https://codecov.io/gh/bionlplab/bioc/branch/master/graph/badge.svg?token=3kEUctqxTx)](https://codecov.io/gh/bionlplab/bioc)
 
 [BioC XML / JSON format](http://bioc.sourceforge.net/) can be used to
 share text documents and annotations.
