@@ -4,7 +4,7 @@ Data structures.
 import copy
 import sys
 import time
-from typing import List
+from typing import List, NewType, Union
 
 from .utils import shorten_text
 
@@ -21,7 +21,8 @@ class InfonsMaxin:
         self.infons.clear()
 
     def __str__infons__(self):
-        return 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
+        return 'infons=[%s],' % ','.join(
+            f'{k}={v}' for (k, v) in self.infons.items())
 
 
 class BioCNode:
@@ -87,7 +88,8 @@ class BioCLocation:
 
     def __contains__(self, location):
         if not isinstance(location, BioCLocation):
-            raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
+            raise TypeError(
+                f'Object of type {location.__class__.__name__} is not BioCLocation')
         return self.offset <= location.offset \
                and location.offset + location.length <= self.offset + self.length
 
@@ -139,14 +141,16 @@ class BioCAnnotation(InfonsMaxin):
     def total_span(self) -> BioCLocation:
         """The total span of this annotation. Discontinued locations will be merged."""
         if not self.locations:
-            raise ValueError(f'{self.id}: annotation must have at least one location')
+            raise ValueError(
+                f'{self.id}: annotation must have at least one location')
         start = min(l.offset for l in self.locations)
         end = max(l.end for l in self.locations)
         return BioCLocation(start, end - start)
 
     def __contains__(self, annotation):
         if not isinstance(annotation, BioCAnnotation):
-            raise TypeError(f'Object of type {annotation.__class__.__name__} is not BioCAnnotation')
+            raise TypeError(
+                f'Object of type {annotation.__class__.__name__} is not BioCAnnotation')
         loc1 = self.total_span
         loc2 = annotation.total_span
         return loc2 in loc1
@@ -279,7 +283,7 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
         return str(self)
 
     @classmethod
-    def of_text(cls, text: str, offset: int=0) -> 'BioCSentence':
+    def of_text(cls, text: str, offset: int = 0) -> 'BioCSentence':
         """
         Returns a sentence with the text
         """
@@ -510,3 +514,7 @@ class BioCCollection(InfonsMaxin):
                 raise ValueError('Document is None')
             c.add_document(document)
         return c
+
+
+BioCDataModel = NewType('BioCDataModel', Union[
+    BioCCollection, BioCDocument, BioCPassage, BioCSentence])

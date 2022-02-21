@@ -4,7 +4,7 @@ BioC data structures and encoder/decoder for Python
 from typing import TextIO
 
 from .bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
-    BioCRelation, BioCLocation, BioCNode
+    BioCRelation, BioCLocation, BioCNode, BioCDataModel
 from .biocitertools import annotations, relations, sentences
 from .biocjson import BioCJsonIterWriter, toJSON, BioCJsonIterReader, fromJSON
 from .biocjson import load as jsonload, loads as jsonloads, dump as jsondump, dumps as jsondumps
@@ -15,6 +15,7 @@ from .validator import validate
 
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'BioCFileType', 'BioCVersion',
+           'BioCDataModel',
            'validate', 'annotations', 'sentences', 'get_text', 'pretty_print',
            'biocxml', 'biocjson',
            'BioCJsonIterWriter', 'toJSON', 'BioCJsonIterReader', 'fromJSON', 'biocjson']
