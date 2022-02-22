@@ -249,3 +249,10 @@ If you use bioc in your research, please cite the following paper:
   - Peng Y, Tudor CO, Torii M , Wu CH, Vijay-Shanker K. iSimp in BioC standard format: enhancing the 
     interoperability of a sentence simplification system. Database (Oxford). 2014;2014. 
     doi: 10.1093/database/bau038. Print 2014. PMID: 24850848; PMCID: PMC4028706. 
+    
+## License
+
+Copyright BioNLP Lab at Weill Cornell Medicine, 2022.
+
+Distributed under the terms of the [MIT](https://github.com/bionlplab/bioc/blob/master/LICENSE) license, 
+bioc is free and open soure software.
