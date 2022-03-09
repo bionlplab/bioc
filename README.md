@@ -255,4 +255,4 @@ If you use bioc in your research, please cite the following paper:
 Copyright BioNLP Lab at Weill Cornell Medicine, 2022.
 
 Distributed under the terms of the [MIT](https://github.com/bionlplab/bioc/blob/master/LICENSE) license, 
-bioc is free and open soure software.
+bioc is free and open source software.
