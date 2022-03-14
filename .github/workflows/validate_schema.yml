@@ -1,5 +1,8 @@
 name: Validate BioC schema
-on: [push]
+on:
+  push:
+    paths:
+      - schema/**
 jobs:
   test:
     name: Validate BioC schema
