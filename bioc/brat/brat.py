@@ -8,8 +8,8 @@ class BratAnnotation(ABC):
     """
     Base class for all annotations with an ID.
 
-    All annotations IDs consist of a single upper-case character identifying the annotation type and a number. The initial
-    ID characters relate to annotation types as follows:
+    All annotations IDs consist of a single upper-case character identifying the annotation type and a number.
+    The initial ID characters relate to annotation types as follows:
 
     * T: text-bound annotation
     * R: relation
@@ -281,6 +281,9 @@ class BratDocument:
 
     def get_types(self, type):
         return [ann for ann in self.annotations if isinstance(ann, type)]
+
+    def add_annotation(self, ann: BratAnnotation):
+        self.annotations.append(ann)
 
     @property
     def entities(self):
