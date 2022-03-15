@@ -83,9 +83,6 @@ class BioCLocation:
             return False
         return self.offset == other.offset and self.length == other.length
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
     def __contains__(self, location):
         if not isinstance(location, BioCLocation):
             raise TypeError(

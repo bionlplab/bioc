@@ -5,9 +5,12 @@ import pytest
 
 from bioc import biocxml, bioc
 
-file = Path(__file__).parent / 'everything.xml'
-with open(file, encoding='utf8') as fp:
-    collection = biocxml.load(fp)
+@pytest.fixture
+def collection():
+    file = Path(__file__).parent / 'everything.xml'
+    with open(file, encoding='utf8') as fp:
+        collection = biocxml.load(fp)
+    return collection
 
 
 def test_BioCLocation():
@@ -33,7 +36,7 @@ def test_BioCLocation():
         assert 'foo' in base
 
 
-def test_BioCNode():
+def test_node():
     base = bioc.BioCNode('refid', 'role')
     assert base != 'foo'
 
@@ -48,7 +51,7 @@ def test_BioCNode():
     assert node in nodes
 
 
-def test_BioCAnnotation():
+def test_annotation():
     base = bioc.BioCAnnotation()
     base.add_location(bioc.BioCLocation(1, 10))
 
@@ -66,25 +69,32 @@ def test_BioCAnnotation():
         assert base.total_span
 
 
-def test_BioCRelation():
-    base = collection.documents[0].passages[0].relations[0]
+def test_relation():
+    base = bioc.BioCRelation()
+    base.id = 'R1'
+    base.infons['key1'] = 'value1'
+    base.add_node(bioc.BioCNode('1', 'role1'))
+    base.add_node(bioc.BioCNode('2', 'role2'))
     assert base.get_node('role1').refid == '1'
     assert base.get_node('role3') is None
 
 
-def test_InfonsMaxin():
+def test_InfonsMaxin(collection):
     c = copy.deepcopy(collection)
     c.clear_infons()
     assert len(c.infons) == 0
 
 
-def test_AnnotationMixin():
+def test_AnnotationMixin(collection):
     c = copy.deepcopy(collection)
     p = c.documents[0].passages[0]
     p.clear_annotations()
     assert len(p.annotations) == 0
     p.clear_relations()
     assert len(p.relations) == 0
+
+    c = copy.deepcopy(collection)
+    p = c.documents[0].passages[0]
 
     ann = p.get_annotation('1')
     assert ann.total_span.offset == 1
@@ -93,7 +103,7 @@ def test_AnnotationMixin():
     assert ann.total_span.offset == 5
 
 
-def test_BioCPassage():
+def test_BioCPassage(collection):
     p = collection.documents[1].passages[0]
     assert p.get_sentence(34).text == '测试Non-ASCII'
     assert p.get_sentence(10) is None
@@ -115,14 +125,16 @@ def test_BioCPassage():
     assert p.offset == p_copy.offset
 
 
-def test_BioCSentence():
-    s = collection.documents[1].passages[0].sentences[0]
-    s_copy = bioc.BioCSentence.of_text(s.text, s.offset)
+def test_sentence():
+    s = bioc.BioCSentence()
+    s.offset = 27
+    s.text = 'abcdefg'
+    s_copy = bioc.BioCSentence.of_text('abcdefg', 27)
     assert s.text == s_copy.text
     assert s.offset == s_copy.offset
 
 
-def test_BioCDocument():
+def test_BioCDocument(collection):
     d = collection.documents[0]
     assert d.get_passage(0).text == 'abcdefghijklmnopqrstuvwxyz'
     assert d.get_passage(10) is None
@@ -143,7 +155,7 @@ def test_BioCDocument():
         bioc.BioCDocument.of_passages(None)
 
 
-def test_BioCColection():
+def test_BioCColection(collection):
     documents = collection.documents
     newc = bioc.BioCCollection.of_documents(*documents)
 
