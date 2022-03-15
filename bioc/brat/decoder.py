@@ -1,3 +1,4 @@
+import io
 from typing import TextIO
 
 from bioc.brat.brat import BratDocument, BratEntity, BratEvent, BratRelation, BratNote, BratAttribute, BratEquivRelation
@@ -105,7 +106,7 @@ def loads_brat_relation(s: str) -> BratRelation:
     for tok in toks[1:]:
         i = tok.find(':')
         assert i != -1, 'Illegal format: %s' % s
-        rel.arguments[tok[:i]] = tok[i + 1:]
+        rel.add_argument(tok[:i], tok[i + 1:])
 
     return rel
 
@@ -129,7 +130,11 @@ def loads_brat_note(s: str) -> BratNote:
     return note
 
 
-def load(fp: TextIO):
+def loads(s: str) -> BratDocument:
+    return load(io.StringIO(s))
+
+
+def load(fp: TextIO) -> BratDocument:
     doc = BratDocument()
     for i, line in enumerate(fp):
         if line[0] == 'T':

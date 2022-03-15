@@ -35,3 +35,4 @@ def test_attribute():
     assert base == actual
 
     assert line == dumps_brat_attribute(base)
+

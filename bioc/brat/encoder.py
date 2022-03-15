@@ -1,3 +1,4 @@
+import io
 from typing import TextIO
 
 from bioc.brat.brat import BratAttribute, BratEntity, BratEquivRelation, BratEvent, BratNote, BratRelation, BratDocument
@@ -17,7 +18,7 @@ def dumps_brat_entity(ent: BratEntity) -> str:
     ID [tab] TYPE START END[;START END]* [tab] TEXT
     """
     return '%s\t%s %s\t%s' % (ent.id, ent.type,
-                              ';'.join(['%s %s' % (i.begin, i.end) for i in ent.range]),
+                              ';'.join(['%s %s' % (i.begin, i.end) for i in sorted(ent.range)]),
                               ent.text)
 
 
@@ -25,7 +26,7 @@ def dumps_brat_equiv(rel: BratEquivRelation) -> str:
     """
     * [tab] TYPE ID1 ID2 [...]
     """
-    return '%s\t%s %s' % (rel.id, rel.type, ' '.join(rel.argids))
+    return '%s\t%s %s' % (rel.id, rel.type, ' '.join(sorted(rel.argids)))
 
 
 def dumps_brat_event(event: BratEvent) -> str:
@@ -63,3 +64,9 @@ def dump(doc: BratDocument, fp: TextIO):
         fp.write('%s\n' % dumps_brat_equiv(rel))
     for note in doc.notes:
         fp.write('%s\n' % dumps_brat_note(note))
+
+
+def dumps(doc: BratDocument):
+    output = io.StringIO()
+    dump(doc, output)
+    return output.getvalue()

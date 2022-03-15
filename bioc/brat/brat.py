@@ -124,6 +124,15 @@ class BratEntity(BratAnnotation):
     def span(self):
         return self.range.begin(), self.range.end()
 
+    def __eq__(self, other):
+        if not isinstance(other, BratEntity):
+            return False
+        else:
+            return self.id == other.id \
+                   and self.type == other.type \
+                   and self.text == other.text \
+                   and self.range == other.range
+
 
 class BratRelation(BratAnnotation):
     """
@@ -155,6 +164,17 @@ class BratRelation(BratAnnotation):
         super(BratRelation, self).__init__()
         self.arguments = {}
 
+    def add_argument(self, role, id):
+        self.arguments[role] = id
+
+    def __eq__(self, other):
+        if not isinstance(other, BratRelation):
+            return False
+        else:
+            return self.id == other.id \
+                   and self.type == other.type \
+                   and self.arguments == other.arguments
+
 
 class BratEquivRelation(BratAnnotation):
     """
@@ -181,6 +201,9 @@ class BratEquivRelation(BratAnnotation):
         self.id = '*'
         self.type = 'Equiv'
         self.argids = set()
+
+    def add_argid(self, argid: str):
+        self.argids.add(argid)
 
     def __eq__(self, other):
         if not isinstance(other, BratEquivRelation):
@@ -267,6 +290,15 @@ class BratNote(BratAnnotation):
         super(BratNote, self).__init__()
         self.refid = None  # type: str | None
         self.text = None  # type: str | None
+
+    def __eq__(self, other):
+        if not isinstance(other, BratNote):
+            return False
+        else:
+            return self.id == other.id \
+                   and self.type == other.type \
+                   and self.refid == other.refid \
+                   and self.text == other.text
         
 
 class BratDocument:
