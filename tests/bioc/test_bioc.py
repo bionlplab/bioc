@@ -14,6 +14,8 @@ def test_BioCLocation():
     base = bioc.BioCLocation(1, 10)
     assert base != 'foo'
     assert base.end == 11
+    assert base.contains(9)
+    assert not base.contains(11)
 
     loc = bioc.BioCLocation(1, 10)
     assert base == loc
@@ -83,6 +85,12 @@ def test_AnnotationMixin():
     assert len(p.annotations) == 0
     p.clear_relations()
     assert len(p.relations) == 0
+
+    ann = p.get_annotation('1')
+    assert ann.total_span.offset == 1
+
+    ann = p.get_annotation('2')
+    assert ann.total_span.offset == 5
 
 
 def test_BioCPassage():

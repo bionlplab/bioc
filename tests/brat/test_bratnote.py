@@ -14,6 +14,8 @@ def get_note(id, type, refid, text):
 
 def test_note():
     base = get_note('#1', 'type', 'E1', 'text')
+    assert base != 1
+
     actual = get_note('#1', 'type', 'E1', 'text')
     assert base == actual
 

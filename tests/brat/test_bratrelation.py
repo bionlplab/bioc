@@ -14,6 +14,8 @@ def get_relation(id, type, arguments):
 
 def test_relation():
     base = get_relation('R1', 'type', [('Arg1', 'T1')])
+    assert base != 1
+
     actual = get_relation('R1', 'type', [('Arg1', 'T1')])
     assert base == actual
 

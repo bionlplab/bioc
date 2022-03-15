@@ -164,7 +164,7 @@ class BratRelation(BratAnnotation):
         super(BratRelation, self).__init__()
         self.arguments = {}
 
-    def add_argument(self, role, id):
+    def add_argument(self, role: str, id: str):
         self.arguments[role] = id
 
     def __eq__(self, other):
@@ -252,6 +252,9 @@ class BratEvent(BratAnnotation):
         super(BratEvent, self).__init__()
         self.arguments = {}  # type: Dict[str, str]
         self.trigger_id = None  # type: str | None
+
+    def add_argument(self, role:str, id:str):
+        self.arguments[role] = id
 
     def __eq__(self, other):
         if not isinstance(other, BratEvent):

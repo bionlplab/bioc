@@ -12,6 +12,8 @@ def get_relation(arguments):
 
 def test_relation():
     base = get_relation(['T1'])
+    assert base != 1
+
     actual = get_relation(['T1'])
     assert base == actual
 

@@ -15,6 +15,8 @@ def get_entity(id, type, text, spans):
 
 def test_entity():
     base = get_entity('T1', 'type', 'text', [(48, 53)])
+    assert base != 1
+
     actual = get_entity('T1', 'type', 'text', [(48, 53)])
     assert base == actual
 

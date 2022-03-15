@@ -15,6 +15,8 @@ def get_attr(id, type, refid, attributes):
 
 def test_attribute():
     base = get_attr('A1', 'type', 'E1', ['L1'])
+    assert base != 1
+
     actual = get_attr('A1', 'type', 'E1', ['L1'])
     assert base == actual
 
