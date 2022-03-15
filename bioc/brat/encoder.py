@@ -8,7 +8,7 @@ def dumps_brat_attribute(att: BratAttribute) -> str:
     """
     ID [tab] TYPE REFID [FLAG1 FLAG2 ...]
     """
-    return '%s\t%s %s %s' % (att.id, att.type, att.refid, ' '.join(att.attributes))
+    return '%s\t%s %s %s' % (att.id, att.type, att.refid, ' '.join(sorted(att.attributes)))
 
 
 def dumps_brat_entity(ent: BratEntity) -> str:

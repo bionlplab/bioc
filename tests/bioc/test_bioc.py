@@ -13,78 +13,6 @@ def collection():
     return collection
 
 
-def test_BioCLocation():
-    base = bioc.BioCLocation(1, 10)
-    assert base != 'foo'
-    assert base.end == 11
-    assert base.contains(9)
-    assert not base.contains(11)
-
-    loc = bioc.BioCLocation(1, 10)
-    assert base == loc
-
-    loc = bioc.BioCLocation(2, 9)
-    assert base != loc
-    assert loc in base
-    assert base not in loc
-
-    locs = {base, loc}
-    assert base in locs
-    assert loc in locs
-
-    with pytest.raises(TypeError):
-        assert 'foo' in base
-
-
-def test_node():
-    base = bioc.BioCNode('refid', 'role')
-    assert base != 'foo'
-
-    node = bioc.BioCNode('refid', 'role')
-    assert base == node
-
-    node = bioc.BioCNode('refid', 'role2')
-    assert base != node
-
-    nodes = {base, node}
-    assert base in nodes
-    assert node in nodes
-
-
-def test_annotation():
-    base = bioc.BioCAnnotation()
-    base.add_location(bioc.BioCLocation(1, 10))
-
-    ann = bioc.BioCAnnotation()
-    ann.add_location(bioc.BioCLocation(2, 9))
-
-    assert ann in base
-    assert base not in ann
-
-    with pytest.raises(TypeError):
-        assert 'foo' in base
-
-    with pytest.raises(ValueError):
-        del base.locations[:]
-        assert base.total_span
-
-
-def test_relation():
-    base = bioc.BioCRelation()
-    base.id = 'R1'
-    base.infons['key1'] = 'value1'
-    base.add_node(bioc.BioCNode('1', 'role1'))
-    base.add_node(bioc.BioCNode('2', 'role2'))
-    assert base.get_node('role1').refid == '1'
-    assert base.get_node('role3') is None
-
-
-def test_InfonsMaxin(collection):
-    c = copy.deepcopy(collection)
-    c.clear_infons()
-    assert len(c.infons) == 0
-
-
 def test_AnnotationMixin(collection):
     c = copy.deepcopy(collection)
     p = c.documents[0].passages[0]
@@ -101,6 +29,24 @@ def test_AnnotationMixin(collection):
 
     ann = p.get_annotation('2')
     assert ann.total_span.offset == 5
+
+    rel = p.get_relation('R1')
+    assert rel.infons['relation-infon-key'] == 'relation-infon-value'
+
+    ann = p.get('1')
+    assert ann.total_span.offset == 1
+
+    rel = p.get('R1')
+    assert rel.infons['relation-infon-key'] == 'relation-infon-value'
+
+    with pytest.raises(KeyError):
+        p.get('x')
+
+    with pytest.raises(KeyError):
+        p.get_annotation('x')
+
+    with pytest.raises(KeyError):
+        p.get_relation('x')
 
 
 def test_BioCPassage(collection):
@@ -123,15 +69,6 @@ def test_BioCPassage(collection):
     p_copy = bioc.BioCPassage.of_text(p.text, p.offset)
     assert p.text == p_copy.text
     assert p.offset == p_copy.offset
-
-
-def test_sentence():
-    s = bioc.BioCSentence()
-    s.offset = 27
-    s.text = 'abcdefg'
-    s_copy = bioc.BioCSentence.of_text('abcdefg', 27)
-    assert s.text == s_copy.text
-    assert s.offset == s_copy.offset
 
 
 def test_BioCDocument(collection):

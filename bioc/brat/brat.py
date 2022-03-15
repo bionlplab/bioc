@@ -314,32 +314,32 @@ class BratDocument:
         self.text = None
         self.annotations = []  # type: List[BratAnnotation]
 
-    def get_types(self, type):
+    def get_types(self, type) -> List:
         return [ann for ann in self.annotations if isinstance(ann, type)]
 
     def add_annotation(self, ann: BratAnnotation):
         self.annotations.append(ann)
 
     @property
-    def entities(self):
+    def entities(self) -> List[BratEntity]:
         return self.get_types(BratEntity)
 
     @property
-    def events(self):
+    def events(self) -> List[BratEvent]:
         return self.get_types(BratEvent)
 
     @property
-    def relations(self):
+    def relations(self) -> List[BratRelation]:
         return self.get_types(BratRelation)
 
     @property
-    def equiv_relations(self):
+    def equiv_relations(self) -> List[BratEquivRelation]:
         return self.get_types(BratEquivRelation)
 
     @property
-    def attributes(self):
+    def attributes(self) -> List[BratAttribute]:
         return self.get_types(BratAttribute)
 
     @property
-    def notes(self):
+    def notes(self) -> List[BratNote]:
         return self.get_types(BratNote)

@@ -243,7 +243,28 @@ class AnnotationMixin:
         for ann in self.annotations:
             if ann.id == refid:
                 return ann
-        raise ValueError('%s: Cannot find refid' % refid)
+        raise KeyError('%s: Cannot find refid' % refid)
+
+    def get_relation(self, refid: str) -> BioCRelation:
+        """
+        Gets relation with reference id
+
+        Args:
+            refid: node reference id
+        """
+        for rel in self.relations:
+            if rel.id == refid:
+                return rel
+        raise KeyError('%s: Cannot find refid' % refid)
+
+    def get(self, refid: str) -> Union[BioCAnnotation, BioCRelation]:
+        for ann in self.annotations:
+            if ann.id == refid:
+                return ann
+        for rel in self.relations:
+            if rel.id == refid:
+                return rel
+        raise KeyError('%s: Cannot find refid' % refid)
 
     def __str__anns__(self):
         s = 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
