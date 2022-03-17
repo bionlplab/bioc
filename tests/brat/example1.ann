@@ -1,15 +1,8 @@
-T1	Protein 48 53	BMP-6
-T2	Protein 161 164	Id1
-T3	Protein 202 207	BMP-6
-T4	Protein 321 326	CD40L
-T5	Protein 342 347	BMP-6
-T6	Protein 493 498	BMP-6
-T7	Positive_regulation 135 146	consecutive
-T8	Gene_expression 147 157	production
-E1	Positive_regulation:T7 Theme:E2
-E2	Gene_expression:T8 Theme:T2
+T1	Protein 33 40;41 42	protein1
+T2	Protein 47 56	protein 2
+T3	Trigger 12 15	PPI
 R1	PPI Arg1:T1 Arg2:T2
+E1	PPI:T3 Arg1:T1 Arg2:T2
 A1	Negation E1
 *	Equiv T1 T2
-
 #1	AnnotatorNotes T1	this annotation is suspect

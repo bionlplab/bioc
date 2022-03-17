@@ -42,10 +42,10 @@ def test_entity():
 
 def test_span():
     base = get_entity('T1', 'type', 'text', [(48, 53), (56, 57)])
-    assert base.span == (48, 57)
+    assert base.total_span == (48, 57)
 
 
 def test_shift():
     base = get_entity('T1', 'type', 'text', [(48, 53), (56, 57)])
     base = base.shit(1)
-    assert base.span == (49, 58)
+    assert base.total_span == (49, 58)

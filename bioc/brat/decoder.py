@@ -130,11 +130,21 @@ def loads_brat_note(s: str) -> BratNote:
     return note
 
 
-def loads(s: str) -> BratDocument:
-    return load(io.StringIO(s))
+def loads(text: str, ann: str) -> BratDocument:
+    return load(io.StringIO(text), io.StringIO(ann))
 
 
-def load(fp: TextIO) -> BratDocument:
+def load(text_fp: TextIO, ann_fp: TextIO) -> BratDocument:
+    doc = load_ann(ann_fp)
+    doc.text = text_fp.read()
+    return doc
+
+
+def loads_ann(s: str) -> BratDocument:
+    return load_ann(io.StringIO(s))
+
+
+def load_ann(fp: TextIO) -> BratDocument:
     doc = BratDocument()
     for i, line in enumerate(fp):
         if line[0] == 'T':

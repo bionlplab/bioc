@@ -18,7 +18,7 @@ def dumps_brat_entity(ent: BratEntity) -> str:
     ID [tab] TYPE START END[;START END]* [tab] TEXT
     """
     return '%s\t%s %s\t%s' % (ent.id, ent.type,
-                              ';'.join(['%s %s' % (i.begin, i.end) for i in sorted(ent.range)]),
+                              ';'.join(['%s %s' % (i.begin, i.end) for i in sorted(ent.locations)]),
                               ent.text)
 
 
@@ -51,7 +51,7 @@ def dumps_brat_note(note: BratNote) -> str:
     return '%s\t%s %s\t%s' % (note.id, note.type, note.refid, note.text)
 
 
-def dump(doc: BratDocument, fp: TextIO):
+def dump_ann(doc: BratDocument, fp: TextIO):
     for ent in doc.entities:
         fp.write('%s\n' % dumps_brat_entity(ent))
     for rel in doc.relations:
@@ -66,7 +66,7 @@ def dump(doc: BratDocument, fp: TextIO):
         fp.write('%s\n' % dumps_brat_note(note))
 
 
-def dumps(doc: BratDocument):
+def dumps_ann(doc: BratDocument):
     output = io.StringIO()
-    dump(doc, output)
+    dump_ann(doc, output)
     return output.getvalue()

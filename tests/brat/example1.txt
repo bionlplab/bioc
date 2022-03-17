@@ -1,0 +1,1 @@
+There is no PPI relation between protein 1 and protein 2.

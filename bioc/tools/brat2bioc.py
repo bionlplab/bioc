@@ -11,7 +11,7 @@ def brat2bioc_entity(bratentity: BratEntity) -> BioCAnnotation:
     ann.id = bratentity.id
     ann.text = bratentity.text
     ann.infons['type'] = bratentity.type
-    for span in bratentity.range:
+    for span in bratentity.locations:
         ann.add_location(BioCLocation(span.begin, span.end - span.begin))
     return ann
 

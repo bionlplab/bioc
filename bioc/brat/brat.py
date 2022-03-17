@@ -106,23 +106,23 @@ class BratEntity(BratAnnotation):
     def __init__(self):
         super(BratEntity, self).__init__()
         self.text = None  # type: str | None
-        self.range = IntervalTree()  # type: IntervalTree
+        self.locations = IntervalTree()  # type: IntervalTree
 
     def shit(self, offset: int):
         ent = BratEntity()
         ent.id = self.id
         ent.type = self.type
         ent.text = self.text
-        for interval in self.range:
-            ent.range[interval.begin+offset: interval.end+offset] = interval.data
+        for interval in self.locations:
+            ent.locations[interval.begin + offset: interval.end + offset] = interval.data
         return ent
 
     def add_span(self, start: int, end: int, data = None):
-        self.range[start: end] = data
+        self.locations[start: end] = data
 
     @property
-    def span(self):
-        return self.range.begin(), self.range.end()
+    def total_span(self) -> Tuple[int, int]:
+        return self.locations.begin(), self.locations.end()
 
     def __eq__(self, other):
         if not isinstance(other, BratEntity):
@@ -131,7 +131,7 @@ class BratEntity(BratAnnotation):
             return self.id == other.id \
                    and self.type == other.type \
                    and self.text == other.text \
-                   and self.range == other.range
+                   and self.locations == other.locations
 
 
 class BratRelation(BratAnnotation):
@@ -319,6 +319,12 @@ class BratDocument:
 
     def add_annotation(self, ann: BratAnnotation):
         self.annotations.append(ann)
+
+    def has_annotation_id(self, id: str):
+        for ann in self.annotations:
+            if id == ann.id:
+                return True
+        return False
 
     @property
     def entities(self) -> List[BratEntity]:
