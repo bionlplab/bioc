@@ -6,11 +6,22 @@
 Welcome to bioc's documentation!
 ================================
 
+**BioC** XML / JSON format can be used to share text documents and annotations.
+
+``bioc`` exposes an API familiar to users of the standard library ``marshal`` and ``pickle`` modules.
+
+Development of ``bioc`` happens on GitHub: https://github.com/bionlplab/bioc
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
-   bioc
+   install
+   biocxml
+   biocjson
    brat
+   developer_guide
+   contribute
+   code_of_conduct
    reference
 
