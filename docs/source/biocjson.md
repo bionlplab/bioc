@@ -1,5 +1,7 @@
 # Json
 
+## Encoding the BioC object
+
 Encoding the BioC collection object `collection`:
 
 ```python
@@ -20,7 +22,7 @@ import bioc
 bioc.dumps(collection, BioCFileType.BIOC_JSON)
 ```
 
-Decoding the BioC Json file:
+## Decoding the BioC Json file
 
 ```python
 import bioc

@@ -1,15 +1,17 @@
 # XML
 
+bioc's interfaces for processing BioC XML are grouped in the `biocxml` package.
+
+## Encoding the BioC object
+
 Encoding the BioC collection object `collection`:
 
 ```python
 import bioc
-
 # Serialize ``collection`` to a BioC formatted ``str``.
 bioc.dumps(collection)
-
 # Serialize ``collection`` as a BioC formatted stream to ``fp``.
-with open(filename, 'w') as fp
+with open(filename, 'w') as fp:
     bioc.dump(collection, fp)
 ```
 
@@ -30,14 +32,14 @@ with biocxml.iterwrite(filename) as writer:
         writer.write_document(document)
 ```
 
+## Decoding the BioC XML file
+
 Decoding the BioC XML file:
 
 ```python
 import bioc
-
 # Deserialize ``s`` to a BioC collection object.
 collection = bioc.loads(s)
-
 # Deserialize ``fp`` to a BioC collection object.
 with open(filename, 'r') as fp:
     collection = bioc.load(fp)
@@ -47,14 +49,12 @@ Incrementally decoding the BioC XML file:
 
 ```python
 from bioc import biocxml
-
 # read from a file
 with biocxml.iterparse(filename) as reader:
     collection_info = reader.get_collection_info()
     for document in reader:
         # process document
         ...
-
 # read from a ByteIO
 with biocxml.iterparse(open(filename, 'rb')) as reader:
     collection_info = reader.get_collection_info()
