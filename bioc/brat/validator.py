@@ -15,7 +15,7 @@ def validate(document: BratDocument, onerror: Callable[[str], None]= _default_er
     """Validate a single document."""
     for ann in document.entities:
         anntext = ''
-        for span in ann.locations:
+        for span in sorted(ann.locations, key=lambda s: s[0]):
             anntext += document.text[span[0]: span[1]]
         if anntext != ann.text:
             onerror(
