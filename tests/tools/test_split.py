@@ -30,32 +30,31 @@ def test_itersplit():
         subc = cs[i]
         assert len(subc.documents) == n
 
-    last_n = int(math.ceil(total_doc / n)) - 1
+    last_n = int(math.ceil(total_doc / n))
     if last_n > int(total_doc / n):
-        subc = cs[last_n]
+        subc = cs[last_n-1]
         assert len(subc.documents) == total_doc % n
 
 
-def test_split_file():
+def test_split_file(tmp_path):
     total_doc = 230
     n = 7
     c = get_collection(total_doc)
 
-    top_dir = tempfile.mkdtemp()
-    _, source = tempfile.mkstemp(suffix='.xml', dir=top_dir)
+    source = tmp_path / 'foo.xml'
     with open(source, 'w') as fp:
         bioc.dump(c, fp)
 
-    split.split_file(source, prefix=top_dir, num_doc=n)
+    split.split_file(source, prefix=str(tmp_path), num_doc=n)
     for i in range(int(total_doc/n)):
-        source = top_dir + '{:02x}.xml'.format(i)
+        source = str(tmp_path) + '{:02x}.xml'.format(i)
         with open(source) as fp:
             subc = bioc.load(fp)
             assert len(subc.documents) == n
 
-    last_n = int(math.ceil(total_doc/n)) - 1
+    last_n = int(math.ceil(total_doc/n))
     if last_n > int(total_doc/n):
-        source = top_dir + '{:02x}.xml'.format(last_n)
+        source = str(tmp_path) + '{:02x}.xml'.format(last_n-1)
         with open(source) as fp:
             subc = bioc.load(fp)
             assert len(subc.documents) == total_doc % n

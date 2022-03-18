@@ -20,8 +20,8 @@ def validate(document: BratDocument, onerror: Callable[[str], None]= _default_er
         if anntext != ann.text:
             onerror(
                 '%s: Annotation text is incorrect at %d.\n'
-                '  Annotation: %s\n'
-                '  Actual text: %s' %
+                '  Annotation: %r\n'
+                '  Actual text: %r' %
                 (document.id, ann.total_span[0], anntext, ann.text))
 
     for rel in document.relations:

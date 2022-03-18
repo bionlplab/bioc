@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 import bioc
 from bioc import biocxml
 from tests.utils import assert_everything
@@ -12,6 +14,14 @@ def test_load():
     with open(file, encoding='utf8') as fp:
         collection = bioc.load(fp)
     assert_everything(collection)
+
+
+def test_file_type():
+    with pytest.raises(ValueError):
+        bioc.load(open(file, encoding='utf8'), None)
+
+    with pytest.raises(ValueError):
+        bioc.loads('', None)
 
 
 def test_loads():

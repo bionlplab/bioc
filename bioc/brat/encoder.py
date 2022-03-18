@@ -70,3 +70,8 @@ def dumps_ann(doc: BratDocument):
     output = io.StringIO()
     dump_ann(doc, output)
     return output.getvalue()
+
+
+def dump(doc: BratDocument, text_fp: TextIO, ann_fp: TextIO):
+    text_fp.write(doc.text)
+    dump_ann(doc, ann_fp)

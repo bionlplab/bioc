@@ -1,6 +1,7 @@
 from bioc.brat import decoder, encoder
 from bioc.brat.brat import BratDocument
 
+txt_text = "There is no PPI relation between protein 1 and protein 2."
 
 ann_text = """
 T1	Protein 33 42	protein 1
@@ -16,26 +17,30 @@ A1	Negation E1
 
 def _assert(document: BratDocument):
     assert len(document.entities) == 3
-    assert document.entities[0].id == 'T1'
     assert len(document.events) == 1
     assert len(document.relations) == 1
     assert len(document.attributes) == 1
     assert len(document.equiv_relations) == 1
     assert len(document.notes) == 1
+    assert document.has_annotation_id('T1')
 
 
-def test_decoder():
-    document = decoder.loads_ann(ann_text)
+def test_loads():
+    document = decoder.loads(txt_text, ann_text)
     _assert(document)
 
 
 def test_load(tmp_path):
-    filepath = tmp_path / 'foo.ann'
-    with open(filepath, 'w') as fp:
-        fp.write(ann_text)
+    annpath = tmp_path / 'foo.ann'
+    txtpath = tmp_path / 'foo.txt'
 
-    with open(filepath) as fp:
-        document = decoder.load_ann(fp)
+    with open(annpath, 'w') as fp:
+        fp.write(ann_text)
+    with open(txtpath, 'w') as fp:
+        fp.write(txt_text)
+
+    with open(annpath) as ann_fp, open(txtpath) as txt_fp:
+        document = decoder.load(txt_fp, ann_fp)
 
     _assert(document)
 
@@ -48,12 +53,14 @@ def test_dumps():
 
 
 def test_dump(tmp_path):
-    base = decoder.loads_ann(ann_text)
-    filepath = tmp_path / 'foo.ann'
-    with open(filepath, 'w') as fp:
-        encoder.dump_ann(base, fp)
+    annpath = tmp_path / 'foo.ann'
+    txtpath = tmp_path / 'foo.txt'
 
-    with open(filepath) as fp:
-        document = decoder.load_ann(fp)
+    base = decoder.loads(txt_text, ann_text)
+    with open(annpath, 'w') as ann_fp, open(txtpath, 'w') as text_fp:
+        encoder.dump(base, text_fp, ann_fp)
+
+    with open(annpath) as ann_fp, open(txtpath) as text_fp:
+        document = decoder.load(text_fp, ann_fp)
 
     _assert(document)

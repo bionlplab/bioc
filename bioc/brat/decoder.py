@@ -147,6 +147,9 @@ def loads_ann(s: str) -> BratDocument:
 def load_ann(fp: TextIO) -> BratDocument:
     doc = BratDocument()
     for i, line in enumerate(fp):
+        line = line.rstrip()
+        if len(line) == 0:
+            continue
         if line[0] == 'T':
             doc.add_annotation(loads_brat_entity(line))
         if line[0] == 'E':

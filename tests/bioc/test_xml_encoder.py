@@ -32,6 +32,14 @@ def test_dumps():
     assert_everything(collection)
 
 
+def test_file_type():
+    with pytest.raises(ValueError):
+        bioc.dump(None, None, None)
+
+    with pytest.raises(ValueError):
+        bioc.dumps(None, None)
+
+
 def test_iterwrite_file():
     collection = _get_collection()
 
