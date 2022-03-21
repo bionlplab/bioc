@@ -1,5 +1,9 @@
 import io
-from typing import TextIO
+import os
+from pathlib import Path
+from typing import TextIO, List, Generator, Iterator
+
+import tqdm
 
 from bioc.brat.brat import BratDocument, BratEntity, BratEvent, BratRelation, BratNote, BratAttribute, BratEquivRelation
 
@@ -130,22 +134,40 @@ def loads_brat_note(s: str) -> BratNote:
     return note
 
 
-def loads(text: str, ann: str) -> BratDocument:
-    return load(io.StringIO(text), io.StringIO(ann))
+def loads(text: str, ann: str, docid=None) -> BratDocument:
+    return load(io.StringIO(text), io.StringIO(ann), docid)
 
 
-def load(text_fp: TextIO, ann_fp: TextIO) -> BratDocument:
+def load(text_fp: TextIO, ann_fp: TextIO, docid=None) -> BratDocument:
     doc = load_ann(ann_fp)
     doc.text = text_fp.read()
+    doc.id = docid
     return doc
 
 
-def loads_ann(s: str) -> BratDocument:
-    return load_ann(io.StringIO(s))
+def iterloaddir(path) -> Iterator[BratDocument]:
+    with os.scandir(path) as it:
+        for entry in tqdm.tqdm(it):
+            if entry.name.endswith('.txt'):
+                txt_path = Path(entry.path)
+                ann_path = txt_path.with_suffix('.ann')
+                with open(txt_path) as txt_fp, open(ann_path) as ann_fp:
+                    doc = load(txt_fp, ann_fp)
+                    doc.id = txt_path.stem
+                yield doc
 
 
-def load_ann(fp: TextIO) -> BratDocument:
+def loaddir(path) -> List[BratDocument]:
+    return [doc for doc in iterloaddir(path)]
+
+
+def loads_ann(s: str, docid=None) -> BratDocument:
+    return load_ann(io.StringIO(s), docid)
+
+
+def load_ann(fp: TextIO, docid=None) -> BratDocument:
     doc = BratDocument()
+    doc.id = docid
     for i, line in enumerate(fp):
         line = line.rstrip()
         if len(line) == 0:

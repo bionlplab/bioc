@@ -23,7 +23,10 @@
         <xs:element name="key" type="xs:string"/>
         <xs:element name="version" type="xs:string"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
-        <xs:element maxOccurs="unbounded" ref="document"/>
+        <xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="document"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="sentence"/>
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -32,7 +35,11 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="infon"/>
-        <xs:element maxOccurs="unbounded" ref="passage"/>
+        <xs:choice>
+          <xs:element minOccurs="0" ref="text"/>
+          <xs:element maxOccurs="unbounded" ref="passage"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="sentence"/>
+        </xs:choice>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="annotation"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="relation"/>
       </xs:sequence>

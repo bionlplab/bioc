@@ -4,12 +4,13 @@ Data structures.
 import copy
 import sys
 import time
+from abc import ABC
 from typing import List, NewType, Union
 
 from .utils import shorten_text
 
 
-class InfonsMaxin:
+class InfonsMaxin(ABC):
     def __init__(self):
         super(InfonsMaxin, self).__init__()
         self.infons = {}
@@ -183,21 +184,30 @@ class BioCRelation(InfonsMaxin):
         """
         self.nodes.append(node)
 
-    def get_node(self, role: str, default=None) -> BioCNode:
+    def get_node(self, *, role: str = None, refid: str = None, default=None) -> BioCNode:
         """
         Get the first node with role
 
         Args:
             role: role
+            refid: annotation id
             default: node returned instead of raising StopIteration
 
         Returns:
             the first node with role
         """
-        return next((node for node in self.nodes if node.role == role), default)
+        nodes = self.nodes
+        if role is not None:
+            nodes = [n for n in nodes if n.role == role]
+        if refid is not None:
+            nodes = [n for n in nodes if n.refid == refid]
+        if len(nodes) > 0:
+            return nodes[0]
+        else:
+            return default
 
 
-class AnnotationMixin:
+class AnnotationMixin(ABC):
     def __init__(self):
         super(AnnotationMixin, self).__init__()
         self.annotations = []  # type: List[BioCAnnotation]
@@ -311,34 +321,9 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
         return sentence
 
 
-class BioCPassage(AnnotationMixin, InfonsMaxin):
-    """
-    One passage in a BioCDocument.
-
-    This might be the text in the passage and possibly BioCAnnotations over that text. It could be
-    the BioCSentences in the passage. In either case it might include BioCRelations over annotations
-    on the passage.
-    """
-
+class WithSentence(ABC):
     def __init__(self):
-        super(BioCPassage, self).__init__()
-        self.offset = -1  # type: int
-        self.text = ''  # type: str
         self.sentences = []  # type: List[BioCSentence]
-
-    def __str__(self):
-        s = 'BioCPassage['
-        s += 'offset=%d,' % self.offset
-        if self.text is not None:
-            s += 'text=%s,' % shorten_text(self.text)
-        s += self.__str__infons__()
-        s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
-        s += self.__str__anns__()
-        s += ']'
-        return s
-
-    def __repr__(self):
-        return str(self)
 
     def add_sentence(self, sentence: BioCSentence):
         """
@@ -363,6 +348,35 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
             if sentence.offset == offset:
                 return sentence
         return None
+
+
+class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
+    """
+    One passage in a BioCDocument.
+
+    This might be the text in the passage and possibly BioCAnnotations over that text. It could be
+    the BioCSentences in the passage. In either case it might include BioCRelations over annotations
+    on the passage.
+    """
+
+    def __init__(self):
+        super(BioCPassage, self).__init__()
+        self.offset = -1  # type: int
+        self.text = ''  # type: str
+
+    def __str__(self):
+        s = 'BioCPassage['
+        s += 'offset=%d,' % self.offset
+        if self.text is not None:
+            s += 'text=%s,' % shorten_text(self.text)
+        s += self.__str__infons__()
+        s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
+        s += self.__str__anns__()
+        s += ']'
+        return s
+
+    def __repr__(self):
+        return str(self)
 
     @classmethod
     def of_sentences(cls, *sentences: BioCSentence) -> 'BioCPassage':
@@ -391,7 +405,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin):
         return passage
 
 
-class BioCDocument(AnnotationMixin, InfonsMaxin):
+class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
     """
     One document in the BioCCollection.
 
@@ -403,11 +417,14 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
         super(BioCDocument, self).__init__()
         self.id = ''
         self.passages = []  # type: List[BioCPassage]
+        self.text = ''  # type: str
 
     def __str__(self):
         s = 'BioCDocument['
         s += 'id=%s,' % self.id
         s += self.__str__infons__()
+        if self.text is not None:
+            s += 'text=%s,' % shorten_text(self.text)
         s += 'passages=[%s],' % ','.join(str(p) for p in self.passages)
         s += self.__str__anns__()
         s += ']'
@@ -459,13 +476,12 @@ class BioCDocument(AnnotationMixin, InfonsMaxin):
         """
         Returns a document containing one passage with the text
         """
-        passage = BioCPassage()
-        passage.text = text
-        passage.offset = 0
-        return cls.of_passages(passage)
+        doc = BioCDocument()
+        doc.text = text
+        return doc
 
 
-class BioCCollection(InfonsMaxin):
+class BioCCollection(InfonsMaxin, WithSentence):
     """
     Collection of documents.
 

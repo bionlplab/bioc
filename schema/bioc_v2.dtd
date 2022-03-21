@@ -8,7 +8,7 @@
 
 <!ELEMENT text (#PCDATA)>
 
-<!ELEMENT document ( infon*, passage+, annotation*, relation* ) >
+<!ELEMENT document ( infon*, ( text | passage+ | sentence+ ), annotation*, relation* ) >
 <!ATTLIST document id CDATA #IMPLIED >
 
 <!ELEMENT passage ( infon*, ( text | sentence* ), annotation*, relation* ) >

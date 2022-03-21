@@ -46,36 +46,33 @@ def brat2bioc_event(bratevent: BratEvent) -> BioCRelation:
 
 
 def brat2bioc_doc(bratdoc: BratDocument) -> BioCDocument:
-    passage = BioCPassage()
-    passage.offset = 0
-    passage.text = bratdoc.text
+    biocdoc = BioCDocument()
+    biocdoc.id = bratdoc.id
+    biocdoc.text = bratdoc.text
     # entity
     for bratentity in bratdoc.entities:
-        passage.add_annotation(brat2bioc_entity(bratentity))
+        biocdoc.add_annotation(brat2bioc_entity(bratentity))
     # relation
     for bratrelation in bratdoc.relations:
-        passage.add_relation(brat2bioc_relation(bratrelation))
+        biocdoc.add_relation(brat2bioc_relation(bratrelation))
     # event
     for bratevent in bratdoc.events:
-        passage.add_relation(brat2bioc_event(bratevent))
+        biocdoc.add_relation(brat2bioc_event(bratevent))
     # equiv
     for i, brat_equiv in enumerate(bratdoc.equiv_relations):
         brat_equiv.id = '%s%s' % (brat_equiv.id, i)
-        passage.add_relation(brat2bioc_equiv(brat_equiv))
+        biocdoc.add_relation(brat2bioc_equiv(brat_equiv))
     # attribute
     for bratatt in bratdoc.attributes:
-        ann = passage.get(bratatt.refid)
+        ann = biocdoc.get(bratatt.refid)
         ann.infons['note_id'] = bratatt.id
         ann.infons['attributes'] = ' '.join(sorted(bratatt.attributes))
     # note
     for bratnote in bratdoc.notes:
-        ann = passage.get(bratnote.refid)
+        ann = biocdoc.get(bratnote.refid)
         ann.infons['note_id'] = bratnote.id
         ann.infons['type'] = bratnote.type
         ann.infons['note'] = bratnote.text
-
-    biocdoc = BioCDocument.of_passages(passage)
-    biocdoc.id = bratdoc.id
     return biocdoc
 
 

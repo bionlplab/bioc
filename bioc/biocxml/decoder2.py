@@ -59,8 +59,12 @@ class BioCXMLDecoder:
         document = BioCDocument()
         document.id = tree.attrib['id']
         document.infons = self.__parse_infons(tree)
+        if tree.find('text') is not None:
+            document.text = tree.findtext('text')
         for child in tree.findall('passage'):
             document.add_passage(self.__parse_passage(child))
+        for child in tree.findall('sentence'):
+            document.add_sentence(self.__parse_sentence(child))
         for child in tree.findall('annotation'):
             document.add_annotation(self.__parse_annotation(child))
         for child in tree.findall('relation'):

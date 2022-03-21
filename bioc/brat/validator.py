@@ -18,11 +18,14 @@ def validate(document: BratDocument, onerror: Callable[[str], None]= _default_er
         for span in sorted(ann.locations, key=lambda s: s[0]):
             anntext += document.text[span[0]: span[1]]
         if anntext != ann.text:
+            start = max(0, ann.total_span[0] - 10)
+            end = min(len(document.text), ann.total_span[1] + 10)
             onerror(
                 '%s: Annotation text is incorrect at %d.\n'
                 '  Annotation: %r\n'
-                '  Actual text: %r' %
-                (document.id, ann.total_span[0], anntext, ann.text))
+                '  Actual text: %r\n'
+                '  text: %s' %
+                (document.id, ann.total_span[0], anntext, ann.text, document.text[start:end]))
 
     for rel in document.relations:
         for arg_id in rel.arguments.values():

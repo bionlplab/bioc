@@ -111,7 +111,7 @@ def encode_passage(passage):
 def encode_document(document):
     """Encode a single document."""
     tree = etree.Element('document')
-    etree.SubElement(tree, 'id').text = document.id
+    etree.SubElement(tree, 'id').text = str(document.id)
     encode_infons(tree, document.infons)
     for passage in document.passages:
         tree.append(encode_passage(passage))

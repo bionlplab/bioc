@@ -108,7 +108,7 @@ class BratEntity(BratAnnotation):
         self.text = None  # type: str | None
         self.locations = IntervalTree()  # type: IntervalTree
 
-    def shit(self, offset: int):
+    def shift(self, offset: int):
         ent = BratEntity()
         ent.id = self.id
         ent.type = self.type
@@ -132,6 +132,10 @@ class BratEntity(BratAnnotation):
                    and self.type == other.type \
                    and self.text == other.text \
                    and self.locations == other.locations
+
+    def __str__(self):
+        return 'BratEntity[id=%s,type=%s,text=%s,loc=%s]' % (
+            self.id, self.type, self.text, self.locations)
 
 
 class BratRelation(BratAnnotation):
@@ -319,6 +323,12 @@ class BratDocument:
 
     def add_annotation(self, ann: BratAnnotation):
         self.annotations.append(ann)
+
+    def get_annotation(self, id: str, default=None) -> BratAnnotation:
+        for ann in self.annotations:
+            if id == ann.id:
+                return ann
+        return default
 
     def has_annotation_id(self, id: str):
         for ann in self.annotations:

@@ -47,5 +47,5 @@ def test_span():
 
 def test_shift():
     base = get_entity('T1', 'type', 'text', [(48, 53), (56, 57)])
-    base = base.shit(1)
+    base = base.shift(1)
     assert base.total_span == (49, 58)

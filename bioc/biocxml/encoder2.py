@@ -67,10 +67,14 @@ def encode_passage(passage):
 
 def encode_document(document):
     """Encode a single document."""
-    tree = etree.Element('document', {'id': document.id})
+    tree = etree.Element('document', {'id': str(document.id)})
     encode_infons(tree, document.infons)
+    if document.text:
+        etree.SubElement(tree, 'text').text = document.text
     for passage in document.passages:
         tree.append(encode_passage(passage))
+    for sen in document.sentences:
+        tree.append(encode_sentence(sen))
     for ann in document.annotations:
         tree.append(encode_annotation(ann))
     for rel in document.relations:
@@ -88,6 +92,8 @@ def encode_collection(collection):
     encode_infons(tree, collection.infons)
     for doc in collection.documents:
         tree.append(encode_document(doc))
+    for sen in collection.sentences:
+        tree.append(encode_sentence(sen))
     return tree
 
 

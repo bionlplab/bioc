@@ -3,6 +3,7 @@ Validate BioC data structure
 """
 from typing import Callable, List
 
+import bioc
 from bioc import BioCDocument, BioCCollection
 
 
@@ -58,6 +59,13 @@ class BioCValidator:
             self.traceback.pop()
         self.traceback.pop()
 
+    def validate_sen(self, sentence: bioc.BioCSentence):
+        self.traceback.append(sentence)
+        self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
+        self.__validate_rel(sentence.annotations, sentence.relations,
+                            f'sentence {sentence.offset}')
+        self.traceback.pop()
+
     def validate(self, collection: BioCCollection):
         """Validate a single collection."""
         for document in collection.documents:
@@ -75,11 +83,14 @@ class BioCValidator:
             location = ann.total_span
             anntext = text[location.offset - offset: location.offset + location.length - offset]
             if anntext != ann.text:
+                start = max(0, location.offset - 10)
+                end = min(len(text), location.end + 10)
                 self.onerror(
-                    '%s: Annotation text is incorrect at %d.\n'
+                    '%s:%s: Annotation text is incorrect at %d.\n'
                     '  Annotation: %s\n'
-                    '  Actual text: %s' %
-                    (self.current_docid, location.offset, anntext, ann.text),
+                    '  Actual text: %r\n'
+                    '  text: %s' %
+                    (self.current_docid, ann.id, location.offset, anntext, ann.text, text[start:end]),
                     self.traceback)
             self.traceback.pop()
 
@@ -118,6 +129,9 @@ class BioCValidator:
         return text
 
     def __get_doc_text(self, document):
+        if document.text:
+            return document.text
+
         text = ''
         for passage in document.passages:
             text = self.__fill_newline(text, passage.offset)
