@@ -42,9 +42,14 @@ class PubTator:
     def add_relation(self, rel: PubTatorRel):
         self.relations.append(rel)
 
-    def get_annotation(self, concept_id: str, default=None) -> PubTatorAnn:
+    def get_annotation(self, concept_id: str, multiple_ids: bool = True, default=None) -> PubTatorAnn:
+        """
+        :param multiple_ids: one entity may have multiple concept ids.
+        """
         for ann in self.annotations:
-            if ann.id == concept_id:
+            if multiple_ids and concept_id in ann.id:
+                return ann
+            elif ann.id == concept_id:
                 return ann
         return default
 

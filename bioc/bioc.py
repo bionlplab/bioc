@@ -320,6 +320,11 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
         sentence.offset = offset
         return sentence
 
+    @property
+    def total_span(self) -> BioCLocation:
+        """The total span of this sentence."""
+        return BioCLocation(self.offset, len(self.text))
+
 
 class WithSentence(ABC):
     def __init__(self):
@@ -403,6 +408,14 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
         passage.text = text
         passage.offset = offset
         return passage
+
+    @property
+    def total_span(self) -> BioCLocation:
+        """The total span of this annotation. Discontinued locations will be merged."""
+        if self.text:
+            return BioCLocation(self.offset, len(self.text))
+        else:
+            return BioCLocation(self.sentences[0].offset, self.sentences[-1].total_span.end)
 
 
 class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):

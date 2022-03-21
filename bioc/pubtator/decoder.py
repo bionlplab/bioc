@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import List, Generator, TextIO, Iterator
+from typing import List, Generator, TextIO, Iterator, Union
 
 from bioc.pubtator.pubtator import PubTator, PubTatorAnn, PubTatorRel
 
@@ -79,13 +79,23 @@ def iterparse(fp: TextIO) -> Generator[PubTator, None, None]:
     return iterparse_s(fp)
 
 
-def loads_ann(s: str) -> PubTatorAnn:
+def loads_ann(s: Union[str, List[str]]) -> PubTatorAnn:
     """
     Parse s (a str) in the Pubtator annotation format
     """
-    toks = s.split('\t')
-    if len(toks) >= 6:
-        return PubTatorAnn(pmid=toks[0], start=int(toks[1]),
-                           end=int(toks[2]), text=toks[3],
-                           type=toks[4], id=toks[5])
+    if isinstance(s, str):
+        toks = s.split('\t')
+    else:
+        toks = s
+
+    if len(toks) == 6:
+        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]), text=toks[3], type=toks[4], id=toks[5])
+
+    if len(toks) == 7 and '|' in toks[5] and '|' in toks[6]:
+        ids = toks[5].split('|')
+        texts = toks[6].split('|')
+        if len(ids) != len(texts):
+            raise ValueError('Cannot parse entity. %s concept but %s text. %s' % (len(ids), len(texts), s))
+        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]), text=toks[3], type=toks[4], id=toks[5])
+
     raise ValueError('Cannot parse: %s' % s)

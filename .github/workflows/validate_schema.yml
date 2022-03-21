@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - schema/**
+    branches:
+      - main
 jobs:
   test:
     name: Validate BioC schema
