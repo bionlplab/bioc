@@ -5,34 +5,34 @@
 Encoding the BioC collection object `collection`:
 
 ```python
-import bioc
+from bioc import biocjson
 
 # Serialize ``collection`` to a BioC Json formatted ``str``.
-bioc.dumps(collection, BioCFileType.BIOC_JSON, indent=2)
+biocjson.dumps(collection, indent=2)
 
 # Serialize ``collection`` as a BioC Json formatted stream to ``fp``.
 with open(filename, 'w') as fp
-    bioc.dump(collection, BioCFileType.BIOC_JSON, fp, indent=2)
+    biocjson.dump(collection, fp, indent=2)
 ```
 
 Compact encoding:
 
 ```python
-import bioc
-bioc.dumps(collection, BioCFileType.BIOC_JSON)
+from bioc import biocjson
+biocjson.dumps(collection)
 ```
 
 ## Decoding the BioC Json file
 
 ```python
-import bioc
+from bioc import biocjson
 
 # Deserialize ``s`` to a BioC collection object.
-collection = bioc.loads(s, BioCFileType.BIOC_JSON)
+collection = biocjson.loads(s)
 
 # Deserialize ``fp`` to a BioC collection object.
 with open(filename, 'r') as fp:
-    collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+    collection = biocjson.load(fp)
 ```
 
 ## Json Lines
@@ -40,7 +40,9 @@ with open(filename, 'r') as fp:
 Incrementally encoding the BioC structure:
 
 ```python
-from bioc import BioCJsonIterWriter
+import bioc
+from bioc.biocjson import BioCJsonIterWriter
+
 with open(filename, 'w', encoding='utf8') as fp:
     writer = BioCJsonIterWriter(fp, level=bioc.PASSAGE)
     for doc in collection.documents:
@@ -51,18 +53,19 @@ with open(filename, 'w', encoding='utf8') as fp:
 or
 
 ```python
-from bioc import toJSON
+from bioc import biocjson
 import jsonlines
 with jsonlines.open(filename, 'w') as writer:
     for doc in collection.documents:
          for passage in doc.passages:
-             writer.write(toJSON(passage))
+             writer.write(biocjson.toJSON(passage))
 ```
 
 Incrementally decoding the BioC Json lines file:
 
 ```python
-from bioc import BioCJsonIterReader
+import bioc
+from bioc.biocjson import BioCJsonIterReader
 with open(filename, 'r', encoding='utf8') as fp:
     reader = BioCJsonIterReader(fp, level=bioc.PASSAGE)
     for passage in reader:
@@ -73,11 +76,12 @@ with open(filename, 'r', encoding='utf8') as fp:
 or
 
 ```python
-from bioc import fromJSON
+import bioc
+from bioc import biocjson
 import jsonlines
 with jsonlines.open(filename) as reader:
     for obj in reader:
-        passage = fromJSON(obj, level=bioc.PASSAGE)
+        passage = biocjson.fromJSON(obj, level=bioc.PASSAGE)
         ...
 ```
 

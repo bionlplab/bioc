@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 
-import bioc
 from bioc import biocxml
 from tests.utils import assert_everything
 
@@ -12,32 +11,32 @@ from tests.utils import assert_everything
 def _get_collection():
     file = Path(__file__).parent / 'everything.xml'
     with open(file, encoding='utf8') as fp:
-        return bioc.load(fp)
+        return biocxml.load(fp)
 
 
 def test_dump():
     collection = _get_collection()
     tmp = tempfile.mktemp()
     with open(tmp, 'w', encoding='utf8') as fp:
-        bioc.dump(collection, fp)
+        biocxml.dump(collection, fp)
     with open(tmp, encoding='utf8') as fp:
-        collection = bioc.load(fp)
+        collection = biocxml.load(fp)
     assert_everything(collection)
 
 
 def test_dumps():
     collection = _get_collection()
-    s = bioc.dumps(collection)
-    collection = bioc.loads(s)
+    s = biocxml.dumps(collection)
+    collection = biocxml.loads(s)
     assert_everything(collection)
 
 
 def test_file_type():
     with pytest.raises(ValueError):
-        bioc.dump(None, None, None)
+        biocxml.dump(None, None, None)
 
     with pytest.raises(ValueError):
-        bioc.dumps(None, None)
+        biocxml.dumps(None, None)
 
 
 def test_iterwrite_file():
@@ -50,7 +49,7 @@ def test_iterwrite_file():
             writer.write_document(document)
 
     with open(tmp, encoding='utf8') as fp:
-        collection = bioc.load(fp)
+        collection = biocxml.load(fp)
 
     assert_everything(collection)
 
@@ -63,5 +62,5 @@ def test_iterwrite_io():
         for document in collection.documents:
             writer.write_document(document)
 
-    collection = bioc.loads(f.getvalue().decode('utf-8'))
+    collection = biocxml.loads(f.getvalue().decode('utf-8'))
     assert_everything(collection)

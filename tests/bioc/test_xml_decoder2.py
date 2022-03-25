@@ -10,14 +10,14 @@ file = Path(__file__).parent / 'everything_v2.xml'
 
 def test_load():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp, version=bioc.BioCVersion.V2)
+        collection = biocxml.load(fp, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 
 def test_loads():
     with open(file, encoding='utf8') as fp:
         s = fp.read()
-    collection = bioc.loads(s, version=bioc.BioCVersion.V2)
+    collection = biocxml.loads(s, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 

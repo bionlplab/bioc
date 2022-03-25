@@ -7,7 +7,7 @@ from typing import TextIO, Dict, Union
 
 from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
     BioCLocation, BioCPassage, BioCDocument
-from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: Dict) -> BioCCollection:

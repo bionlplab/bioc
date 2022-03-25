@@ -7,7 +7,7 @@ from typing import Dict, Union, TextIO
 
 from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
-from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]

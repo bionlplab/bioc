@@ -10,23 +10,23 @@ from tests.utils import assert_everything
 def _get_collection():
     file = Path(__file__).parent / 'everything_v2.xml'
     with open(file, encoding='utf8') as fp:
-        return bioc.load(fp, version=bioc.BioCVersion.V2)
+        return biocxml.load(fp, version=bioc.BioCVersion.V2)
 
 
 def test_dump():
     collection = _get_collection()
     tmp = tempfile.mktemp()
     with open(tmp, 'w', encoding='utf8') as fp:
-        bioc.dump(collection, fp, version=bioc.BioCVersion.V2)
+        biocxml.dump(collection, fp, version=bioc.BioCVersion.V2)
     with open(tmp, encoding='utf8') as fp:
-        collection = bioc.load(fp, version=bioc.BioCVersion.V2)
+        collection = biocxml.load(fp, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 
 def test_dumps():
     collection = _get_collection()
-    s = bioc.dumps(collection, version=bioc.BioCVersion.V2)
-    collection = bioc.loads(s, version=bioc.BioCVersion.V2)
+    s = biocxml.dumps(collection, version=bioc.BioCVersion.V2)
+    collection = biocxml.loads(s, version=bioc.BioCVersion.V2)
     assert_everything(collection)
 
 
@@ -40,7 +40,7 @@ def test_iterwrite_file():
             writer.write_document(document)
 
     with open(tmp, encoding='utf8') as fp:
-        collection = bioc.load(fp, version=bioc.BioCVersion.V2)
+        collection = biocxml.load(fp, version=bioc.BioCVersion.V2)
 
     assert_everything(collection)
 
@@ -53,6 +53,6 @@ def test_iterwrite_io():
         for document in collection.documents:
             writer.write_document(document)
 
-    collection = bioc.loads(f.getvalue().decode('utf-8'), version=bioc.BioCVersion.V2)
+    collection = biocxml.loads(f.getvalue().decode('utf-8'), version=bioc.BioCVersion.V2)
     assert_everything(collection)
 

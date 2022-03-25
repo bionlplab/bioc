@@ -7,7 +7,7 @@ import time
 from abc import ABC
 from typing import List, NewType, Union
 
-from bioc.bioc.utils import shorten_text
+from bioc.utils import shorten_text
 
 
 class InfonsMaxin(ABC):

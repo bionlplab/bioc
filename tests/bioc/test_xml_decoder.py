@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-import bioc
 from bioc import biocxml
 from tests.utils import assert_everything
 
@@ -12,22 +11,22 @@ file = Path(__file__).parent / 'everything.xml'
 
 def test_load():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp)
+        collection = biocxml.load(fp)
     assert_everything(collection)
 
 
 def test_file_type():
     with pytest.raises(ValueError):
-        bioc.load(open(file, encoding='utf8'), None)
+        biocxml.load(open(file, encoding='utf8'), None)
 
     with pytest.raises(ValueError):
-        bioc.loads('', None)
+        biocxml.loads('', None)
 
 
 def test_loads():
     with open(file, encoding='utf8') as fp:
         s = fp.read()
-    collection = bioc.loads(s)
+    collection = biocxml.loads(s)
     assert_everything(collection)
 
 

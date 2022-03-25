@@ -5,9 +5,11 @@ from pathlib import Path
 import pytest
 
 import bioc
-from bioc import BioCFileType
-from bioc import BioCJsonIterWriter
-from bioc import fromJSON, BioCJsonIterReader
+from bioc import biocjson
+from bioc.biocjson import BioCJsonIterWriter, BioCJsonIterReader
+# from bioc import BioCFileType
+# from bioc import BioCJsonIterWriter
+# from bioc.biocjson import BioCJsonIterReader
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -15,37 +17,37 @@ file = Path(__file__).parent / 'everything.json'
 
 def test_load():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+        collection = biocjson.load(fp)
     assert_everything(collection)
 
 
 def test_loads():
     with open(file, encoding='utf8') as fp:
         s = fp.read()
-    collection = bioc.loads(s, BioCFileType.BIOC_JSON)
+    collection = biocjson.loads(s)
     assert_everything(collection)
 
 
 def test_fromJSON():
     with pytest.raises(ValueError):
-        fromJSON({}, level=5)
+        biocjson.fromJSON({}, level=5)
 
     with open(file, encoding='utf8') as fp:
         obj = json.load(fp)
 
-    d = fromJSON(obj['documents'][0], bioc.DOCUMENT)
+    d = biocjson.fromJSON(obj['documents'][0], bioc.DOCUMENT)
     assert d.id == '1'
 
-    p = fromJSON(obj['documents'][0]['passages'][0], bioc.PASSAGE)
+    p = biocjson.fromJSON(obj['documents'][0]['passages'][0], bioc.PASSAGE)
     assert p.text == 'abcdefghijklmnopqrstuvwxyz'
 
-    s = fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], bioc.SENTENCE)
+    s = biocjson.fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], bioc.SENTENCE)
     assert s.offset == 27
 
 
 def test_BioCJsonIterReader_document():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+        collection = biocjson.load(fp)
 
     s = io.StringIO()
     writer = BioCJsonIterWriter(s, level=bioc.DOCUMENT)
@@ -65,7 +67,7 @@ def test_BioCJsonIterReader_document():
 
 def test_BioCJsonIterReader_passage():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+        collection = biocjson.load(fp)
 
     s = io.StringIO()
     writer = BioCJsonIterWriter(s, level=bioc.PASSAGE)
@@ -85,7 +87,7 @@ def test_BioCJsonIterReader_passage():
 
 def test_BioCJsonIterReader_sentence():
     with open(file, encoding='utf8') as fp:
-        collection = bioc.load(fp, BioCFileType.BIOC_JSON)
+        collection = biocjson.load(fp)
 
     s = io.StringIO()
     writer = BioCJsonIterWriter(s, level=bioc.SENTENCE)

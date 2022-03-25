@@ -6,7 +6,7 @@ from typing import Generator, Collection, Union
 
 from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation
-from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 class BioCResult:

@@ -5,7 +5,7 @@ from typing import TextIO, Union, BinaryIO
 from contextlib import contextmanager
 
 from bioc.bioc import BioCCollection
-from bioc.bioc.constants import BioCVersion
+from bioc.constants import BioCVersion
 from .decoder import BioCXMLDocumentReader
 from .decoder import load as load1, loads as loads1
 from .decoder2 import BioCXMLDocumentReader as BioCXMLDocumentReader2

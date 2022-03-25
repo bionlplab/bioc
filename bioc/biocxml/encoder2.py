@@ -5,7 +5,7 @@ from typing import TextIO
 from lxml import etree
 
 from bioc.bioc import BioCCollection, BioCDocument
-from bioc.bioc.biocxml.encoder import encode_infons, encode_annotation, encode_relation
+from bioc.biocxml.encoder import encode_infons, encode_annotation, encode_relation
 
 
 def dump(collection: BioCCollection, fp: TextIO, *, pretty_print: bool = True):

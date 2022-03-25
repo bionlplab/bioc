@@ -1,6 +1,6 @@
 import pytest
 
-from bioc.bioc.validator import BioCValidator
+from bioc.validator import BioCValidator
 from bioc import pubtator
 from bioc.tools.pubtator2bioc import pubtator2bioc
 

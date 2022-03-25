@@ -7,19 +7,19 @@ bioc's interfaces for processing BioC XML are grouped in the `biocxml` package.
 Encoding the BioC collection object `collection`:
 
 ```python
-import bioc
+from bioc import biocxml
 # Serialize ``collection`` to a BioC formatted ``str``.
-bioc.dumps(collection)
+biocxml.dumps(collection)
 # Serialize ``collection`` as a BioC formatted stream to ``fp``.
 with open(filename, 'w') as fp:
-    bioc.dump(collection, fp)
+    biocxml.dump(collection, fp)
 ```
 
 Compact encoding:
 
 ```python
-import bioc
-bioc.dumps(collection, pretty_print=False)
+from bioc import biocxml
+biocxml.dumps(collection, pretty_print=False)
 ```
 
 Incremental BioC serialisation:
@@ -37,12 +37,12 @@ with biocxml.iterwrite(filename) as writer:
 Decoding the BioC XML file:
 
 ```python
-import bioc
+from bioc import biocxml
 # Deserialize ``s`` to a BioC collection object.
-collection = bioc.loads(s)
+collection = biocxml.loads(s)
 # Deserialize ``fp`` to a BioC collection object.
 with open(filename, 'r') as fp:
-    collection = bioc.load(fp)
+    collection = biocxml.load(fp)
 ```
 
 Incrementally decoding the BioC XML file:
