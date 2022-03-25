@@ -1,6 +1,6 @@
 import pytest
 
-from bioc.pubtator import decoder, encoder
+from bioc import pubtator
 
 text = """8701013|t|Famotidine-associated delirium. A series of six cases.
 8701013|a|Famotidine is a histamine H2-receptor antagonist used in inpatient settings for prevention of stress ulcers and is showing increasing popularity because of its low cost. Although all of the currently available H2-receptor antagonists have shown the propensity to cause delirium, only two previously reported cases have been associated with famotidine. The authors report on six cases of famotidine-associated delirium in hospitalized patients who cleared completely upon removal of famotidine. The pharmacokinetics of famotidine are reviewed, with no change in its metabolism in the elderly population seen. The implications of using famotidine in elderly persons are discussed.
@@ -26,7 +26,7 @@ def _test_doc(doc):
 
 
 def test_loads():
-    docs = decoder.loads(text)
+    docs = pubtator.loads(text)
     assert len(docs) == 1
     _test_doc(docs[0])
 
@@ -37,7 +37,7 @@ def test_load(tmp_path):
     with open(filepath, 'w') as fp:
         fp.write(text)
     with open(filepath) as fp:
-        docs = decoder.load(fp)
+        docs = pubtator.load(fp)
     assert len(docs) == 1
     _test_doc(docs[0])
 
@@ -50,7 +50,7 @@ def test_iterparse(tmp_path):
         fp.write(text)
 
     with open(filepath) as fp:
-        docs = [doc for doc in decoder.iterparse(fp)]
+        docs = [doc for doc in pubtator.iterparse(fp)]
 
     assert len(docs) == 2
     _test_doc(docs[0])
@@ -59,32 +59,32 @@ def test_iterparse(tmp_path):
 
 def test_loads_ann():
     text = "23949582\t297\t317\themorrhagic cystitis\tDisease\tD006470|D003556\themorrhagic|cystitis"
-    ann = decoder.loads_ann(text)
+    ann = pubtator.loads_ann(text)
     assert ann.text == 'hemorrhagic cystitis'
 
     with pytest.raises(ValueError):
         text = "23949582\t297\t317\themorrhagic cystitis\tDisease\tD006470|D003556\themorrhagic|cystitis|ABC"
-        decoder.loads_ann(text)
+        pubtator.loads_ann(text)
 
     with pytest.raises(ValueError):
         text = "23949582\t297\t317"
-        decoder.loads_ann(text)
+        pubtator.loads_ann(text)
 
 
 def test_dump(tmp_path):
-    docs = decoder.loads(text)
+    docs = pubtator.loads(text)
     filepath = tmp_path / 'foo.txt'
     with open(filepath, 'w') as fp:
-        encoder.dump(fp, docs[0])
+        pubtator.dump(docs, fp)
     with open(filepath) as fp:
-        docs = decoder.load(fp)
+        docs = pubtator.load(fp)
     assert len(docs) == 1
     _test_doc(docs[0])
 
 
 def test_dumps():
-    docs = decoder.loads(text)
-    s = encoder.dumps(docs[0])
-    docs = decoder.loads(s)
+    docs = pubtator.loads(text)
+    s = pubtator.dumps(docs)
+    docs = pubtator.loads(s)
     assert len(docs) == 1
     _test_doc(docs[0])

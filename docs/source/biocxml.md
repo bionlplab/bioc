@@ -1,4 +1,4 @@
-# XML
+# BioC XML
 
 bioc's interfaces for processing BioC XML are grouped in the `biocxml` package.
 

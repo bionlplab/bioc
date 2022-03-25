@@ -1,7 +1,7 @@
 import pytest
 
 from bioc.bioc.validator import BioCValidator
-from bioc.pubtator import decoder, validate
+from bioc import pubtator
 from bioc.tools.pubtator2bioc import pubtator2bioc
 
 text = """8701013|t|Famotidine-associated delirium. A series of six cases.
@@ -22,10 +22,10 @@ text = """8701013|t|Famotidine-associated delirium. A series of six cases.
 
 @pytest.fixture
 def documents():
-    return decoder.loads(text)
+    return pubtator.loads(text)
 
 
-def test_brat2bioc(documents):
+def test_pubtator2bioc(documents):
     d = pubtator2bioc(documents[0])
     assert len(d.annotations) == 11
     assert len(d.relations) == 1

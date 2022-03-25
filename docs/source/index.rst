@@ -20,6 +20,7 @@ Development of ``bioc`` happens on GitHub: https://github.com/bionlplab/bioc
    biocxml
    biocjson
    brat
+   pubtator
    developer_guide
    contribute
    code_of_conduct

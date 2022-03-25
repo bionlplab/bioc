@@ -1,4 +1,4 @@
-# Json
+# BioC Json
 
 ## Encoding the BioC object
 

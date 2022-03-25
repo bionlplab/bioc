@@ -1,6 +1,6 @@
 import pytest
 
-from bioc.brat import decoder
+from bioc import brat
 from bioc.tools.brat2bioc import brat2bioc
 
 txt_text = "There is no PPI relation between protein 1 and protein 2."
@@ -18,7 +18,7 @@ A1	Negation E1
 
 @pytest.fixture
 def document():
-    return decoder.loads(txt_text, ann_text)
+    return brat.loads(txt_text, ann_text)
 
 
 def test_brat2bioc(document):

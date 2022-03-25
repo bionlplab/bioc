@@ -1,4 +1,4 @@
-from typing import TextIO
+from typing import TextIO, List
 
 from bioc.pubtator.pubtator import PubTatorAnn, PubTatorRel, PubTator
 
@@ -11,25 +11,25 @@ def dumps_rel(rel: PubTatorRel) -> str:
     return str(rel)
 
 
-def dumps(doc: PubTator) -> str:
+def dumps(docs: List[PubTator]) -> str:
     """
-    Serialize obj (an instance of Pubtator) to a Pubtator formatted str.
+    Serialize a list of Pubtator instances to a Pubtator formatted str.
 
     Args:
-        doc: a Pubtator document
+        docs: a list of Pubtator documents
 
     Return:
         a Pubtator formatted str
     """
-    return str(doc)
+    return '\n'.join(str(doc) for doc in docs)
 
 
-def dump(fp: TextIO, obj: PubTator):
+def dump(docs: List[PubTator], fp: TextIO):
     """
-    Serialize obj (an instance of Pubtator) to file-like object.
+    Serialize a list of Pubtator instances to file-like object.
 
     Args:
+        docs: a list of Pubtator documents
         fp: a file-like object
-        obj: a Pubtator document
     """
-    fp.write(dumps(obj) + '\n')
+    fp.write(dumps(docs))

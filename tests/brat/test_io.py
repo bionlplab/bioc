@@ -1,5 +1,4 @@
-from bioc.brat import decoder, encoder
-from bioc.brat.brat import BratDocument
+from bioc import brat
 
 txt_text = "There is no PPI relation between protein 1 and protein 2."
 
@@ -15,7 +14,7 @@ A1	Negation E1
 """
 
 
-def _assert(document: BratDocument):
+def _assert(document: brat.BratDocument):
     assert len(document.entities) == 3
     assert len(document.events) == 1
     assert len(document.relations) == 1
@@ -26,7 +25,7 @@ def _assert(document: BratDocument):
 
 
 def test_loads():
-    document = decoder.loads(txt_text, ann_text)
+    document = brat.loads(txt_text, ann_text)
     _assert(document)
 
 
@@ -40,15 +39,15 @@ def test_load(tmp_path):
         fp.write(txt_text)
 
     with open(annpath) as ann_fp, open(txtpath) as txt_fp:
-        document = decoder.load(txt_fp, ann_fp)
+        document = brat.load(txt_fp, ann_fp)
 
     _assert(document)
 
 
 def test_dumps():
-    base = decoder.loads_ann(ann_text)
-    s = encoder.dumps_ann(base)
-    document = decoder.loads_ann(s)
+    base = brat.loads_ann(ann_text)
+    s = brat.dumps_ann(base)
+    document = brat.loads_ann(s)
     _assert(document)
 
 
@@ -56,12 +55,12 @@ def test_dump(tmp_path):
     annpath = tmp_path / 'foo.ann'
     txtpath = tmp_path / 'foo.txt'
 
-    base = decoder.loads(txt_text, ann_text)
+    base = brat.loads(txt_text, ann_text)
     with open(annpath, 'w') as ann_fp, open(txtpath, 'w') as text_fp:
-        encoder.dump(base, text_fp, ann_fp)
+        brat.dump(base, text_fp, ann_fp)
 
     with open(annpath) as ann_fp, open(txtpath) as text_fp:
-        document = decoder.load(text_fp, ann_fp)
+        document = brat.load(text_fp, ann_fp)
 
     _assert(document)
 
@@ -76,8 +75,8 @@ def test_loaddir(tmp_path):
             fp.write(ann_text)
         with open(tmp_path / f'{i}.a2', 'w') as fp:
             fp.write(ann_text)
-    docs = decoder.loaddir(tmp_path)
+    docs = brat.loaddir(tmp_path)
     assert len(docs) == 10
 
-    docs = [doc for doc in decoder.iterloaddir(tmp_path, ann_file=False)]
+    docs = [doc for doc in brat.iterloaddir(tmp_path, ann_file=False)]
     assert len(docs) == 10
