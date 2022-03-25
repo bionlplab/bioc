@@ -24,8 +24,8 @@ def document():
 def test_brat2bioc(document):
     c = brat2bioc([document])
     assert len(c.documents) == 1
-    assert len(c.documents[0].passages) == 1
 
-    p = c.documents[0].passages[0]
-    assert len(p.annotations) == 3
-    assert len(p.relations) == 3
+    d = c.documents[0]
+    assert d.text == txt_text
+    assert len(d.annotations) == 3
+    assert len(d.relations) == 3

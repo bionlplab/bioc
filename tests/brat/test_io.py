@@ -64,3 +64,20 @@ def test_dump(tmp_path):
         document = decoder.load(text_fp, ann_fp)
 
     _assert(document)
+
+
+def test_loaddir(tmp_path):
+    for i in range(10):
+        with open(tmp_path / f'{i}.txt', 'w') as fp:
+            fp.write(txt_text)
+        with open(tmp_path / f'{i}.ann', 'w') as fp:
+            fp.write(ann_text)
+        with open(tmp_path / f'{i}.a1', 'w') as fp:
+            fp.write(ann_text)
+        with open(tmp_path / f'{i}.a2', 'w') as fp:
+            fp.write(ann_text)
+    docs = decoder.loaddir(tmp_path)
+    assert len(docs) == 10
+
+    docs = [doc for doc in decoder.iterloaddir(tmp_path, ann_file=False)]
+    assert len(docs) == 10

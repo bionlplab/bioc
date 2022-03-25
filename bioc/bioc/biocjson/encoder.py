@@ -5,9 +5,9 @@ BioC JSON encoder
 import json
 from typing import Dict, Union, TextIO
 
-from bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
+from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
-from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]

@@ -5,9 +5,9 @@ BioC JSON decoder
 import json
 from typing import TextIO, Dict, Union
 
-from bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
+from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
     BioCLocation, BioCPassage, BioCDocument
-from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: Dict) -> BioCCollection:

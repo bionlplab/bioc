@@ -4,18 +4,18 @@ This module implements a number of iterator building blocks.
 
 from typing import Generator, Collection, Union
 
-from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation
-from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
+from bioc.bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 class BioCResult:
     def __init__(self):
-        self.document = None  # type: BioCDocument | None
-        self.passage = None  # type: BioCPassage | None
-        self.sentence = None  # type: BioCSentence | None
-        self.annotation = None  # type: BioCAnnotation | None
-        self.relation = None  # type: BioCRelation | None
+        self.document = None  # type: BioCDocument or None
+        self.passage = None  # type: BioCPassage or None
+        self.sentence = None  # type: BioCSentence or None
+        self.annotation = None  # type: BioCAnnotation or None
+        self.relation = None  # type: BioCRelation or None
 
 
 def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,

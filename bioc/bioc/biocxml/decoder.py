@@ -7,7 +7,7 @@ from typing import TextIO, Union, BinaryIO
 
 from lxml import etree
 
-from bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation, BioCLocation, BioCNode
 
 

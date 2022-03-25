@@ -1,11 +1,10 @@
 """
-BioC XML encoder v2
+BioC XML encoder
 """
 from typing import TextIO
 from lxml import etree
 
-from bioc import BioCCollection, BioCDocument
-from bioc.biocxml.encoder import encode_infons, encode_annotation, encode_relation
+from bioc.bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation
 
 
 def dump(collection: BioCCollection, fp: TextIO, *, pretty_print: bool = True):
@@ -37,10 +36,53 @@ def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:
     return s.decode(collection.encoding)
 
 
+def encode_location(location: BioCLocation):
+    """Encode a single location."""
+    return etree.Element('location',
+                         {'offset': str(location.offset), 'length': str(location.length)})
+
+
+def encode_node(node: BioCNode):
+    """Encode a single node."""
+    return etree.Element('node', {'refid': node.refid, 'role': node.role})
+
+
+def encode_relation(relation: BioCRelation):
+    """Encode a single relation."""
+    tree = etree.Element('relation', {'id': relation.id})
+    encode_infons(tree, relation.infons)
+    for node in relation.nodes:
+        tree.append(encode_node(node))
+    return tree
+
+
+def encode_infons(tree, infons):
+    for k, v in infons.items():
+        elem = encode_infon(k, v)
+        tree.append(elem)
+
+
+def encode_infon(k, v):
+    elem = etree.Element('infon', {'key': str(k)})
+    elem.text = str(v)
+    return elem
+
+
+def encode_annotation(annotation):
+    """Encode a single annotation."""
+    tree = etree.Element('annotation', {'id': annotation.id})
+    encode_infons(tree, annotation.infons)
+    for location in annotation.locations:
+        tree.append(encode_location(location))
+    etree.SubElement(tree, 'text').text = annotation.text
+    return tree
+
+
 def encode_sentence(sentence):
     """Encode a single sentence."""
-    tree = etree.Element('sentence', {'offset': str(sentence.offset)})
+    tree = etree.Element('sentence')
     encode_infons(tree, sentence.infons)
+    etree.SubElement(tree, 'offset').text = str(sentence.offset)
     if sentence.text:
         etree.SubElement(tree, 'text').text = sentence.text
     for ann in sentence.annotations:
@@ -52,8 +94,9 @@ def encode_sentence(sentence):
 
 def encode_passage(passage):
     """Encode a single passage."""
-    tree = etree.Element('passage', {'offset': str(passage.offset)})
+    tree = etree.Element('passage')
     encode_infons(tree, passage.infons)
+    etree.SubElement(tree, 'offset').text = str(passage.offset)
     if passage.text:
         etree.SubElement(tree, 'text').text = passage.text
     for sen in passage.sentences:
@@ -67,14 +110,11 @@ def encode_passage(passage):
 
 def encode_document(document):
     """Encode a single document."""
-    tree = etree.Element('document', {'id': str(document.id)})
+    tree = etree.Element('document')
+    etree.SubElement(tree, 'id').text = str(document.id)
     encode_infons(tree, document.infons)
-    if document.text:
-        etree.SubElement(tree, 'text').text = document.text
     for passage in document.passages:
         tree.append(encode_passage(passage))
-    for sen in document.sentences:
-        tree.append(encode_sentence(sen))
     for ann in document.annotations:
         tree.append(encode_annotation(ann))
     for rel in document.relations:
@@ -88,12 +128,9 @@ def encode_collection(collection):
     etree.SubElement(tree, 'source').text = collection.source
     etree.SubElement(tree, 'date').text = collection.date
     etree.SubElement(tree, 'key').text = collection.key
-    etree.SubElement(tree, 'version').text = collection.version
     encode_infons(tree, collection.infons)
     for doc in collection.documents:
         tree.append(encode_document(doc))
-    for sen in collection.sentences:
-        tree.append(encode_sentence(sen))
     return tree
 
 
@@ -136,10 +173,6 @@ class BioCXMLDocumentWriter:
 
         elem = etree.Element('key')
         elem.text = collection.key
-        self.__writer.send(elem)
-
-        elem = etree.Element('version')
-        elem.text = collection.version
         self.__writer.send(elem)
 
         for k, v in collection.infons.items():

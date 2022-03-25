@@ -1,4 +1,4 @@
-from bioc.bioc import InfonsMaxin
+from bioc.bioc.bioc import InfonsMaxin
 
 
 def test_infonsmaxin():

@@ -7,7 +7,7 @@ import time
 from abc import ABC
 from typing import List, NewType, Union
 
-from .utils import shorten_text
+from bioc.bioc.utils import shorten_text
 
 
 class InfonsMaxin(ABC):
@@ -295,7 +295,7 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
 
     def __init__(self):
         super(BioCSentence, self).__init__()
-        self.offset = -1  # type: int
+        self.offset = None  # type: int or None
         self.text = ''  # type: str
 
     def __str__(self):

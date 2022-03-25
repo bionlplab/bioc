@@ -78,7 +78,7 @@ def test_BioCDocument(collection):
 
     text = 'abcdefghijklmnopqrstuvwxyz'
     doc = bioc.BioCDocument.of_text(text)
-    assert doc.get_passage(0).text == text
+    assert doc.text == text
 
     passages = d.passages
     newd = bioc.BioCDocument.of_passages(*passages)

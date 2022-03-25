@@ -3,8 +3,7 @@ Validate BioC data structure
 """
 from typing import Callable, List
 
-import bioc
-from bioc import BioCDocument, BioCCollection
+from bioc.bioc import BioCDocument, BioCCollection, BioCSentence
 
 
 # pylint: disable=unused-argument
@@ -39,30 +38,30 @@ class BioCValidator:
         self.traceback.append(document)
 
         text = self.__get_doc_text(document)
-        self.__validate_ann(document.annotations, text, 0)
-        self.__validate_rel(annotations, document.relations, f'document {document.id}')
+        self._validate_ann(document.annotations, text, 0)
+        self._validate_rel(annotations, document.relations, f'document {document.id}')
 
         for passage in document.passages:
             self.traceback.append(passage)
 
             text = self.__get_passage_text(passage)
-            self.__validate_ann(passage.annotations, text, passage.offset)
-            self.__validate_rel(annotations, passage.relations,
+            self._validate_ann(passage.annotations, text, passage.offset)
+            self._validate_rel(annotations, passage.relations,
                                 f'document {document.id} --> passage {passage.offset}')
 
             for sentence in passage.sentences:
                 self.traceback.append(sentence)
-                self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
-                self.__validate_rel(annotations, sentence.relations,
+                self._validate_ann(sentence.annotations, sentence.text, sentence.offset)
+                self._validate_rel(annotations, sentence.relations,
                                     f'document {document.id} --> sentence {sentence.offset}')
                 self.traceback.pop()
             self.traceback.pop()
         self.traceback.pop()
 
-    def validate_sen(self, sentence: bioc.BioCSentence):
+    def validate_sen(self, sentence: BioCSentence):
         self.traceback.append(sentence)
-        self.__validate_ann(sentence.annotations, sentence.text, sentence.offset)
-        self.__validate_rel(sentence.annotations, sentence.relations,
+        self._validate_ann(sentence.annotations, sentence.text, sentence.offset)
+        self._validate_rel(sentence.annotations, sentence.relations,
                             f'sentence {sentence.offset}')
         self.traceback.pop()
 
@@ -71,13 +70,13 @@ class BioCValidator:
         for document in collection.documents:
             self.validate_doc(document)
 
-    def __validate_rel(self, annotations, relations, path):
+    def _validate_rel(self, annotations, relations, path):
         for relation in relations:
             for node in relation.nodes:
                 if not self.__contains(annotations, node.refid):
                     self.onerror(f'Cannot find node {node} in {path}', self.traceback)
 
-    def __validate_ann(self, annotations, text, offset):
+    def _validate_ann(self, annotations, text, offset):
         for ann in annotations:
             self.traceback.append(ann)
             location = ann.total_span

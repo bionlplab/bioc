@@ -59,9 +59,7 @@ def iterparse_s(line_iterator: Iterator[str]) -> Generator[PubTator, None, None]
             continue
         toks = line.split('\t')
         if len(toks) >= 6:
-            annotation = PubTatorAnn(pmid=toks[0], start=int(toks[1]),
-                                     end=int(toks[2]), text=toks[3],
-                                     type=toks[4], id=toks[5])
+            annotation = loads_ann(toks)
             doc.add_annotation(annotation)
         if len(toks) == 4:
             relation = PubTatorRel(toks[0], toks[1], toks[2], toks[3])
