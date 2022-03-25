@@ -145,15 +145,33 @@ def load(text_fp: TextIO, ann_fp: TextIO, docid=None) -> BratDocument:
     return doc
 
 
-def iterloaddir(path) -> Iterator[BratDocument]:
+def iterloaddir(path, ann_file: bool = True) -> Iterator[BratDocument]:
+    """
+    if ann_file is True, load .txt and .ann in the folder
+    if ann_file is False, load .txt, .a1, and .a2 in the folder
+    """
     with os.scandir(path) as it:
         for entry in tqdm.tqdm(it):
             if entry.name.endswith('.txt'):
                 txt_path = Path(entry.path)
-                ann_path = txt_path.with_suffix('.ann')
-                with open(txt_path) as txt_fp, open(ann_path) as ann_fp:
-                    doc = load(txt_fp, ann_fp)
-                    doc.id = txt_path.stem
+                with open(txt_path) as fp:
+                    text = fp.read()
+
+                if ann_file:
+                    ann_path = txt_path.with_suffix('.ann')
+                    with open(ann_path) as fp:
+                        ann = fp.read()
+                else:
+                    ann_path = txt_path.with_suffix('.a1')
+                    with open(ann_path) as fp:
+                        a1 = fp.read()
+                    ann_path = txt_path.with_suffix('.a2')
+                    with open(ann_path) as fp:
+                        a2 = fp.read()
+                    ann = a1 + '\n' + a2
+
+                doc = loads(text, ann)
+                doc.id = txt_path.stem
                 yield doc
 
 
