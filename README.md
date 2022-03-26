@@ -1,4 +1,4 @@
-# bioc - BioC data structures and encoder/decoder for Python
+# bioc - BioC/Brat/PubTator data structures and encoder/decoder for Python
 
 [![Build
 status](https://github.com/bionlplab/bioc/actions/workflows/pytest.yml/badge.svg)](https://github.com/bionlplab/bioc/)
@@ -10,6 +10,12 @@ PyPI](https://img.shields.io/pypi/v/bioc.svg)](https://pypi.python.org/pypi/bioc
 
 [BioC XML / JSON format](http://bioc.sourceforge.net/) can be used to
 share text documents and annotations.
+
+[Brat standoff format](https://brat.nlplab.org/standoff.html) is created by the brat annotation tool to store
+annotations on disk in a standoff format. annotations are stored separately from the annotated document text, which is
+never modified by the tool.
+
+[PubTator format](https://www.ncbi.nlm.nih.gov/research/pubtator/) is used by the PutTator Central system.
 
 `bioc` exposes an API familiar to users of the standard library
 `marshal` and `pickle` modules.
