@@ -27,7 +27,7 @@ $ pip install -r requirements.txt
 ## Test the code
 
 ```shell
-$ pytest cov=bioc tests
+$ pytest --cov html tests
 ```
 
 ## Create this documentation
@@ -53,6 +53,7 @@ token; don’t limit its scope to a particular project, since you are
 creating a new project.
 
 ```shell
+$ pip install build twine
 $ python -m build
 ```
 

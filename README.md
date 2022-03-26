@@ -31,22 +31,64 @@ Installing `bioc`
 $ pip install bioc
 ```
 
+### BioC
+
 Encoding the BioC collection object `collection`:
 
 ```python
-import bioc
+from bioc import biocxml
 # Serialize ``collection`` as a BioC formatted stream to ``fp``.
 with open(filename, 'w') as fp
-    bioc.dump(collection, fp)
+    biocxml.dump(collection, fp)
 ```
 
 Decoding the BioC XML file:
 
 ```python
-import bioc
+from bioc import biocxml
 # Deserialize ``fp`` to a BioC collection object.
 with open(filename, 'r') as fp:
-    collection = bioc.load(fp)
+    collection = biocxml.load(fp)
+```
+
+### Brat
+
+Encoding the Brat document
+
+```python
+from bioc import brat
+# Serialize ``doc`` as a brat formatted stream to ``text_fp`` and ``ann_fp``.
+with open(annpath, 'w') as ann_fp, open(txtpath, 'w') as text_fp:
+    brat.dump(doc, text_fp, ann_fp)
+```
+
+Decoding the Brat document:
+
+```python
+from bioc import brat
+# Deserialize two streams (text and ann) to a Brat document object.
+with open(annpath) as ann_fp, open(txtpath) as text_fp:
+    doc = brat.load(text_fp, ann_fp)
+```
+
+### PubTator
+
+Encoding the PubTator document object `doc`:
+
+```python
+from bioc import pubtator
+# Serialize ``collection`` as a BioC formatted stream to ``fp``.
+with open(filename, 'w') as fp:
+    pubtator.dump([doc], fp)
+```
+
+Decoding the PubTator file
+
+```python
+from bioc import pubtator
+# Deserialize ``fp`` to a PubTator object.
+with open(filename, 'r') as fp:
+    docs = pubtator.load(fp)
 ```
 
 ## Documentation
