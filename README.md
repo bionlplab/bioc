@@ -98,7 +98,7 @@ site](https://bioc.readthedocs.io/en/latest/index.html).
 
 ## Contributing
 
-You can find information about contributing to RadText at our [Contribution
+You can find information about contributing to bioc at our [Contribution
 page](https://bioc.readthedocs.io/en/latest/contribute.html).
 
 ## Reference
