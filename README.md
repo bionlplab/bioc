@@ -1,4 +1,4 @@
-# bioc - BioC/Brat/PubTator data structures and encoder/decoder for Python
+# bioc - Processing BioC, Brat, and PubTator with Python
 
 [![Build
 status](https://github.com/bionlplab/bioc/actions/workflows/pytest.yml/badge.svg)](https://github.com/bionlplab/bioc/)
@@ -15,7 +15,7 @@ share text documents and annotations.
 annotations on disk in a standoff format. annotations are stored separately from the annotated document text, which is
 never modified by the tool.
 
-[PubTator format](https://www.ncbi.nlm.nih.gov/research/pubtator/) is used by the PutTator Central system.
+[PubTator format](https://www.ncbi.nlm.nih.gov/research/pubtator/) is created by the PutTator Central system.
 
 `bioc` exposes an API familiar to users of the standard library
 `marshal` and `pickle` modules.
