@@ -101,15 +101,6 @@ site](https://bioc.readthedocs.io/en/latest/index.html).
 You can find information about contributing to RadText at our [Contribution
 page](https://bioc.readthedocs.io/en/latest/contribute.html).
 
-## Webpage
-
-The official BioC webpage is available with all up-to-date instructions,
-code, and corpora in the BioC format, and other research on, based on
-and related to BioC.
-
-  - <http://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/BioC/>
-  - <http://bioc.sourceforge.net/>
-
 ## Reference
 
 If you use bioc in your research, please cite the following paper:
