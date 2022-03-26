@@ -9,6 +9,7 @@ from .utils import get_text, pretty_print
 from .biocxml import loads, load, dump, dumps
 from .constants import PASSAGE, DOCUMENT, SENTENCE, BioCVersion
 
+
 __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', 'BioCNode',
            'BioCPassage', 'BioCRelation', 'BioCSentence', 'BioCVersion',
            'BioCDataModel',

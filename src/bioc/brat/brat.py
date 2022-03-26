@@ -26,8 +26,8 @@ class BratAnnotation(ABC):
     :type id: str, optional
     """
     def __init__(self):
-        self.id = None  # type: str | None
-        self.type = None # type: str | None
+        self.id = None  # type: str or None
+        self.type = None # type: str or None
 
 
 class BratAttribute(BratAnnotation):
@@ -65,10 +65,13 @@ class BratAttribute(BratAnnotation):
     """
     def __init__(self):
         super(BratAttribute, self).__init__()
-        self.refid = None  # type: str | None
+        self.refid = None  # type: str or None
         self.attributes = set()  # type: Set[str]
 
     def add_attribute(self, attribute: str):
+        """
+        Add one attribute to this object
+        """
         self.attributes.add(attribute)
 
     def __eq__(self, other):
@@ -105,7 +108,7 @@ class BratEntity(BratAnnotation):
     """
     def __init__(self):
         super(BratEntity, self).__init__()
-        self.text = None  # type: str | None
+        self.text = None  # type: str or None
         self.locations = IntervalTree()  # type: IntervalTree
 
     def shift(self, offset: int):
@@ -255,7 +258,7 @@ class BratEvent(BratAnnotation):
     def __init__(self):
         super(BratEvent, self).__init__()
         self.arguments = {}  # type: Dict[str, str]
-        self.trigger_id = None  # type: str | None
+        self.trigger_id = None  # type: str or None
 
     def add_argument(self, role:str, id:str):
         self.arguments[role] = id
@@ -295,8 +298,8 @@ class BratNote(BratAnnotation):
     """
     def __init__(self):
         super(BratNote, self).__init__()
-        self.refid = None  # type: str | None
-        self.text = None  # type: str | None
+        self.refid = None  # type: str or None
+        self.text = None  # type: str or None
 
     def __eq__(self, other):
         if not isinstance(other, BratNote):

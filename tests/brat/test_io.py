@@ -75,8 +75,8 @@ def test_loaddir(tmp_path):
             fp.write(ann_text)
         with open(tmp_path / f'{i}.a2', 'w') as fp:
             fp.write(ann_text)
-    docs = brat.loaddir(tmp_path)
+    docs = brat.listdir(tmp_path)
     assert len(docs) == 10
 
-    docs = [doc for doc in brat.iterloaddir(tmp_path, ann_file=False)]
+    docs = [doc for doc in brat.scandir(tmp_path, ann_file=False)]
     assert len(docs) == 10

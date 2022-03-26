@@ -6,7 +6,7 @@ import pytest
 
 import bioc
 from bioc import biocjson
-from bioc.biocjson import BioCJsonIterWriter
+# from bioc.biocjson import BioCJsonIterWriter
 # from bioc import BioCFileType
 # from bioc import BioCJsonIterWriter
 # from bioc import toJSON
@@ -35,24 +35,39 @@ def test_dumps():
     assert_everything(collection)
 
 
-def test_level():
-    with pytest.raises(ValueError):
-        BioCJsonIterWriter(io.StringIO(), level=-1)
-
+def test_jsoniterwriter(tmp_path):
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
-    with pytest.raises(ValueError):
-        writer = biocjson.BioCJsonIterWriter(io.StringIO(), level=bioc.SENTENCE)
-        writer.write(collection.documents[0])
+    filepath = tmp_path / 'foo.json'
+    with biocjson.iterwriter(filepath) as writer:
+        for doc in collection.documents:
+            writer.write(doc)
 
-    with pytest.raises(ValueError):
-        writer = BioCJsonIterWriter(io.StringIO(), level=bioc.PASSAGE)
-        writer.write(collection.documents[0])
+    del collection.documents[:]
+    with biocjson.iterreader(filepath) as reader:
+        for doc in reader:
+            collection.add_document(doc)
+    assert_everything(collection)
 
-    with pytest.raises(ValueError):
-        writer = BioCJsonIterWriter(io.StringIO(), level=bioc.DOCUMENT)
-        writer.write(collection.documents[0].passages[0])
+# def test_level():
+#     with pytest.raises(ValueError):
+#         BioCJsonIterWriter(io.StringIO(), level=-1)
+#
+#     with open(file, encoding='utf8') as fp:
+#         collection = biocjson.load(fp)
+#
+#     with pytest.raises(ValueError):
+#         writer = biocjson.BioCJsonIterWriter(io.StringIO(), level=bioc.SENTENCE)
+#         writer.write(collection.documents[0])
+#
+#     with pytest.raises(ValueError):
+#         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.PASSAGE)
+#         writer.write(collection.documents[0])
+#
+#     with pytest.raises(ValueError):
+#         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.DOCUMENT)
+#         writer.write(collection.documents[0].passages[0])
 
 
 def test_toJSON():

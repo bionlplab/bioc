@@ -42,7 +42,7 @@ class PubTator:
     def add_relation(self, rel: PubTatorRel):
         self.relations.append(rel)
 
-    def get_annotation(self, concept_id: str, multiple_ids: bool = True, default=None) -> PubTatorAnn:
+    def get_annotation(self, concept_id: str, multiple_ids: bool = True, default = None) -> PubTatorAnn:
         """
         :param multiple_ids: one entity may have multiple concept ids.
         """
@@ -72,26 +72,3 @@ class PubTator:
         if self.abstract:
             text += '\n' + self.abstract
         return text
-
-
-# def merge(dst, *srcs):
-#     """
-#     Merge multiple Pubtator from srcs (file names) to dst
-#     """
-#     logger = logging.getLogger(__name__)
-#     docs = {}
-#     for src in srcs:
-#         logger.debug('Process %s', src)
-#         with open(src) as f:
-#             for doc in iterparse(f):
-#                 if doc.pmid in docs:
-#                     # compare
-#                     if dumps(doc) != dumps(docs[doc.pmid]):
-#                         logging.warning('Two docs are not same\n%s\n\n%s',
-#                                         doc, docs[doc.pmid])
-#                 else:
-#                     docs[doc.pmid] = doc
-#
-#     with open(dst, 'w') as f:
-#         for pmid in sorted(docs.keys()):
-#             print(dumps(docs[pmid]), file=f)

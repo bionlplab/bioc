@@ -6,7 +6,7 @@ import pytest
 
 import bioc
 from bioc import biocjson
-from bioc.biocjson import BioCJsonIterWriter, BioCJsonIterReader
+# from bioc.biocjson import iterreader, iterwriter
 # from bioc import BioCFileType
 # from bioc import BioCJsonIterWriter
 # from bioc.biocjson import BioCJsonIterReader
@@ -29,82 +29,82 @@ def test_loads():
 
 
 def test_fromJSON():
-    with pytest.raises(ValueError):
-        biocjson.fromJSON({}, level=5)
+    # with pytest.raises(ValueError):
+    #     biocjson.fromJSON({}, level=5)
 
     with open(file, encoding='utf8') as fp:
         obj = json.load(fp)
 
-    d = biocjson.fromJSON(obj['documents'][0], bioc.DOCUMENT)
+    d = biocjson.fromJSON(obj['documents'][0], 'BioCDocument')
     assert d.id == '1'
 
-    p = biocjson.fromJSON(obj['documents'][0]['passages'][0], bioc.PASSAGE)
+    p = biocjson.fromJSON(obj['documents'][0]['passages'][0], 'BioCPassage')
     assert p.text == 'abcdefghijklmnopqrstuvwxyz'
 
-    s = biocjson.fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], bioc.SENTENCE)
+    s = biocjson.fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], 'BioCSentence')
     assert s.offset == 27
 
 
-def test_BioCJsonIterReader_document():
+def test_iterreader_document():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
     s = io.StringIO()
-    writer = BioCJsonIterWriter(s, level=bioc.DOCUMENT)
-    for doc in collection.documents:
-        writer.write(doc)
+    with biocjson.iterwriter(s) as writer:
+        for doc in collection.documents:
+            writer.write(doc)
 
     del collection.documents[:]
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    reader = BioCJsonIterReader(io.StringIO(s.getvalue()), level=bioc.DOCUMENT)
-    for obj in reader:
-        collection.add_document(obj)
+    with biocjson.iterreader(io.StringIO(s.getvalue())) as reader:
+        for obj in reader:
+            collection.add_document(obj)
 
     assert_everything(collection)
 
 
-def test_BioCJsonIterReader_passage():
+def test_iterreader_passage():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
     s = io.StringIO()
-    writer = BioCJsonIterWriter(s, level=bioc.PASSAGE)
-    for p in collection.documents[0].passages:
-        writer.write(p)
+    with biocjson.iterwriter(s) as writer:
+        for p in collection.documents[0].passages:
+            writer.write(p)
 
     del collection.documents[0].passages[:]
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    reader = BioCJsonIterReader(io.StringIO(s.getvalue()), level=bioc.PASSAGE)
-    for obj in reader:
-        collection.documents[0].add_passage(obj)
+    with biocjson.iterreader(io.StringIO(s.getvalue())) as reader:
+        for obj in reader:
+            collection.documents[0].add_passage(obj)
 
     assert_everything(collection)
 
 
-def test_BioCJsonIterReader_sentence():
+def test_iterreader_sentence():
     with open(file, encoding='utf8') as fp:
         collection = biocjson.load(fp)
 
     s = io.StringIO()
-    writer = BioCJsonIterWriter(s, level=bioc.SENTENCE)
-    for sen in collection.documents[1].passages[0].sentences:
-        writer.write(sen)
+    with biocjson.iterwriter(s) as writer:
+        for sen in collection.documents[1].passages[0].sentences:
+            writer.write(sen)
 
     del collection.documents[1].passages[0].sentences[:]
     with pytest.raises(IndexError):
         assert_everything(collection)
 
-    reader = BioCJsonIterReader(io.StringIO(s.getvalue()), level=bioc.SENTENCE)
-    for obj in reader:
-        collection.documents[1].passages[0].add_sentence(obj)
+    with biocjson.iterreader(io.StringIO(s.getvalue())) as reader:
+        for obj in reader:
+            collection.documents[1].passages[0].add_sentence(obj)
 
     assert_everything(collection)
-
-
-def test_level():
-    with pytest.raises(ValueError):
-        BioCJsonIterReader(io.StringIO(), level=-1)
+#
+#
+# def test_level():
+#     with pytest.raises(ValueError):
+#         BioCJsonIterReader(io.StringIO(), level=-1)

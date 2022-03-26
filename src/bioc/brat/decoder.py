@@ -145,10 +145,11 @@ def load(text_fp: TextIO, ann_fp: TextIO, docid=None) -> BratDocument:
     return doc
 
 
-def iterloaddir(path, ann_file: bool = True) -> Iterator[BratDocument]:
+def scandir(path, ann_file: bool = True) -> Iterator[BratDocument]:
     """
-    if ann_file is True, load .txt and .ann in the folder
-    if ann_file is False, load .txt, .a1, and .a2 in the folder
+    Scan a directory for all Brat annotation files.
+
+    :param ann_file: If true, load .txt and .ann in the folder. If false, load .txt, .a1, and .a2 in the folder
     """
     with os.scandir(path) as it:
         for entry in tqdm.tqdm(it):
@@ -175,15 +176,26 @@ def iterloaddir(path, ann_file: bool = True) -> Iterator[BratDocument]:
                 yield doc
 
 
-def loaddir(path) -> List[BratDocument]:
-    return [doc for doc in iterloaddir(path)]
+def listdir(path, ann_file: bool = True) -> List[BratDocument]:
+    """
+    Return a list of brat documents in the directory given by path.
+
+    :param ann_file: If true, load .txt and .ann in the folder. If false, load .txt, .a1, and .a2 in the folder
+    """
+    return [doc for doc in scandir(path, ann_file)]
 
 
 def loads_ann(s: str, docid=None) -> BratDocument:
+    """
+    Deserialize a string to a document
+    """
     return load_ann(io.StringIO(s), docid)
 
 
 def load_ann(fp: TextIO, docid=None) -> BratDocument:
+    """
+    Deserialize ``fp`` (a ``.read()``-supporting file-like object containing brat annotations) to a document
+    """
     doc = BratDocument()
     doc.id = docid
     for i, line in enumerate(fp):

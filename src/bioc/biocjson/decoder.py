@@ -1,17 +1,19 @@
 """
 BioC JSON decoder
 """
-
+import io
 import json
+from contextlib import contextmanager
 from typing import TextIO, Dict, Union
 
 from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
     BioCLocation, BioCPassage, BioCDocument
-from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 def parse_collection(obj: Dict) -> BioCCollection:
-    """Deserialize a dict ``obj`` to a BioCCollection object"""
+    """
+    Deserialize a dict ``obj`` to a BioCCollection object
+    """
     collection = BioCCollection()
     collection.source = obj['source']
     collection.date = obj['date']
@@ -25,7 +27,9 @@ def parse_collection(obj: Dict) -> BioCCollection:
 
 
 def parse_annotation(obj: Dict) -> BioCAnnotation:
-    """Deserialize a dict obj to a BioCAnnotation object"""
+    """
+    Deserialize a dict obj to a BioCAnnotation object
+    """
     ann = BioCAnnotation()
     ann.id = obj['id']
     ann.infons = obj['infons']
@@ -36,7 +40,9 @@ def parse_annotation(obj: Dict) -> BioCAnnotation:
 
 
 def parse_relation(obj: Dict) -> BioCRelation:
-    """Deserialize a dict obj to a BioCRelation object"""
+    """
+    Deserialize a dict obj to a BioCRelation object
+    """
     rel = BioCRelation()
     rel.id = obj['id']
     rel.infons = obj['infons']
@@ -46,7 +52,9 @@ def parse_relation(obj: Dict) -> BioCRelation:
 
 
 def parse_sentence(obj: Dict) -> BioCSentence:
-    """Deserialize a dict obj to a BioCSentence object"""
+    """
+    Deserialize a dict obj to a BioCSentence object
+    """
     sentence = BioCSentence()
     sentence.offset = obj['offset']
     sentence.infons = obj['infons']
@@ -59,7 +67,9 @@ def parse_sentence(obj: Dict) -> BioCSentence:
 
 
 def parse_passage(obj: Dict) -> BioCPassage:
-    """Deserialize a dict obj to a BioCPassage object"""
+    """
+    Deserialize a dict obj to a BioCPassage object
+    """
     passage = BioCPassage()
     passage.offset = obj['offset']
     passage.infons = obj['infons']
@@ -75,7 +85,9 @@ def parse_passage(obj: Dict) -> BioCPassage:
 
 
 def parse_doc(obj: Dict) -> BioCDocument:
-    """Deserialize a dict obj to a BioCDocument object"""
+    """
+    Deserialize a dict obj to a BioCDocument object
+    """
     doc = BioCDocument()
     doc.id = obj['id']
     doc.infons = obj['infons']
@@ -107,18 +119,23 @@ def loads(s: str, **kwargs) -> BioCCollection:
     return parse_collection(obj)
 
 
-def fromJSON(o: Dict, level: int) -> Union[BioCDocument, BioCPassage, BioCSentence]:
+def fromJSON(obj: Dict, bioctype: str = None) -> Union[BioCDocument, BioCPassage, BioCSentence]:
     """
-    Convert a Python ``dict`` to a BioC object (a ``BioCDocument``, ``BioCPassage``, or
-    ``BioCSentence`` instance)
+    Convert a Python dict to a BioC object
     """
-    if level == DOCUMENT:
-        return parse_doc(o)
-    elif level == PASSAGE:
-        return parse_passage(o)
-    elif level == SENTENCE:
-        return parse_sentence(o)
-    raise ValueError(f'Unrecognized level {level}')
+    if 'bioctype' in obj and bioctype is None:
+        bioctype = obj['bioctype']
+    if bioctype is None:
+        raise KeyError('Cannot find bioctype in the object: %s' % obj)
+
+    if bioctype == 'BioCDocument':
+        return parse_doc(obj)
+    elif bioctype == 'BioCPassage':
+        return parse_passage(obj)
+    elif bioctype == 'BioCSentence':
+        return parse_sentence(obj)
+    else:
+        raise KeyError
 
 
 class BioCJsonIterReader:
@@ -126,26 +143,37 @@ class BioCJsonIterReader:
     Reader for the jsonlines format.
     """
 
-    def __init__(self, fp: TextIO, level: int):
-        if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'Unrecognized level {level}')
-
+    def __init__(self, fp: TextIO):
         self.fp = fp
-        self.level = level
+        self.lineno = 0
 
     def __iter__(self):
         return self
 
     def __next__(self):
         s = self.fp.readline()
+        self.lineno += 1
         if s:
             obj = json.loads(s)
-            if self.level == DOCUMENT:
-                return parse_doc(obj)
-            elif self.level == PASSAGE:
-                return parse_passage(obj)
-            else:
-                return parse_sentence(obj)
+            if 'bioctype' not in obj:
+                raise KeyError('%s:%s: Cannot find bioctype in the object: %s' % (self.fp.name, self.lineno, s))
+            return fromJSON(obj)
         else:
             raise StopIteration
 
+
+@contextmanager
+def iterreader(source: Union[str, TextIO]) -> BioCJsonIterReader:
+    """
+    Parse a jsonline into a BioC object incrementally.
+
+    :param file: a filename or file object
+    :return: an iterator
+    """
+    if isinstance(source, io.TextIOBase):
+        reader = BioCJsonIterReader(source)
+        yield reader
+    else:
+        with open(source) as fp:
+            reader = BioCJsonIterReader(fp)
+            yield reader

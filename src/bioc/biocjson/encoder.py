@@ -1,13 +1,13 @@
 """
 BioC JSON encoder
 """
-
+import io
 import json
+from contextlib import contextmanager
 from typing import Dict, Union, TextIO
 
 from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
-from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 
 BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]
@@ -59,6 +59,7 @@ class BioCJSONEncoder(json.JSONEncoder):
             }
         if isinstance(o, BioCSentence):
             return {
+                'bioctype': 'BioCSentence',
                 'offset': o.offset,
                 'infons': o.infons,
                 'text': o.text,
@@ -67,6 +68,7 @@ class BioCJSONEncoder(json.JSONEncoder):
             }
         if isinstance(o, BioCPassage):
             return {
+                'bioctype': 'BioCPassage',
                 'offset': o.offset,
                 'infons': o.infons,
                 'text': o.text,
@@ -76,6 +78,7 @@ class BioCJSONEncoder(json.JSONEncoder):
             }
         if isinstance(o, BioCDocument):
             return {
+                'bioctype': 'BioCDocument',
                 'id': o.id,
                 'infons': o.infons,
                 'passages': [self.default(p) for p in o.passages],
@@ -84,6 +87,7 @@ class BioCJSONEncoder(json.JSONEncoder):
             }
         if isinstance(o, BioCCollection):
             return {
+                'bioctype': 'BioCCollection',
                 'source': o.source,
                 'date': o.date,
                 'key': o.key,
@@ -100,27 +104,28 @@ class BioCJsonIterWriter:
     Writer for the json lines format.
     """
 
-    def __init__(self, fp: TextIO, level: int):
-        if level not in {DOCUMENT, PASSAGE, SENTENCE}:
-            raise ValueError(f'Unrecognized level {level}')
-
+    def __init__(self, fp: TextIO):
         self.fp = fp
-        self.level = level
 
     def write(self, obj: Union[BioCDocument, BioCPassage, BioCSentence]):
         """
         Encode and write a BioC obj (an instance of BioCDocument, BioCPassage, or BioCSentence).
         """
-        if self.level == DOCUMENT and not isinstance(obj, BioCDocument):
-            raise ValueError(f'{self.fp}: can only write BioCDocument '
-                             f'because of the level {self.level}')
-        if self.level == PASSAGE and not isinstance(obj, BioCPassage):
-            raise ValueError(f'{self.fp}: can only write BioCPassage '
-                             f'because of the level {self.level}')
-        if self.level == SENTENCE and not isinstance(obj, BioCSentence):
-            raise ValueError(f'{self.fp}: can only write BioCSentence '
-                             f'because of the level {self.level}')
         self.fp.write(json.dumps(BioCJSONEncoder().default(obj)) + '\n')
+
+
+@contextmanager
+def iterwriter(file: Union[str, TextIO]) -> BioCJsonIterWriter:
+    """
+    Write a bioc object to a file incrementally.
+    """
+    if isinstance(file, io.TextIOBase):
+        writer = BioCJsonIterWriter(file)
+        yield writer
+    else:
+        with open(file, 'w') as fp:
+            writer = BioCJsonIterWriter(fp)
+            yield writer
 
 
 def toJSON(o) -> Dict:

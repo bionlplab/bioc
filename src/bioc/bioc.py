@@ -21,9 +21,17 @@ class InfonsMaxin(ABC):
         """
         self.infons.clear()
 
-    def __str__infons__(self):
-        return 'infons=[%s],' % ','.join(
-            f'{k}={v}' for (k, v) in self.infons.items())
+    def __str__(self):
+        return self.infons_repr()
+
+    def __repr__(self):
+        return self.infons_repr()
+
+    def infons_repr(self):
+        """
+        :return: a printable representation of infons
+        """
+        return 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
 
 
 class BioCNode:
@@ -33,10 +41,8 @@ class BioCNode:
 
     def __init__(self, refid: str, role: str):
         """
-        Args:
-            refid: the id of an annotated object or another relation
-            role: the role of how the referenced annotation or other relation participates in
-            the current relation
+        :param refid: the id of an annotated object or another relation
+        :param role: the role of how the referenced annotation or other relation participates in the current relation
         """
         self.refid = refid
         self.role = role
@@ -66,9 +72,8 @@ class BioCLocation:
 
     def __init__(self, offset: int, length: int):
         """
-        Args:
-            offset: the offset of annotation
-            length: the length of the annotated text
+        :param offset: the offset of annotation
+        :param length: the length of the annotated text
         """
         self.offset = offset
         self.length = length
@@ -86,20 +91,24 @@ class BioCLocation:
 
     def __contains__(self, location):
         if not isinstance(location, BioCLocation):
-            raise TypeError(
-                f'Object of type {location.__class__.__name__} is not BioCLocation')
-        return self.offset <= location.offset \
-               and location.offset + location.length <= self.offset + self.length
+            raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
+        return self.offset <= location.offset and location.offset + location.length <= self.offset + self.length
 
     def __hash__(self):
         return hash((self.offset, self.length))
 
-    def contains(self, offset):
+    def contains(self, offset: int) -> bool:
+        """
+        :param offset: the offset
+        :return: If the offset is contained in this location
+        """
         return self.offset <= offset < self.end
 
     @property
-    def end(self):
-        """The end offset of annotation"""
+    def end(self) -> int:
+        """
+        :return: The end offset of annotation
+        """
         return self.offset + self.length
 
 
@@ -111,15 +120,12 @@ class BioCAnnotation(InfonsMaxin):
     def __init__(self):
         super(BioCAnnotation, self).__init__()
         self.locations = []  # type: List[BioCLocation]
-        self.id = ''
-        self.text = ''
+        self.id = ''  # type: str
+        self.text = ''  # type: str
 
     def add_location(self, location: BioCLocation):
         """
-        Adds the location at the specified position in this annotation.
-
-        Args:
-            location: the location at the specified position in this annotation
+        Add the location at the specified position in this annotation.
         """
         self.locations.append(location)
 
@@ -127,7 +133,7 @@ class BioCAnnotation(InfonsMaxin):
         s = 'BioCAnnotation['
         s += f'id={self.id},'
         s += f'text={shorten_text(self.text)},'
-        s += self.__str__infons__()
+        s += self.infons_repr()
         s += 'locations=[%s],' % ','.join(str(l) for l in self.locations)
         s += ']'
         return s
@@ -137,7 +143,9 @@ class BioCAnnotation(InfonsMaxin):
 
     @property
     def total_span(self) -> BioCLocation:
-        """The total span of this annotation. Discontinued locations will be merged."""
+        """
+        :return: The total span of this annotation. Discontinued locations will be merged.
+        """
         if not self.locations:
             raise ValueError(
                 f'{self.id}: annotation must have at least one location')
@@ -167,7 +175,7 @@ class BioCRelation(InfonsMaxin):
     def __str__(self):
         s = 'BioCRelation['
         s += 'id=%s,' % self.id
-        s += self.__str__infons__()
+        s += self.infons_repr()
         s += 'nodes=[%s],' % ','.join(str(n) for n in self.nodes)
         s += ']'
         return s
@@ -178,23 +186,15 @@ class BioCRelation(InfonsMaxin):
     def add_node(self, node: BioCNode):
         """
         Add the node to this relation
-
-        Args:
-            node: node to be added to this relation
         """
         self.nodes.append(node)
 
     def get_node(self, *, role: str = None, refid: str = None, default=None) -> BioCNode:
         """
-        Get the first node with role
-
-        Args:
-            role: role
-            refid: annotation id
-            default: node returned instead of raising StopIteration
-
-        Returns:
-            the first node with role
+        :param role: role
+        :param refid: annotation id
+        :param default: node returned instead of raising StopIteration
+        :return: The first node with role
         """
         nodes = self.nodes
         if role is not None:
@@ -215,10 +215,7 @@ class AnnotationMixin(ABC):
 
     def add_annotation(self, annotation: BioCAnnotation):
         """
-        Adds annotation in this sentence.
-
-        Args:
-            annotation: the annotation
+        Add the annotation to this sentence.
         """
         self.annotations.append(annotation)
 
@@ -236,19 +233,14 @@ class AnnotationMixin(ABC):
 
     def add_relation(self, relation: BioCRelation):
         """
-        Adds relation in this sentence.
-
-        Args:
-            relation: a relation
+        Add the relation to this sentence.
         """
         self.relations.append(relation)
 
     def get_annotation(self, refid: str) -> BioCAnnotation:
         """
-        Gets annotation with reference id
-
-        Args:
-            refid: node reference id
+        :param refid: reference id
+        :return: the first annotation with reference id
         """
         for ann in self.annotations:
             if ann.id == refid:
@@ -257,10 +249,8 @@ class AnnotationMixin(ABC):
 
     def get_relation(self, refid: str) -> BioCRelation:
         """
-        Gets relation with reference id
-
-        Args:
-            refid: node reference id
+        :param refid: node reference id
+        :return: the first relation with reference id
         """
         for rel in self.relations:
             if rel.id == refid:
@@ -268,6 +258,10 @@ class AnnotationMixin(ABC):
         raise KeyError('%s: Cannot find refid' % refid)
 
     def get(self, refid: str) -> Union[BioCAnnotation, BioCRelation]:
+        """
+        :param refid: reference id
+        :return: one annotation or relation with the refid
+        """
         for ann in self.annotations:
             if ann.id == refid:
                 return ann
@@ -276,7 +270,10 @@ class AnnotationMixin(ABC):
                 return rel
         raise KeyError('%s: Cannot find refid' % refid)
 
-    def __str__anns__(self):
+    def anns_repr(self) -> str:
+        """
+        :return: a printable representation of annotations and relations
+        """
         s = 'annotations=[%s],' % ','.join(str(a) for a in self.annotations)
         s += 'relations=[%s],' % ','.join(str(r) for r in self.relations)
         return s
@@ -302,8 +299,8 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
         s = 'BioCSentence['
         s += 'offset=%s,' % self.offset
         s += 'text=%s,' % shorten_text(self.text)
-        s += self.__str__infons__()
-        s += self.__str__anns__()
+        s += self.infons_repr()
+        s += self.anns_repr()
         s += ']'
         return s
 
@@ -313,7 +310,9 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
     @classmethod
     def of_text(cls, text: str, offset: int = 0) -> 'BioCSentence':
         """
-        Returns a sentence with the text
+        :param text: text
+        :param offset: sentence offset
+        :return: a sentence with the text
         """
         sentence = BioCSentence()
         sentence.text = text
@@ -322,7 +321,9 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
 
     @property
     def total_span(self) -> BioCLocation:
-        """The total span of this sentence."""
+        """
+        :return: The total span of this sentence.
+        """
         return BioCLocation(self.offset, len(self.text))
 
 
@@ -332,22 +333,14 @@ class WithSentence(ABC):
 
     def add_sentence(self, sentence: BioCSentence):
         """
-        Adds sentence in this passage.
-
-        Args:
-            sentence: a sentence
+        Add the sentence to this passage
         """
         self.sentences.append(sentence)
 
     def get_sentence(self, offset: int) -> BioCSentence or None:
         """
-        Gets sentence with specified offset
-
-        Args:
-            offset: sentence offset
-
-        Return:
-            the sentence with specified offset
+        :param offset: sentence offset
+        :return: the sentence with specified offset
         """
         for sentence in self.sentences:
             if sentence.offset == offset:
@@ -366,7 +359,7 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
 
     def __init__(self):
         super(BioCPassage, self).__init__()
-        self.offset = -1  # type: int
+        self.offset = 0  # type: int
         self.text = ''  # type: str
 
     def __str__(self):
@@ -374,9 +367,9 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
         s += 'offset=%d,' % self.offset
         if self.text is not None:
             s += 'text=%s,' % shorten_text(self.text)
-        s += self.__str__infons__()
+        s += self.infons_repr()
         s += 'sentences=[%s],' % ','.join(str(s) for s in self.sentences)
-        s += self.__str__anns__()
+        s += self.anns_repr()
         s += ']'
         return s
 
@@ -386,7 +379,8 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
     @classmethod
     def of_sentences(cls, *sentences: BioCSentence) -> 'BioCPassage':
         """
-        Returns a passage containing the sentences
+        :param sentences: a list of sentences
+        :return: a passage containing the sentences
         """
         if len(sentences) <= 0:
             raise ValueError("There has to be at least one sentence.")
@@ -402,7 +396,9 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
     @classmethod
     def of_text(cls, text: str, offset: int = 0) -> 'BioCPassage':
         """
-        Returns a passage with the text
+        :param text: text
+        :param offset: passage offset
+        :return: a passage with the text
         """
         passage = BioCPassage()
         passage.text = text
@@ -411,7 +407,9 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
 
     @property
     def total_span(self) -> BioCLocation:
-        """The total span of this annotation. Discontinued locations will be merged."""
+        """
+        :return: The total span of this annotation. Discontinued locations will be merged.
+        """
         if self.text:
             return BioCLocation(self.offset, len(self.text))
         else:
@@ -428,18 +426,18 @@ class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
 
     def __init__(self):
         super(BioCDocument, self).__init__()
-        self.id = ''
+        self.id = ''  # type: str
         self.passages = []  # type: List[BioCPassage]
         self.text = ''  # type: str
 
     def __str__(self):
         s = 'BioCDocument['
         s += 'id=%s,' % self.id
-        s += self.__str__infons__()
+        s += self.infons_repr()
         if self.text is not None:
             s += 'text=%s,' % shorten_text(self.text)
         s += 'passages=[%s],' % ','.join(str(p) for p in self.passages)
-        s += self.__str__anns__()
+        s += self.anns_repr()
         s += ']'
         return s
 
@@ -448,22 +446,14 @@ class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
 
     def add_passage(self, passage: BioCPassage):
         """
-        Adds passage in this document.
-
-        Args:
-            passage: a passage
+        Add the passage to this document
         """
         self.passages.append(passage)
 
     def get_passage(self, offset: int) -> BioCPassage or None:
         """
-        Gets passage
-
-        Args:
-            offset: passage offset
-
-        Return:
-            the passage with specified offset
+        :param offset: passage offset
+        :return: the passage with specified offset
         """
         for passage in self.passages:
             if passage.offset == offset:
@@ -473,7 +463,7 @@ class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
     @classmethod
     def of_passages(cls, *passages: BioCPassage) -> 'BioCDocument':
         """
-        Returns a document containing the passages
+        :return: a document containing the passages
         """
         if len(passages) <= 0:
             raise ValueError("There has to be at least one passage.")
@@ -487,7 +477,7 @@ class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
     @classmethod
     def of_text(cls, text: str) -> 'BioCDocument':
         """
-        Returns a document containing one passage with the text
+        :return: a document with the text
         """
         doc = BioCDocument()
         doc.text = text
@@ -528,10 +518,7 @@ class BioCCollection(InfonsMaxin, WithSentence):
 
     def add_document(self, document: BioCDocument):
         """
-        Adds document in this collection.
-
-        Args:
-            document: a document
+        Add one document to this collection.
         """
         self.documents.append(document)
 
@@ -540,7 +527,7 @@ class BioCCollection(InfonsMaxin, WithSentence):
         s += 'source=%s,' % self.source
         s += 'date=%s,' % self.date
         s += 'key=%s,' % self.key
-        s += self.__str__infons__()
+        s += self.infons_repr()
         s += 'documents=[%s],' % ','.join(str(d) for d in self.documents)
         s += ']'
         return s
@@ -551,7 +538,7 @@ class BioCCollection(InfonsMaxin, WithSentence):
     @classmethod
     def of_documents(cls, *documents: BioCDocument) -> 'BioCCollection':
         """
-        Returns a collection containing the documents
+        :return: a collection with the documents
         """
         if len(documents) <= 0:
             raise ValueError("There has to be at least one document.")

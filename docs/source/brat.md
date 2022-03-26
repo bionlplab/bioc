@@ -34,8 +34,9 @@ Decoding the files in a folder:
 
 ```python
 from bioc import brat
+
 # read from a file
-for doc in brat.iterloaddir(dirname):
+for doc in brat.scandir(dirname):
     # process document
     ...
 ```
@@ -45,7 +46,8 @@ for doc in brat.iterloaddir(dirname):
 ```python
 from bioc import brat
 from bioc.tools.brat2bioc import brat2bioc
-docs = brat.loaddir(dirname)
+
+docs = brat.listdir(dirname)
 
 # Convert a list of Brat docs to a BioC collection object.
 collection = brat2bioc(docs)
