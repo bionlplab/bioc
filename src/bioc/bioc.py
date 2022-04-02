@@ -5,7 +5,7 @@ import copy
 import sys
 import time
 from abc import ABC
-from typing import List, NewType, Union
+from typing import List, NewType, Union, Optional
 
 from bioc.utils import shorten_text
 
@@ -337,7 +337,7 @@ class WithSentence(ABC):
         """
         self.sentences.append(sentence)
 
-    def get_sentence(self, offset: int) -> BioCSentence or None:
+    def get_sentence(self, offset: int) -> Optional[BioCSentence]:
         """
         :param offset: sentence offset
         :return: the sentence with specified offset
@@ -450,7 +450,7 @@ class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
         """
         self.passages.append(passage)
 
-    def get_passage(self, offset: int) -> BioCPassage or None:
+    def get_passage(self, offset: int) -> Optional[BioCPassage]:
         """
         :param offset: passage offset
         :return: the passage with specified offset

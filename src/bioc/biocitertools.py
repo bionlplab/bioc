@@ -2,7 +2,7 @@
 This module implements a number of iterator building blocks.
 """
 
-from typing import Generator, Collection, Union
+from typing import Generator, Collection, Union, Optional
 
 from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation
@@ -11,11 +11,11 @@ from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
 class BioCResult:
     def __init__(self):
-        self.document = None  # type: BioCDocument or None
-        self.passage = None  # type: BioCPassage or None
-        self.sentence = None  # type: BioCSentence or None
-        self.annotation = None  # type: BioCAnnotation or None
-        self.relation = None  # type: BioCRelation or None
+        self.document = None  # type: Optional[BioCDocument]
+        self.passage = None  # type: Optional[BioCPassage]
+        self.sentence = None  # type: Optional[BioCSentence]
+        self.annotation = None  # type: Optional[BioCAnnotation]
+        self.relation = None  # type: Optional[BioCRelation]
 
 
 def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
