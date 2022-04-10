@@ -43,6 +43,8 @@ def get_text(obj) -> Tuple[int, str]:
                 raise ValueError(f'Overlapping sentences {sentence.offset}')
         return obj.offset, text
     elif isinstance(obj, BioCDocument):
+        if obj.text:
+            return 0, obj.text
         text = ''
         for passage in obj.passages:
             try:

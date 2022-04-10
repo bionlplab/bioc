@@ -19,6 +19,9 @@ def test_get_text():
     assert (0, '\n' * 27 + 'abcdefg测试Non-ASCII') == bioc.get_text(collection.documents[1])
     assert (34, '测试Non-ASCII') == bioc.get_text(collection.documents[1].passages[0].sentences[1])
 
+    document = bioc.BioCDocument.of_text('abcd')
+    assert (0, 'abcd') == bioc.get_text(document)
+
     with pytest.raises(TypeError):
         bioc.get_text('Foo')
 
