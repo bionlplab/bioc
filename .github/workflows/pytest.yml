@@ -2,7 +2,7 @@ name: Build and Test
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   test:
     name: Test BioC package
@@ -11,6 +11,8 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.6, 3.9]
+    env:
+      PYTHONPATH: src
     steps:
       - name: Chgeckout repository code
         uses: actions/checkout@v2
