@@ -18,6 +18,17 @@ text = """8701013|t|Famotidine-associated delirium. A series of six cases.
 8701013	CID	D015738	D003693
 """
 
+
+text2 = """
+22051099|t|Variation in the CXCR1 gene (IL8RA) is not associated with susceptibility to chronic periodontitis.
+22051099|a|BACKGROUND: The chemokine receptor 1 CXCR-1 (or IL8R-alpha) is a specific receptor for the interleukin 8 (IL-8), which is chemoattractant for neutrophils and has an important role in the inflammatory response. The polymorphism rs2234671 at position Ex2+860G>C of the CXCR1 gene causes a conservative amino acid substitution (S276T). This single nucleotide polymorphism (SNP) seemed to be functional as it was associated with decreased lung cancer risk. Previous studies of our group found association of haplotypes in the IL8 and in the CXCR2 genes with the multifactorial disease chronic periodontitis. In this study we investigated the polymorphism rs2234671 in 395 Brazilian subjects with and without chronic periodontitis. FINDINGS: Similar distribution of the allelic and genotypic frequencies were observed between the groups (p>0.05). CONCLUSIONS: The polymorphism rs2234671 in the CXCR1 gene was not associated with the susceptibility to chronic periodontitis in the studied Brazilian population.
+22051099	327	336	rs2234671	SNP	rs2234671
+22051099	349	359	Ex2+860G>C	DNAMutation	c|SUB|G|Ex2+860|C	RSID:2234671
+22051099	425	430	S276T	ProteinMutation	p|SUB|S|276|T	RSID:2234671
+22051099	751	760	rs2234671	SNP	rs2234671
+22051099	972	981	rs2234671	SNP	rs2234671
+"""
+
 def _test_doc(doc):
     assert len(doc.relations) == 1
     assert len(doc.annotations) == 11
@@ -25,10 +36,21 @@ def _test_doc(doc):
     assert doc.annotations[-1].type == 'Chemical'
 
 
+def _test_doc2(doc):
+    assert len(doc.relations) == 0
+    assert len(doc.annotations) == 5
+    assert doc.annotations[1].id == 'c|SUB|G|Ex2+860|C'
+    assert doc.annotations[1].others == ['RSID:2234671']
+
+
 def test_loads():
     docs = pubtator.loads(text)
     assert len(docs) == 1
     _test_doc(docs[0])
+
+    docs = pubtator.loads(text2)
+    assert len(docs) == 1
+    _test_doc2(docs[0])
 
 
 

@@ -5,16 +5,18 @@ from typing import List
 
 
 class PubTatorAnn:
-    def __init__(self, pmid: str, start: int, end: int, text: str, type: str, id: str):
+    def __init__(self, pmid: str, start: int, end: int, text: str, type: str, id: str, *args):
         self.pmid = pmid
         self.start = start
         self.end = end
         self.text = text
         self.type = type
         self.id = id
+        self.others = list(*args)
 
     def __str__(self):
-        return '{self.pmid}\t{self.start}\t{self.end}\t{self.text}\t{self.type}\t{self.id}'.format(self=self)
+        return '{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
+            self.pmid, self.start, self.end, self.text, self.type, self.id, '\t'.join(self.others))
 
 
 class PubTatorRel:

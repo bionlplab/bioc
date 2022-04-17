@@ -96,4 +96,7 @@ def loads_ann(s: Union[str, List[str]]) -> PubTatorAnn:
             raise ValueError('Cannot parse entity. %s concept but %s text. %s' % (len(ids), len(texts), s))
         return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]), text=toks[3], type=toks[4], id=toks[5])
 
+    if len(toks) == 7:
+        return PubTatorAnn(toks[0], int(toks[1]), int(toks[2]), toks[3], toks[4], toks[5], toks[6:])
+
     raise ValueError('Cannot parse: %s' % s)
