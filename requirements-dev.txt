@@ -1,0 +1,9 @@
+lxml>=4.6.3
+jsonlines>=1.2.0
+intervaltree
+tqdm
+docopt
+pytest
+pytest-cov
+build
+twine

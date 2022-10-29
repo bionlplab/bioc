@@ -20,14 +20,15 @@ class PubTatorAnn:
 
 
 class PubTatorRel:
-    def __init__(self, pmid, type, id1, id2):
+    def __init__(self, pmid, type, id1, id2, neg=None):
         self.pmid = pmid
         self.type = type
         self.id1 = id1
         self.id2 = id2
+        self.neg = neg
 
     def __str__(self):
-        return '{self.pmid}\t{self.type}\t{self.id1}\t{self.id2}'.format(self=self)
+        return '{self.pmid}\t{self.type}\t{self.id1}\t{self.id2}\t{self.neg}'.format(self=self)
 
 
 class PubTator:

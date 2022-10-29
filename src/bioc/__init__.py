@@ -16,4 +16,5 @@ __all__ = ['BioCAnnotation', 'BioCCollection', 'BioCDocument', 'BioCLocation', '
            'validate', 'annotations', 'relations', 'sentences', 'get_text', 'pretty_print',
            'biocxml', 'biocjson',
            'load', 'loads', 'dump', 'dumps',
-           'PASSAGE', 'DOCUMENT', 'SENTENCE']
+           'PASSAGE', 'DOCUMENT', 'SENTENCE',
+           'pubtator']

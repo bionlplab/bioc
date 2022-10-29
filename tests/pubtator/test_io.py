@@ -16,6 +16,7 @@ text = """8701013|t|Famotidine-associated delirium. A series of six cases.
 8701013	573	583	famotidine	Chemical	D015738
 8701013	689	699	famotidine	Chemical	D015738
 8701013	CID	D015738	D003693
+8701013	CID	D015738	D014456	No
 """
 
 
@@ -29,8 +30,9 @@ text2 = """
 22051099	972	981	rs2234671	SNP	rs2234671
 """
 
+
 def _test_doc(doc):
-    assert len(doc.relations) == 1
+    assert len(doc.relations) == 2
     assert len(doc.annotations) == 11
     assert doc.annotations[0].id == 'D015738'
     assert doc.annotations[-1].type == 'Chemical'
@@ -51,7 +53,6 @@ def test_loads():
     docs = pubtator.loads(text2)
     assert len(docs) == 1
     _test_doc2(docs[0])
-
 
 
 def test_load(tmp_path):

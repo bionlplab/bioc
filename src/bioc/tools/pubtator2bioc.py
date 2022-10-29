@@ -15,6 +15,8 @@ def pubtator2bioc_ann(ann: PubTatorAnn) -> bioc.BioCAnnotation:
 def pubtator2bioc_rel(rel: PubTatorRel) -> bioc.BioCRelation:
     biocrel = bioc.BioCRelation()
     biocrel.infons['type'] = rel.type
+    if rel.neg is not None:
+        biocrel.infons['neg'] = rel.neg
     biocrel.add_node(bioc.BioCNode(rel.id1, 'Chemical'))
     biocrel.add_node(bioc.BioCNode(rel.id2, 'Disease'))
     return biocrel

@@ -61,9 +61,14 @@ def iterparse_s(line_iterator: Iterator[str]) -> Generator[PubTator, None, None]
         if len(toks) >= 6:
             annotation = loads_ann(toks)
             doc.add_annotation(annotation)
-        if len(toks) == 4:
+        elif len(toks) == 4:
             relation = PubTatorRel(toks[0], toks[1], toks[2], toks[3])
             doc.add_relation(relation)
+        elif len(toks) == 5:
+            relation = PubTatorRel(toks[0], toks[1], toks[2], toks[3], toks[4])
+            doc.add_relation(relation)
+        else:
+            print('%i: Cannot parse: "%r"' % (i, line))
 
     if doc.pmid and (doc.title or doc.abstract):
         yield doc
