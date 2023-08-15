@@ -1,4 +1,4 @@
-from bioc.brat.brat import BratNote
+from bioc.brat import BratNote
 from bioc.brat.decoder import loads_brat_note
 from bioc.brat.encoder import dumps_brat_note
 

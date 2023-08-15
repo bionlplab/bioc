@@ -20,11 +20,8 @@ def get_text(obj) -> Tuple[int, str]:
     """
     Return text with its offset in the document
 
-    Args:
-        obj: BioCDocument, BioCPassage, or BioCSentence
-
-    Returns:
-        offset, text
+    :param obj: BioCDocument, BioCPassage, or BioCSentence
+    :return: offset, text
     """
     from bioc import BioCDocument, BioCPassage, BioCSentence
 
@@ -37,10 +34,11 @@ def get_text(obj) -> Tuple[int, str]:
         for sentence in obj.sentences:
             try:
                 text = pad_char(text, sentence.offset - obj.offset, ' ')
-                assert sentence.text, f'BioC sentence has no text: {sentence.offset}'
+                assert sentence.text, \
+                    'BioC sentence has no text: %s' % sentence.offset
                 text += sentence.text
             except ValueError:
-                raise ValueError(f'Overlapping sentences {sentence.offset}')
+                raise ValueError('Overlapping sentences %s' % sentence.offset)
         return obj.offset, text
     elif isinstance(obj, BioCDocument):
         if obj.text:
@@ -51,11 +49,13 @@ def get_text(obj) -> Tuple[int, str]:
                 text = pad_char(text, passage.offset)
                 text += get_text(passage)[1]
             except ValueError:
-                raise ValueError(f'{obj.id}: overlapping passages {passage.offset}')
+                raise ValueError('%s: overlapping passages %s'
+                                 % (obj.id, passage.offset))
         return 0, text
     else:
-        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
-                        f'BioCDocument, BioCPassage, or BioCSentence')
+        raise TypeError('Object of type %s must be BioCCollection, '
+                        'BioCDocument, BioCPassage, or BioCSentence'
+                        % obj.__class__.__name__)
 
 
 def pretty_print(src, dst):
@@ -68,8 +68,10 @@ def pretty_print(src, dst):
     tree = etree.parse(src, parser)
     docinfo = tree.docinfo
     with open(dst, 'wb') as fp:
-        fp.write(etree.tostring(tree, pretty_print=True,
-                                encoding=docinfo.encoding, standalone=docinfo.standalone))
+        fp.write(etree.tostring(tree,
+                                pretty_print=True,
+                                encoding=docinfo.encoding,
+                                standalone=docinfo.standalone))
 
 
 def shorten_text(text: str, maxlen=40):

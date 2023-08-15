@@ -4,7 +4,8 @@ This module implements a number of iterator building blocks.
 
 from typing import Generator, Collection, Union, Optional
 
-from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+from bioc.datastructure import BioCCollection, BioCDocument, \
+    BioCPassage, BioCSentence, BioCAnnotation, \
     BioCRelation
 from bioc.constants import DOCUMENT, PASSAGE, SENTENCE
 
@@ -18,25 +19,24 @@ class BioCResult:
         self.relation = None  # type: Optional[BioCRelation]
 
 
-def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
+def annotations(obj: BioCCollection or BioCDocument or BioCPassage
+                     or BioCSentence,
                 docid: str = None,
                 level: Union[int, Collection[int]] = (DOCUMENT, PASSAGE, SENTENCE)) \
         -> Generator[BioCResult, None, None]:
     """
     Get all annotations in document id.
 
-    Args:
-        obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
-        docid: document id. If None, all documents
-        level: DOCUMENT, PASSAGE, SENTENCE
-
-    Yields:
-        one annotation
+    :param obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
+    :param docid: document id. If None, all documents
+    :param level: DOCUMENT, PASSAGE, SENTENCE
+    :return: one annotation
     """
     if type(level) == int:
         level = (level, )
     if isinstance(obj, BioCCollection):
-        for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
+        for document in filter(
+                lambda d: docid is None or docid == d.id, obj.documents):
             yield from annotations(document, level=level)
     elif isinstance(obj, BioCDocument):
         if DOCUMENT in level:
@@ -68,8 +68,9 @@ def annotations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSenten
                 r.annotation = ann
                 yield r
     else:
-        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
-                        f'BioCDocument, BioCPassage, or BioCSentence')
+        raise TypeError('Object of type %s must be BioCCollection, '
+                        'BioCDocument, BioCPassage, or BioCSentence'
+                        % obj.__class__.__name__)
 
 
 def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence,
@@ -79,18 +80,16 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
     """
     Get all relations in document id.
 
-    Args:
-        obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
-        docid: document id. If None, all documents
-        level: DOCUMENT, PASSAGE, SENTENCE
-
-    Yields:
-        one relation
+    :param obj: BioCCollection, BioCDocument, BioCPassage, or BioCSentence
+    :param docid: document id. If None, all documents
+    :param level: DOCUMENT, PASSAGE, SENTENCE
+    :return: one relation
     """
     if type(level) == int:
         level = (level, )
     if isinstance(obj, BioCCollection):
-        for document in filter(lambda d: docid is None or docid == d.id, obj.documents):
+        for document in filter(
+                lambda d: docid is None or docid == d.id, obj.documents):
             yield from relations(document, level=level)
     elif isinstance(obj, BioCDocument):
         if DOCUMENT in level:
@@ -122,19 +121,18 @@ def relations(obj: BioCCollection or BioCDocument or BioCPassage or BioCSentence
                 r.relation = rel
                 yield r
     else:
-        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, '
-                        f'BioCDocument, BioCPassage, or BioCSentence')
+        raise TypeError('Object of type %s must be BioCCollection, '
+                        'BioCDocument, BioCPassage, or BioCSentence'
+                        % obj.__class__.__name__)
 
 
-def sentences(obj: BioCCollection or BioCDocument or BioCPassage) -> Generator[BioCResult, None, None]:
+def sentences(obj: BioCCollection or BioCDocument or BioCPassage) \
+        -> Generator[BioCResult, None, None]:
     """
     Get all sentences in document id.
 
-    Args:
-        obj: BioCCollection, BioCDocument, or BioCPassage
-
-    Yields:
-        one sentence
+    :param obj: BioCCollection, BioCDocument, or BioCPassage
+    :return: one sentence
     """
     if isinstance(obj, BioCCollection):
         for document in obj.documents:
@@ -151,4 +149,6 @@ def sentences(obj: BioCCollection or BioCDocument or BioCPassage) -> Generator[B
             r.sentence = sentence
             yield r
     else:
-        raise TypeError(f'Object of type {obj.__class__.__name__} must be BioCCollection, BioCDocument, BioCPassage')
+        raise TypeError('Object of type %s must be BioCCollection, '
+                        'BioCDocument, BioCPassage'
+                        % obj.__class__.__name__)

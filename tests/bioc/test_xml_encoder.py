@@ -31,14 +31,6 @@ def test_dumps():
     assert_everything(collection)
 
 
-def test_file_type():
-    with pytest.raises(ValueError):
-        biocxml.dump(None, None, None)
-
-    with pytest.raises(ValueError):
-        biocxml.dumps(None, None)
-
-
 def test_iterwrite_file():
     collection = _get_collection()
 

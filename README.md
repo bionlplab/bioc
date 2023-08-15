@@ -38,7 +38,7 @@ Encoding the BioC collection object `collection`:
 ```python
 from bioc import biocxml
 # Serialize ``collection`` as a BioC formatted stream to ``fp``.
-with open(filename, 'w') as fp
+with open(filename, 'w') as fp:
     biocxml.dump(collection, fp)
 ```
 
@@ -117,7 +117,7 @@ This work is supported by the National Library of Medicine under Award No.
     
 ## License
 
-Copyright BioNLP Lab at Weill Cornell Medicine, 2022.
+Copyright BioNLP Lab at Weill Cornell Medicine, 2023.
 
 Distributed under the terms of the [MIT](https://github.com/bionlplab/bioc/blob/master/LICENSE) license, 
 bioc is free and open source software.

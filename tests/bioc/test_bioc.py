@@ -3,7 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from bioc import biocxml, bioc
+from bioc import biocxml
+import bioc
+
 
 @pytest.fixture
 def collection():
@@ -16,6 +18,7 @@ def collection():
 def test_AnnotationMixin(collection):
     c = copy.deepcopy(collection)
     p = c.documents[0].passages[0]
+
     p.clear_annotations()
     assert len(p.annotations) == 0
     p.clear_relations()

@@ -1,4 +1,4 @@
-from bioc.brat.brat import BratAttribute
+from bioc.brat import BratAttribute
 from bioc.brat.decoder import loads_brat_attribute
 from bioc.brat.encoder import dumps_brat_attribute
 

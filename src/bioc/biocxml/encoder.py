@@ -4,17 +4,17 @@ BioC XML encoder
 from typing import TextIO
 from lxml import etree
 
-from bioc.bioc import BioCCollection, BioCDocument, BioCLocation, BioCNode, BioCRelation
+from bioc.datastructure import BioCCollection, BioCDocument, BioCLocation, \
+    BioCNode, BioCRelation
 
 
 def dump(collection: BioCCollection, fp: TextIO, *, pretty_print: bool = True):
     """
     Serialize ``collection`` as a BioC formatted stream to ``fp``.
 
-    Args:
-        collection: the BioC collection
-        fp: a ``.write()``-supporting file-like object
-        pretty_print: enables formatted XML
+    :param collection: the BioC collection fp:
+    a ``.write()``-supporting file-like object
+    :param pretty_print: enables formatted XML
     """
     fp.write(dumps(collection, pretty_print=pretty_print))
 
@@ -23,15 +23,14 @@ def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:
     """
     Serialize ``collection`` to a BioC formatted ``str``.
 
-    Args:
-        collection: the BioC collection
-        pretty_print: enables formatted XML
-
-    Returns:
-        a BioC formatted ``str``
+    :param collection: the BioC collection
+    :param pretty_print: enables formatted XML
+    :return: a BioC formatted ``str``
     """
     doc = etree.ElementTree(encode_collection(collection))
-    s = etree.tostring(doc, pretty_print=pretty_print, encoding=collection.encoding,
+    s = etree.tostring(doc,
+                       pretty_print=pretty_print,
+                       encoding=collection.encoding,
                        standalone=collection.standalone)
     return s.decode(collection.encoding)
 
@@ -39,7 +38,8 @@ def dumps(collection: BioCCollection, *, pretty_print: bool = True) -> str:
 def encode_location(location: BioCLocation):
     """Encode a single location."""
     return etree.Element('location',
-                         {'offset': str(location.offset), 'length': str(location.length)})
+                         {'offset': str(location.offset),
+                          'length': str(location.length)})
 
 
 def encode_node(node: BioCNode):
@@ -161,7 +161,8 @@ class BioCXMLDocumentWriter:
 
     def write_collection_info(self, collection: BioCCollection):
         """
-        Writes the collection information: encoding, version, DTD, source, date, key, infons, etc.
+        Writes the collection information: encoding, version, DTD,
+        source, date, key, infons, etc.
         """
         elem = etree.Element('source')
         elem.text = collection.source

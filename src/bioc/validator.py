@@ -3,12 +3,13 @@ Validate BioC data structure
 """
 from typing import Callable, List
 
-from bioc.bioc import BioCDocument, BioCCollection, BioCSentence
+from bioc.datastructure import BioCDocument, BioCCollection, BioCSentence
 
 
 # pylint: disable=unused-argument
 def _default_error(msg, traceback):
-    """Default error handler that accepts two parameters: error message and traceback."""
+    """Default error handler that accepts two parameters: error message
+    and traceback."""
     raise ValueError(msg)
 
 
@@ -39,30 +40,40 @@ class BioCValidator:
 
         text = self.__get_doc_text(document)
         self._validate_ann(document.annotations, text, 0)
-        self._validate_rel(annotations, document.relations, f'document {document.id}')
+        self._validate_rel(annotations,
+                           document.relations,
+                           'document %s' % document.id)
 
         for passage in document.passages:
             self.traceback.append(passage)
 
             text = self.__get_passage_text(passage)
             self._validate_ann(passage.annotations, text, passage.offset)
-            self._validate_rel(annotations, passage.relations,
-                                f'document {document.id} --> passage {passage.offset}')
+            self._validate_rel(annotations,
+                               passage.relations,
+                               'document %s --> passage %s'
+                               % (document.id, passage.offset))
 
             for sentence in passage.sentences:
                 self.traceback.append(sentence)
-                self._validate_ann(sentence.annotations, sentence.text, sentence.offset)
-                self._validate_rel(annotations, sentence.relations,
-                                    f'document {document.id} --> sentence {sentence.offset}')
+                self._validate_ann(sentence.annotations,
+                                   sentence.text,
+                                   sentence.offset)
+                self._validate_rel(annotations,
+                                   sentence.relations,
+                                   'document %s --> sentence %s'
+                                   % (document.id, sentence.offset))
                 self.traceback.pop()
             self.traceback.pop()
         self.traceback.pop()
 
     def validate_sen(self, sentence: BioCSentence):
         self.traceback.append(sentence)
-        self._validate_ann(sentence.annotations, sentence.text, sentence.offset)
-        self._validate_rel(sentence.annotations, sentence.relations,
-                            f'sentence {sentence.offset}')
+        self._validate_ann(sentence.annotations,sentence.text,
+                           sentence.offset)
+        self._validate_rel(sentence.annotations,
+                           sentence.relations,
+                           'sentence %s' % sentence.offset)
         self.traceback.pop()
 
     def validate(self, collection: BioCCollection):
@@ -74,13 +85,15 @@ class BioCValidator:
         for relation in relations:
             for node in relation.nodes:
                 if not self.__contains(annotations, node.refid):
-                    self.onerror(f'Cannot find node {node} in {path}', self.traceback)
+                    self.onerror('Cannot find node %s in %s'  % (node, path),
+                                 self.traceback)
 
     def _validate_ann(self, annotations, text, offset):
         for ann in annotations:
             self.traceback.append(ann)
             location = ann.total_span
-            anntext = text[location.offset - offset: location.offset + location.length - offset]
+            anntext = text[location.offset - offset
+                           : location.offset + location.length - offset]
             if anntext != ann.text:
                 start = max(0, location.offset - 10)
                 end = min(len(text), location.end + 10)
@@ -89,7 +102,8 @@ class BioCValidator:
                     '  Annotation: %s\n'
                     '  Actual text: %r\n'
                     '  text: %s' %
-                    (self.current_docid, ann.id, location.offset, anntext, ann.text, text[start:end]),
+                    (self.current_docid, ann.id, location.offset, anntext,
+                     ann.text, text[start:end]),
                     self.traceback)
             self.traceback.pop()
 
@@ -103,7 +117,8 @@ class BioCValidator:
     def __fill_newline(self, text, offset):
         dis = offset - len(text)
         if dis < 0:
-            self.onerror('%s: Overlap with previous text: len[%d] vs next offset[%d]\n%s'
+            self.onerror('%s: Overlap with previous text: '
+                         'len[%d] vs next offset[%d]\n%s'
                          % (self.current_docid, len(text), offset, text),
                          self.traceback)
         if dis > 0:
@@ -122,7 +137,8 @@ class BioCValidator:
                 text += sentence.text
             else:
                 self.onerror(
-                    f'{self.current_docid}: BioC sentence has no text: {sentence.offset}',
+                    '%s: BioC sentence has no text: %s'
+                    % (self.current_docid, sentence.offset),
                     self.traceback)
             self.traceback.pop()
         return text

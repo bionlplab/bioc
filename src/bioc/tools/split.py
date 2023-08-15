@@ -3,7 +3,6 @@ Usage:
     split [options] INPUT PREFIX
 
 Options:
-
     -a N --suffix-length=N          generate suffixes of length N [default: 2]
     --additional-suffix=SUFFIX      append an additional SUFFIX to file names [default: .xml]
     -d NUMBER --documents=NUMBER    put NUMBER docs per output file [default: 100]
@@ -29,9 +28,13 @@ def itersplit(collection: bioc.BioCCollection, num_doc: int) -> Generator[bioc.B
         yield subc
 
 
-def split_file(source, *, prefix: str, num_doc: int, additional_suffix: str = '.xml',
+def split_file(source, *,
+               prefix: str,
+               num_doc: int,
+               additional_suffix: str = '.xml',
                suffix_length: int = 2):
-    path_format = prefix + '{:0' + str(suffix_length) + 'x}' + additional_suffix
+    path_format = prefix + '{:0' + str(suffix_length) + 'x}' \
+                  + additional_suffix
 
     with open(source, encoding='utf8') as fp:
         collection = bioc.load(fp)

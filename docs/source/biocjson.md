@@ -40,14 +40,11 @@ with open(filename, 'r') as fp:
 Incrementally encoding the BioC structure:
 
 ```python
-import bioc
-from bioc.biocjson import BioCJsonIterWriter
+from bioc import biocjson
 
-with open(filename, 'w', encoding='utf8') as fp:
-    writer = BioCJsonIterWriter(fp, level=bioc.PASSAGE)
+with biocjson.iterwriter(filename) as writer:
     for doc in collection.documents:
-         for passage in doc.passages:
-             writer.write(passage)
+        writer.write(doc)
 ```
 
 or
@@ -64,10 +61,8 @@ with jsonlines.open(filename, 'w') as writer:
 Incrementally decoding the BioC Json lines file:
 
 ```python
-import bioc
-from bioc.biocjson import BioCJsonIterReader
-with open(filename, 'r', encoding='utf8') as fp:
-    reader = BioCJsonIterReader(fp, level=bioc.PASSAGE)
+from bioc import biocjson
+with biocjson.iterreader(filename) as reader:
     for passage in reader:
         # process passage
         ...
@@ -81,7 +76,7 @@ from bioc import biocjson
 import jsonlines
 with jsonlines.open(filename) as reader:
     for obj in reader:
-        passage = biocjson.fromJSON(obj, level=bioc.PASSAGE)
+        passage = biocjson.fromJSON(obj, bioctype=bioc.PASSAGE)
         ...
 ```
 

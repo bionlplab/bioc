@@ -1,4 +1,4 @@
-from bioc.bioc import InfonsMaxin
+from bioc.datastructure import InfonsMaxin
 
 
 def test_infonsmaxin():
@@ -9,3 +9,8 @@ def test_infonsmaxin():
 
     c.clear_infons()
     assert len(c.infons) == 0
+
+    c.infons['k1'] = 'v1'
+    c.infons['k2'] = 'v2'
+    assert c.infons_repr() == 'infons=[k1=v1,k2=v2],'
+

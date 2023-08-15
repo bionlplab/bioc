@@ -1,11 +1,12 @@
 import io
 import os
 from pathlib import Path
-from typing import TextIO, List, Generator, Iterator
+from typing import TextIO, List, Iterator
 
 import tqdm
 
-from bioc.brat.brat import BratDocument, BratEntity, BratEvent, BratRelation, BratNote, BratAttribute, BratEquivRelation
+from bioc.brat.datastructure import BratDocument, BratEntity, \
+    BratEvent, BratRelation, BratNote, BratAttribute, BratEquivRelation
 
 
 def loads_brat_attribute(s: str) -> BratAttribute:

@@ -1,4 +1,4 @@
-from bioc.brat.brat import BratEvent
+from bioc.brat import BratEvent
 from bioc.brat.decoder import loads_brat_event
 from bioc.brat.encoder import dumps_brat_event
 

@@ -1,17 +1,19 @@
 """
 Validate Brat data structure
 """
-from typing import Callable, List
+from typing import Callable
 
-from bioc.brat.brat import BratDocument, BratEntity
+from bioc.brat.datastructure import BratDocument
 
 
 def _default_error(msg: str):
-    """Default error handler that accepts two parameters: error message and traceback."""
+    """Default error handler that accepts two parameters: error message
+    and traceback."""
     raise ValueError(msg)
 
 
-def validate(document: BratDocument, onerror: Callable[[str], None]= _default_error):
+def validate(document: BratDocument,
+             onerror: Callable[[str], None]= _default_error):
     """Validate a single document."""
     for ann in document.entities:
         anntext = ''
@@ -25,7 +27,8 @@ def validate(document: BratDocument, onerror: Callable[[str], None]= _default_er
                 '  Annotation: %r\n'
                 '  Actual text: %r\n'
                 '  text: %s' %
-                (document.id, ann.total_span[0], anntext, ann.text, document.text[start:end]))
+                (document.id, ann.total_span[0], anntext, ann.text,
+                 document.text[start:end]))
 
     for rel in document.relations:
         for arg_id in rel.arguments.values():
@@ -34,7 +37,8 @@ def validate(document: BratDocument, onerror: Callable[[str], None]= _default_er
 
     for event in document.events:
         if not document.has_annotation_id(event.trigger_id):
-            _default_error('%s: Cannot find id %s' % (document.id, event.trigger_id))
+            _default_error('%s: Cannot find id %s'
+                           % (document.id, event.trigger_id))
         for arg_id in event.arguments.values():
             if not document.has_annotation_id(arg_id):
                 onerror('%s: Cannot find id %s' % (document.id, arg_id))

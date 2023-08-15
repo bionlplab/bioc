@@ -1,6 +1,37 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = [ "setuptools",]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "bioc"
+version = "2.1"
+description = "bioc - Processing BioC, Brat, and PubTator with Python."
+readme = "README.md"
+keywords = [ "bioc", "brat", "pubtator",]
+requires-python = ">=3.6"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Programming Language :: Python :: 3",]
+dynamic = [ "dependencies",]
+[[project.authors]]
+name = "Yifan Peng"
+email = "yip4002@med.cornell.edu"
+
+[project.urls]
+Homepage = "https://github.com/bionlplab/bioc"
+
+[project.scripts]
+bioc-split = "bioc.tools.split:main"
+
+[tool.setuptools.dynamic.dependencies]
+file = [ "requirements.txt",]
+
+[tool.setuptools.packages.find]
+where = [ "src",]
+exclude = [ "tests*",]

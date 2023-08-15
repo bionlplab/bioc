@@ -2,13 +2,16 @@ import math
 import string
 import tempfile
 
+from docopt import docopt
+
 import bioc
 from bioc.tools import split
 import random
 
 
 def get_random_str():
-    return ''.join(random.choices(string.ascii_letters + string.digits + ' ', k=random.randint(10, 500)))
+    return ''.join(random.choices(string.ascii_letters + string.digits + ' ',
+                                  k=random.randint(10, 500)))
 
 
 def get_collection(total_doc):
@@ -58,3 +61,12 @@ def test_split_file(tmp_path):
         with open(source) as fp:
             subc = bioc.load(fp)
             assert len(subc.documents) == total_doc % n
+
+
+def test_cli():
+    cmd = 'split -a 5 --additional-suffix=.txt -d 150 INPUT PREFIX'
+    argv = docopt(split.__doc__, argv=cmd.split()[1:])
+    assert argv['--suffix-length'] == '5'
+    assert argv['--additional-suffix'] == '.txt'
+    assert argv['INPUT'] == 'INPUT'
+    assert argv['PREFIX'] == 'PREFIX'

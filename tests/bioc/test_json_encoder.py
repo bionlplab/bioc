@@ -1,15 +1,8 @@
-import io
-import tempfile
 from pathlib import Path
 
 import pytest
 
-import bioc
 from bioc import biocjson
-# from bioc.biocjson import BioCJsonIterWriter
-# from bioc import BioCFileType
-# from bioc import BioCJsonIterWriter
-# from bioc import toJSON
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -49,25 +42,6 @@ def test_jsoniterwriter(tmp_path):
         for doc in reader:
             collection.add_document(doc)
     assert_everything(collection)
-
-# def test_level():
-#     with pytest.raises(ValueError):
-#         BioCJsonIterWriter(io.StringIO(), level=-1)
-#
-#     with open(file, encoding='utf8') as fp:
-#         collection = biocjson.load(fp)
-#
-#     with pytest.raises(ValueError):
-#         writer = biocjson.BioCJsonIterWriter(io.StringIO(), level=bioc.SENTENCE)
-#         writer.write(collection.documents[0])
-#
-#     with pytest.raises(ValueError):
-#         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.PASSAGE)
-#         writer.write(collection.documents[0])
-#
-#     with pytest.raises(ValueError):
-#         writer = BioCJsonIterWriter(io.StringIO(), level=bioc.DOCUMENT)
-#         writer.write(collection.documents[0].passages[0])
 
 
 def test_toJSON():

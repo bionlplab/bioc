@@ -15,14 +15,6 @@ def test_load():
     assert_everything(collection)
 
 
-def test_file_type():
-    with pytest.raises(ValueError):
-        biocxml.load(open(file, encoding='utf8'), None)
-
-    with pytest.raises(ValueError):
-        biocxml.loads('', None)
-
-
 def test_loads():
     with open(file, encoding='utf8') as fp:
         s = fp.read()

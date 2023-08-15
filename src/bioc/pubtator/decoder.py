@@ -2,7 +2,7 @@ import logging
 import re
 from typing import List, Generator, TextIO, Iterator, Union
 
-from bioc.pubtator.pubtator import PubTator, PubTatorAnn, PubTatorRel
+from bioc.pubtator.datastructure import PubTator, PubTatorAnn, PubTatorRel
 
 ABSTRACT_PATTERN = re.compile(r'(.*?)\|a\|(.*)')
 TITLE_PATTERN = re.compile(r'(.*?)\|t\|(.*)')
@@ -12,8 +12,7 @@ def loads(s: str) -> List[PubTator]:
     """
     Parse s (a str) to a list of Pubtator documents
 
-    Returns:
-        list: a list of PubTator documents
+    :return: a list of PubTator documents
     """
     return list(iterparse_s(s.splitlines()))
 
@@ -22,16 +21,14 @@ def load(fp: TextIO) -> List[PubTator]:
     """
     Parse file-like object to a list of Pubtator documents
 
-    Args:
-        fp: file-like object
-
-    Returns:
-        list: a list of PubTator documents
+    :param fp: file-like object
+    :return: a list of PubTator documents
     """
     return loads(fp.read())
 
 
-def iterparse_s(line_iterator: Iterator[str]) -> Generator[PubTator, None, None]:
+def iterparse_s(line_iterator: Iterator[str]) \
+        -> Generator[PubTator, None, None]:
     """
     Iterative parse each line
     """
@@ -92,16 +89,20 @@ def loads_ann(s: Union[str, List[str]]) -> PubTatorAnn:
         toks = s
 
     if len(toks) == 6:
-        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]), text=toks[3], type=toks[4], id=toks[5])
+        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]),
+                           text=toks[3], type=toks[4], id=toks[5])
 
     if len(toks) == 7 and '|' in toks[5] and '|' in toks[6]:
         ids = toks[5].split('|')
         texts = toks[6].split('|')
         if len(ids) != len(texts):
-            raise ValueError('Cannot parse entity. %s concept but %s text. %s' % (len(ids), len(texts), s))
-        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]), text=toks[3], type=toks[4], id=toks[5])
+            raise ValueError('Cannot parse entity. %s concept but %s text. %s'
+                             % (len(ids), len(texts), s))
+        return PubTatorAnn(pmid=toks[0], start=int(toks[1]), end=int(toks[2]),
+                           text=toks[3], type=toks[4], id=toks[5])
 
     if len(toks) == 7:
-        return PubTatorAnn(toks[0], int(toks[1]), int(toks[2]), toks[3], toks[4], toks[5], toks[6:])
+        return PubTatorAnn(toks[0], int(toks[1]), int(toks[2]), toks[3],
+                           toks[4], toks[5], toks[6:])
 
     raise ValueError('Cannot parse: %s' % s)

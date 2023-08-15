@@ -5,7 +5,8 @@ from typing import List
 
 
 class PubTatorAnn:
-    def __init__(self, pmid: str, start: int, end: int, text: str, type: str, id: str, *args):
+    def __init__(self, pmid: str, start: int, end: int, text: str, type: str,
+                 id: str, *args):
         self.pmid = pmid
         self.start = start
         self.end = end
@@ -15,8 +16,9 @@ class PubTatorAnn:
         self.others = list(*args)
 
     def __str__(self):
-        return '{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
-            self.pmid, self.start, self.end, self.text, self.type, self.id, '\t'.join(self.others))
+        return '%s\t%s\t%s\t%s\t%s\t%s\t%s' \
+            % (self.pmid, self.start, self.end, self.text, self.type, self.id,
+               '\t'.join(self.others))
 
 
 class PubTatorRel:
@@ -28,11 +30,13 @@ class PubTatorRel:
         self.neg = neg
 
     def __str__(self):
-        return '{self.pmid}\t{self.type}\t{self.id1}\t{self.id2}\t{self.neg}'.format(self=self)
+        return '%s\t%s\t%s\t%s\t%s' \
+            % (self.pmid, self.type, self.id1, self.id2, self.neg)
 
 
 class PubTator:
-    def __init__(self, pmid: str = None, title: str = None, abstract: str = None):
+    def __init__(self, pmid: str = None, title: str = None,
+                 abstract: str = None):
         self.pmid = pmid  # type: str
         self.title = title  # type: str
         self.abstract = abstract  # type: str
@@ -45,7 +49,8 @@ class PubTator:
     def add_relation(self, rel: PubTatorRel):
         self.relations.append(rel)
 
-    def get_annotation(self, concept_id: str, multiple_ids: bool = True, default = None) -> PubTatorAnn:
+    def get_annotation(self, concept_id: str, multiple_ids: bool = True,
+                       default = None) -> PubTatorAnn:
         """
         :param multiple_ids: one entity may have multiple concept ids.
         """

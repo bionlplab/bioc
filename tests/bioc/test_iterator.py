@@ -5,9 +5,9 @@ import pytest
 import bioc
 from bioc import DOCUMENT, PASSAGE, SENTENCE
 
-file = Path(__file__).parent / 'everything_v2.xml'
+file = Path(__file__).parent / 'everything.xml'
 with open(file, encoding='utf8') as fp:
-    collection = bioc.load(fp, version=bioc.BioCVersion.V2)
+    collection = bioc.load(fp)
 
 
 def test_sentences():

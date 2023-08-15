@@ -4,12 +4,7 @@ from pathlib import Path
 
 import pytest
 
-import bioc
 from bioc import biocjson
-# from bioc.biocjson import iterreader, iterwriter
-# from bioc import BioCFileType
-# from bioc import BioCJsonIterWriter
-# from bioc.biocjson import BioCJsonIterReader
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.json'
@@ -41,8 +36,15 @@ def test_fromJSON():
     p = biocjson.fromJSON(obj['documents'][0]['passages'][0], 'BioCPassage')
     assert p.text == 'abcdefghijklmnopqrstuvwxyz'
 
-    s = biocjson.fromJSON(obj['documents'][1]['passages'][0]['sentences'][0], 'BioCSentence')
+    s = biocjson.fromJSON(obj['documents'][1]['passages'][0]['sentences'][0],
+                          'BioCSentence')
     assert s.offset == 27
+
+    with pytest.raises(KeyError):
+        biocjson.fromJSON(obj['documents'][0], None)
+
+    with pytest.raises(KeyError):
+        biocjson.fromJSON(obj['documents'][0], 'None')
 
 
 def test_iterreader_document():
@@ -103,8 +105,3 @@ def test_iterreader_sentence():
             collection.documents[1].passages[0].add_sentence(obj)
 
     assert_everything(collection)
-#
-#
-# def test_level():
-#     with pytest.raises(ValueError):
-#         BioCJsonIterReader(io.StringIO(), level=-1)

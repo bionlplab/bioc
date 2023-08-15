@@ -1,10 +1,11 @@
 from typing import Callable
 
-from bioc.pubtator.pubtator import PubTator
+from bioc.pubtator.datastructure import PubTator
 
 
 def _default_error(msg: str):
-    """Default error handler that accepts two parameters: error message and traceback."""
+    """Default error handler that accepts two parameters: error message
+    and traceback."""
     raise ValueError(msg)
 
 

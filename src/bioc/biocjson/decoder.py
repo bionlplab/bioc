@@ -6,7 +6,8 @@ import json
 from contextlib import contextmanager
 from typing import TextIO, Dict, Union
 
-from bioc.bioc import BioCCollection, BioCSentence, BioCRelation, BioCAnnotation, BioCNode, \
+from bioc.datastructure import BioCCollection, BioCSentence, \
+    BioCRelation, BioCAnnotation, BioCNode, \
     BioCLocation, BioCPassage, BioCDocument
 
 
@@ -113,13 +114,15 @@ def load(fp: TextIO, **kwargs) -> BioCCollection:
 def loads(s: str, **kwargs) -> BioCCollection:
     """
     Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
-    containing a JSON document) to a BioCCollection object. kwargs are passed to json.
+    containing a JSON document) to a BioCCollection object. kwargs are
+    passed to json.
     """
     obj = json.loads(s, **kwargs)
     return parse_collection(obj)
 
 
-def fromJSON(obj: Dict, bioctype: str = None) -> Union[BioCDocument, BioCPassage, BioCSentence]:
+def fromJSON(obj: Dict, bioctype: str = None) \
+        -> Union[BioCDocument, BioCPassage, BioCSentence]:
     """
     Convert a Python dict to a BioC object
     """
@@ -156,7 +159,8 @@ class BioCJsonIterReader:
         if s:
             obj = json.loads(s)
             if 'bioctype' not in obj:
-                raise KeyError('%s:%s: Cannot find bioctype in the object: %s' % (self.fp.name, self.lineno, s))
+                raise KeyError('%s:%s: Cannot find bioctype in the object: %s'
+                               % (self.fp.name, self.lineno, s))
             return fromJSON(obj)
         else:
             raise StopIteration

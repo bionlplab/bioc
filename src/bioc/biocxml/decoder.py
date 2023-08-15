@@ -1,13 +1,13 @@
 """
 BioC XML decoder
 """
-import codecs
 import io
 from typing import TextIO, Union, BinaryIO
 
 from lxml import etree
 
-from bioc.bioc import BioCCollection, BioCDocument, BioCPassage, BioCSentence, BioCAnnotation, \
+from bioc.datastructure import BioCCollection, BioCDocument, BioCPassage, \
+    BioCSentence, BioCAnnotation, \
     BioCRelation, BioCLocation, BioCNode
 
 
@@ -21,8 +21,8 @@ class BioCXMLDecoder:
 
     def decodes(self, s: str) -> BioCCollection:
         """
-        Deserialize ``s`` (a ``str`` instance containing a BioC collection) to a BioC collection
-        object.
+        Deserialize ``s`` (a ``str`` instance containing a BioC collection)
+        to a BioC collection object.
         """
         tree = etree.parse(io.BytesIO(bytes(s, encoding='UTF-8')))
         collection = self.__parse_collection(tree.getroot())
@@ -33,8 +33,8 @@ class BioCXMLDecoder:
 
     def decode(self, fp: TextIO) -> BioCCollection:
         """
-        Deserialize ``fp`` (a ``.read()``-supporting file-like object containing a BioC collection)
-        to a BioC collection object.
+        Deserialize ``fp`` (a ``.read()``-supporting file-like object
+        containing a BioC collection) to a BioC collection object.
         """
         # utf8_parser = etree.XMLParser(encoding='utf-8')
         tree = etree.parse(fp)
@@ -97,8 +97,8 @@ class BioCXMLDecoder:
         annotation.infons = self.__parse_infons(tree)
         annotation.text = tree.findtext('text')
         for child in tree.findall('location'):
-            annotation.add_location(
-                BioCLocation(int(child.attrib['offset']), int(child.attrib['length'])))
+            annotation.add_location(BioCLocation(int(child.attrib['offset']),
+                                                 int(child.attrib['length'])))
         return annotation
 
     def __parse_relation(self, tree):
@@ -107,12 +107,14 @@ class BioCXMLDecoder:
             relation.id = tree.attrib['id']
         relation.infons = self.__parse_infons(tree)
         for child in tree.findall('node'):
-            relation.add_node(BioCNode(child.attrib['refid'], child.attrib['role']))
+            relation.add_node(BioCNode(child.attrib['refid'],
+                                       child.attrib['role']))
         return relation
 
     @classmethod
     def __parse_infons(cls, tree):
-        return {child.attrib['key']: child.text for child in tree.findall('infon')}
+        return {child.attrib['key']: child.text
+                for child in tree.findall('infon')}
 
 
 class BioCXMLDocumentReader:
@@ -124,7 +126,8 @@ class BioCXMLDocumentReader:
         # if not isinstance(file, str):
         #     file = str(file)
         self.file = source
-        self.__context = iter(etree.iterparse(self.file, events=('start', 'end')))
+        self.__context = iter(etree.iterparse(self.file,
+                                              events=('start', 'end')))
         self.__state = 0
         self.__event = None
         self.__elem = None
@@ -133,12 +136,11 @@ class BioCXMLDocumentReader:
     def __iter__(self):
         return self
 
-    def __next__(self):
+    def __next__(self) -> BioCDocument:
         """
         Reads one BioC document from the XML file.
 
-        Returns:
-            BioCDocument: the BioC document
+        :return: the BioC document
         """
         if self.__document is None:
             raise StopIteration
@@ -181,9 +183,11 @@ class BioCXMLDocumentReader:
                         self.__passage = BioCPassage()
                         self.__state = 3
                     elif elem.tag == 'annotation':
-                        self.__document.add_annotation(self.__read_annotation(elem))
+                        self.__document.add_annotation(
+                            self.__read_annotation(elem))
                     elif elem.tag == 'relation':
-                        self.__document.add_relation(self.__read_relation(elem))
+                        self.__document.add_relation(
+                            self.__read_relation(elem))
                 elif event == 'end':
                     if elem.tag == 'id':
                         self.__document.id = elem.text
@@ -198,7 +202,8 @@ class BioCXMLDocumentReader:
                         self.__sentence = BioCSentence()
                         self.__state = 4
                     elif elem.tag == 'annotation':
-                        self.__passage.add_annotation(self.__read_annotation(elem))
+                        self.__passage.add_annotation(
+                            self.__read_annotation(elem))
                     elif elem.tag == 'relation':
                         self.__passage.add_relation(self.__read_relation(elem))
                 elif event == 'end':
@@ -215,9 +220,11 @@ class BioCXMLDocumentReader:
             elif self.__state == 4:
                 if event == 'start':
                     if elem.tag == 'annotation':
-                        self.__sentence.add_annotation(self.__read_annotation(elem))
+                        self.__sentence.add_annotation(
+                            self.__read_annotation(elem))
                     elif elem.tag == 'relation':
-                        self.__sentence.add_relation(self.__read_relation(elem))
+                        self.__sentence.add_relation(
+                            self.__read_relation(elem))
                 elif event == 'end':
                     if elem.tag == 'offset':
                         self.__sentence.offset = int(elem.text)
@@ -230,7 +237,7 @@ class BioCXMLDocumentReader:
                         if self.__sentence is not None:
                             self.__passage.add_sentence(self.__sentence)
 
-    def __read_annotation(self, start_elem):
+    def __read_annotation(self, start_elem) -> BioCAnnotation:
         ann = BioCAnnotation()
         ann.id = start_elem.get('id')
         while self.__has_next():
@@ -243,12 +250,13 @@ class BioCXMLDocumentReader:
                 elif elem.tag == 'infon':
                     ann.infons[elem.get('key')] = elem.text
                 elif elem.tag == 'location':
-                    ann.add_location(BioCLocation(int(elem.get('offset')), int(elem.get('length'))))
+                    ann.add_location(BioCLocation(
+                        int(elem.get('offset')), int(elem.get('length'))))
                 elif elem.tag == 'annotation':
                     return ann
         raise RuntimeError("should not reach here")  # pragma: no cover
 
-    def __read_relation(self, start_elem):
+    def __read_relation(self, start_elem) -> BioCRelation:
         rel = BioCRelation()
         rel.id = start_elem.get('id')
         while self.__has_next():
@@ -264,7 +272,7 @@ class BioCXMLDocumentReader:
                     return rel
         raise RuntimeError("should not reach here")  # pragma: no cover
 
-    def __has_next(self):
+    def __has_next(self) -> bool:
         try:
             self.__event, self.__elem = next(self.__context)
             return True
@@ -278,24 +286,25 @@ class BioCXMLDocumentReader:
 
     def get_collection_info(self) -> BioCCollection:
         """
-        Reads the collection information: encoding, version, DTD, source, date, key, infons, etc.
+        Reads the collection information: encoding, version, DTD,
+        source, date, key, infons, etc.
 
-        Returns:
-            the BioC collection that contains only information
+        :return: the BioC collection that contains only information
         """
         return self.__collection
 
 
 def load(fp: TextIO) -> BioCCollection:
     """
-    Deserialize ``fp`` (a ``.read()``-supporting file-like object containing a BioC collection)
-    to a BioC collection object.
+    Deserialize ``fp`` (a ``.read()``-supporting file-like object
+    containing a BioC collection) to a BioC collection object.
     """
     return BioCXMLDecoder().decode(fp)
 
 
 def loads(s: str) -> BioCCollection:
     """
-    Deserialize ``s`` (a ``str`` instance containing a BioC collection) to a BioC collection object.
+    Deserialize ``s`` (a ``str`` instance containing a BioC collection)
+    to a BioC collection object.
     """
     return BioCXMLDecoder().decodes(s)

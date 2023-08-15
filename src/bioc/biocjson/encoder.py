@@ -6,7 +6,8 @@ import json
 from contextlib import contextmanager
 from typing import Dict, Union, TextIO
 
-from bioc.bioc import BioCPassage, BioCNode, BioCAnnotation, BioCLocation, BioCRelation, \
+from bioc.datastructure import BioCPassage, BioCNode, BioCAnnotation, \
+    BioCLocation, BioCRelation, \
     BioCSentence, BioCCollection, BioCDocument
 
 
@@ -15,7 +16,8 @@ BIOC_OBJ = Union[BioCCollection, BioCDocument, BioCPassage, BioCSentence]
 
 def dumps(obj: BIOC_OBJ, **kwargs) -> str:
     """
-    Serialize a BioC ``obj`` to a JSON formatted ``str``. kwargs are passed to json.
+    Serialize a BioC ``obj`` to a JSON formatted ``str``. kwargs are
+    passed to json.
     """
     return json.dumps(obj, cls=BioCJSONEncoder, **kwargs)
 
@@ -109,7 +111,8 @@ class BioCJsonIterWriter:
 
     def write(self, obj: Union[BioCDocument, BioCPassage, BioCSentence]):
         """
-        Encode and write a BioC obj (an instance of BioCDocument, BioCPassage, or BioCSentence).
+        Encode and write a BioC obj (an instance of BioCDocument,
+        BioCPassage, or BioCSentence).
         """
         self.fp.write(json.dumps(BioCJSONEncoder().default(obj)) + '\n')
 

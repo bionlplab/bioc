@@ -1,6 +1,7 @@
 import pytest
 
 from bioc import pubtator
+from bioc.pubtator import dumps_ann
 
 text = """8701013|t|Famotidine-associated delirium. A series of six cases.
 8701013|a|Famotidine is a histamine H2-receptor antagonist used in inpatient settings for prevention of stress ulcers and is showing increasing popularity because of its low cost. Although all of the currently available H2-receptor antagonists have shown the propensity to cause delirium, only two previously reported cases have been associated with famotidine. The authors report on six cases of famotidine-associated delirium in hospitalized patients who cleared completely upon removal of famotidine. The pharmacokinetics of famotidine are reviewed, with no change in its metabolism in the elderly population seen. The implications of using famotidine in elderly persons are discussed.
@@ -84,6 +85,7 @@ def test_loads_ann():
     text = "23949582\t297\t317\themorrhagic cystitis\tDisease\tD006470|D003556\themorrhagic|cystitis"
     ann = pubtator.loads_ann(text)
     assert ann.text == 'hemorrhagic cystitis'
+    assert dumps_ann(ann) == "23949582\t297\t317\themorrhagic cystitis\tDisease\tD006470|D003556\t"
 
     with pytest.raises(ValueError):
         text = "23949582\t297\t317\themorrhagic cystitis\tDisease\tD006470|D003556\themorrhagic|cystitis|ABC"

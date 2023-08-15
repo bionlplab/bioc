@@ -2,8 +2,10 @@ from typing import List
 
 import tqdm
 
-from bioc import BioCDocument, BioCCollection, BioCPassage, BioCAnnotation, BioCLocation, BioCRelation, BioCNode
-from bioc.brat.brat import BratDocument, BratEntity, BratRelation, BratEvent, BratEquivRelation
+from bioc import BioCDocument, BioCCollection, BioCAnnotation, \
+    BioCLocation, BioCRelation, BioCNode
+from bioc.brat import BratDocument, BratEntity, BratRelation, \
+    BratEvent, BratEquivRelation
 
 
 def brat2bioc_entity(bratentity: BratEntity) -> BioCAnnotation:

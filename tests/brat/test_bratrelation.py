@@ -1,4 +1,4 @@
-from bioc.brat.brat import BratRelation
+from bioc.brat import BratRelation
 from bioc.brat.decoder import loads_brat_relation
 from bioc.brat.encoder import dumps_brat_relation
 

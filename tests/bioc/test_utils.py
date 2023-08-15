@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 
 import bioc
-# import bioc.utils
 from tests.utils import assert_everything
 
 file = Path(__file__).parent / 'everything.xml'
@@ -14,10 +13,13 @@ with open(file, encoding='utf8') as fp:
 
 
 def test_get_text():
-    assert (0, 'abcdefghijklmnopqrstuvwxyz') == bioc.get_text(collection.documents[0])
-    assert (27, 'abcdefg测试Non-ASCII') == bioc.get_text(collection.documents[1].passages[0])
-    assert (0, '\n' * 27 + 'abcdefg测试Non-ASCII') == bioc.get_text(collection.documents[1])
-    assert (34, '测试Non-ASCII') == bioc.get_text(collection.documents[1].passages[0].sentences[1])
+    doc = collection.documents[0]
+    assert (0, 'abcdefghijklmnopqrstuvwxyz') == bioc.get_text(doc)
+
+    doc = collection.documents[1]
+    assert (27, 'abcdefg测试Non-ASCII')  == bioc.get_text(doc.passages[0])
+    assert (0, '\n' * 27 + 'abcdefg测试Non-ASCII') == bioc.get_text(doc)
+    assert (34, '测试Non-ASCII')  == bioc.get_text(doc.passages[0].sentences[1])
 
     document = bioc.BioCDocument.of_text('abcd')
     assert (0, 'abcd') == bioc.get_text(document)

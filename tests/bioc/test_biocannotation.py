@@ -1,6 +1,6 @@
 import pytest
 
-from bioc import bioc
+import bioc
 
 
 def test_annotation():

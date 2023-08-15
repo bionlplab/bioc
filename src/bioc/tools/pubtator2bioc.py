@@ -1,5 +1,5 @@
 import bioc
-from bioc.pubtator.pubtator import PubTatorAnn, PubTator, PubTatorRel
+from bioc.pubtator import PubTatorAnn, PubTator, PubTatorRel
 
 
 def pubtator2bioc_ann(ann: PubTatorAnn) -> bioc.BioCAnnotation:

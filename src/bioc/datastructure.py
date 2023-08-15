@@ -31,7 +31,8 @@ class InfonsMaxin(ABC):
         """
         :return: a printable representation of infons
         """
-        return 'infons=[%s],' % ','.join(f'{k}={v}' for (k, v) in self.infons.items())
+        return 'infons=[%s],' % \
+            ','.join(f'{k}={v}' for (k, v) in self.infons.items())
 
 
 class BioCNode:
@@ -42,7 +43,8 @@ class BioCNode:
     def __init__(self, refid: str, role: str):
         """
         :param refid: the id of an annotated object or another relation
-        :param role: the role of how the referenced annotation or other relation participates in the current relation
+        :param role: the role of how the referenced annotation or other
+        relation participates in the current relation
         """
         self.refid = refid
         self.role = role
@@ -67,7 +69,8 @@ class BioCNode:
 
 class BioCLocation:
     """
-    The connection to the original text can be made through the offset and length fields.
+    The connection to the original text can be made through the offset
+    and length fields.
     """
 
     def __init__(self, offset: int, length: int):
@@ -91,8 +94,10 @@ class BioCLocation:
 
     def __contains__(self, location):
         if not isinstance(location, BioCLocation):
-            raise TypeError(f'Object of type {location.__class__.__name__} is not BioCLocation')
-        return self.offset <= location.offset and location.offset + location.length <= self.offset + self.length
+            raise TypeError('Object of type %s is not BioCLocation'
+                            % location.__class__.__name__)
+        return self.offset <= location.offset \
+            and location.offset + location.length <= self.offset + self.length
 
     def __hash__(self):
         return hash((self.offset, self.length))
@@ -114,7 +119,7 @@ class BioCLocation:
 
 class BioCAnnotation(InfonsMaxin):
     """
-    Stand off annotation.
+    Stand-off annotation.
     """
 
     def __init__(self):
@@ -144,19 +149,20 @@ class BioCAnnotation(InfonsMaxin):
     @property
     def total_span(self) -> BioCLocation:
         """
-        :return: The total span of this annotation. Discontinued locations will be merged.
+        :return: The total span of this annotation. Discontinued
+        locations will be merged.
         """
         if not self.locations:
-            raise ValueError(
-                f'{self.id}: annotation must have at least one location')
+            raise ValueError('%s: annotation must have at least one location'
+                             % self.id)
         start = min(l.offset for l in self.locations)
         end = max(l.end for l in self.locations)
         return BioCLocation(start, end - start)
 
     def __contains__(self, annotation):
         if not isinstance(annotation, BioCAnnotation):
-            raise TypeError(
-                f'Object of type {annotation.__class__.__name__} is not BioCAnnotation')
+            raise TypeError('Object of type %s is not BioCAnnotation'
+                            % annotation.__class__.__name__)
         loc1 = self.total_span
         loc2 = annotation.total_span
         return loc2 in loc1
@@ -164,7 +170,8 @@ class BioCAnnotation(InfonsMaxin):
 
 class BioCRelation(InfonsMaxin):
     """
-    Relationship between multiple BioCAnnotations and possibly other BioCRelations
+    Relationship between multiple BioCAnnotations and possibly other
+    BioCRelations
     """
 
     def __init__(self):
@@ -189,7 +196,8 @@ class BioCRelation(InfonsMaxin):
         """
         self.nodes.append(node)
 
-    def get_node(self, *, role: str = None, refid: str = None, default=None) -> BioCNode:
+    def get_node(self, *, role: str = None, refid: str = None, default=None) \
+            -> BioCNode:
         """
         :param role: role
         :param refid: annotation id
@@ -283,11 +291,12 @@ class BioCSentence(AnnotationMixin, InfonsMaxin):
     """
     One sentence in a {@link BioCPassage}.
 
-    It may contain the original text of the sentence or it might be BioCAnnotations and possibly
-    BioCRelations on the text of the passage.
+    It may contain the original text of the sentence or it might be
+    BioCAnnotations and possibly BioCRelations on the text of the passage.
 
-    There is no code to keep those possibilities mutually exclusive. However the currently available
-    DTDs only describe the listed possibilities.
+    There is no code to keep those possibilities mutually exclusive.
+    However, the currently available DTDs only describe the listed
+    possibilities.
     """
 
     def __init__(self):
@@ -352,8 +361,9 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
     """
     One passage in a BioCDocument.
 
-    This might be the text in the passage and possibly BioCAnnotations over that text. It could be
-    the BioCSentences in the passage. In either case it might include BioCRelations over annotations
+    This might be the text in the passage and possibly BioCAnnotations
+    over that text. It could be the BioCSentences in the passage. In
+    either case it might include BioCRelations over annotations
     on the passage.
     """
 
@@ -408,20 +418,23 @@ class BioCPassage(AnnotationMixin, InfonsMaxin, WithSentence):
     @property
     def total_span(self) -> BioCLocation:
         """
-        :return: The total span of this annotation. Discontinued locations will be merged.
+        :return: The total span of this annotation. Discontinued
+        locations will be merged.
         """
         if self.text:
             return BioCLocation(self.offset, len(self.text))
         else:
-            return BioCLocation(self.sentences[0].offset, self.sentences[-1].total_span.end)
+            return BioCLocation(self.sentences[0].offset,
+                                self.sentences[-1].total_span.end)
 
 
 class BioCDocument(AnnotationMixin, InfonsMaxin, WithSentence):
     """
     One document in the BioCCollection.
 
-    An id, typically from the original corpus, identifies the particular document. It includes
-    BioCPassages in the document and possibly BioCRelations over annotations on the document.
+    An id, typically from the original corpus, identifies the
+    particular document. It includes BioCPassages in the document
+    and possibly BioCRelations over annotations on the document.
     """
 
     def __init__(self):
@@ -488,7 +501,8 @@ class BioCCollection(InfonsMaxin, WithSentence):
     """
     Collection of documents.
 
-    Collection of documents for a project. They may be an entire corpus or some portion of a corpus.
+    Collection of documents for a project. They may be an entire corpus
+    or some portion of a corpus.
     Fields are provided to describe the collection.
 
     Documents may appear empty if doing document at a time IO.

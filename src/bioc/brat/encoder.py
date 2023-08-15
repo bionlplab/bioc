@@ -1,14 +1,16 @@
 import io
 from typing import TextIO
 
-from bioc.brat.brat import BratAttribute, BratEntity, BratEquivRelation, BratEvent, BratNote, BratRelation, BratDocument
+from bioc.brat.datastructure import BratAttribute, BratEntity, \
+    BratEquivRelation, BratEvent, BratNote, BratRelation, BratDocument
 
 
 def dumps_brat_attribute(att: BratAttribute) -> str:
     """
     ID [tab] TYPE REFID [FLAG1 FLAG2 ...]
     """
-    return '%s\t%s %s %s' % (att.id, att.type, att.refid, ' '.join(sorted(att.attributes)))
+    return '%s\t%s %s %s' \
+        % (att.id, att.type, att.refid, ' '.join(sorted(att.attributes)))
 
 
 def dumps_brat_entity(ent: BratEntity) -> str:
@@ -17,9 +19,11 @@ def dumps_brat_entity(ent: BratEntity) -> str:
 
     ID [tab] TYPE START END[;START END]* [tab] TEXT
     """
-    return '%s\t%s %s\t%s' % (ent.id, ent.type,
-                              ';'.join(['%s %s' % (i.begin, i.end) for i in sorted(ent.locations)]),
-                              ent.text)
+    return '%s\t%s %s\t%s' % (
+        ent.id,
+        ent.type,
+        ';'.join(['%s %s' % (i.begin, i.end) for i in sorted(ent.locations)]),
+        ent.text)
 
 
 def dumps_brat_equiv(rel: BratEquivRelation) -> str:
@@ -33,15 +37,21 @@ def dumps_brat_event(event: BratEvent) -> str:
     """
     ID [tab] TYPE:TRIGGER [ROLE1:PART1 ROLE2:PART2 ...]
     """
-    return '%s\t%s:%s %s' % (event.id, event.type, event.trigger_id,
-                             ' '.join(['%s:%s' % (k, v) for k, v in event.arguments.items()]))
+    return '%s\t%s:%s %s' % (
+        event.id,
+        event.type,
+        event.trigger_id,
+        ' '.join(['%s:%s' % (k, v) for k, v in event.arguments.items()]))
 
 
 def dumps_brat_relation(rel: BratRelation) -> str:
     """
     ID [tab] TYPE [ROLE1:PART1 ROLE2:PART2 ...]
     """
-    return '%s\t%s %s' % (rel.id, rel.type, ' '.join(['%s:%s' % (k, v) for k, v in rel.arguments.items()]))
+    return '%s\t%s %s' % (
+        rel.id,
+        rel.type,
+        ' '.join(['%s:%s' % (k, v) for k, v in rel.arguments.items()]))
 
 
 def dumps_brat_note(note: BratNote) -> str:

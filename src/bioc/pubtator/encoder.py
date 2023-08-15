@@ -1,6 +1,6 @@
 from typing import TextIO, List
 
-from bioc.pubtator.pubtator import PubTatorAnn, PubTatorRel, PubTator
+from bioc.pubtator.datastructure import PubTatorAnn, PubTatorRel, PubTator
 
 
 def dumps_ann(ann: PubTatorAnn) -> str:

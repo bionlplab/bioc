@@ -1,4 +1,4 @@
-from bioc.brat.brat import BratEntity
+from bioc.brat import BratEntity
 from bioc.brat.decoder import loads_brat_entity
 from bioc.brat.encoder import dumps_brat_entity
 

@@ -1,4 +1,4 @@
-from bioc import bioc
+import bioc
 
 
 def test_sentence():
@@ -8,3 +8,4 @@ def test_sentence():
     s_copy = bioc.BioCSentence.of_text('abcdefg', 27)
     assert s.text == s_copy.text
     assert s.offset == s_copy.offset
+    assert s.total_span == bioc.BioCLocation(27, 7)
