@@ -1,11 +1,11 @@
 import math
 import string
-import tempfile
 
 from docopt import docopt
 
 import bioc
 from bioc.tools import split
+from bioc.cli import split_bioc
 import random
 
 
@@ -65,7 +65,7 @@ def test_split_file(tmp_path):
 
 def test_cli():
     cmd = 'split -a 5 --additional-suffix=.txt -d 150 INPUT PREFIX'
-    argv = docopt(split.__doc__, argv=cmd.split()[1:])
+    argv = docopt(split_bioc.__doc__, argv=cmd.split()[1:])
     assert argv['--suffix-length'] == '5'
     assert argv['--additional-suffix'] == '.txt'
     assert argv['INPUT'] == 'INPUT'

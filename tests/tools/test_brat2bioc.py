@@ -16,6 +16,7 @@ A1	Negation E1
 #1	AnnotatorNotes T1	this annotation is suspect
 """
 
+
 @pytest.fixture
 def document():
     return brat.loads(txt_text, ann_text)
@@ -26,6 +27,6 @@ def test_brat2bioc(document):
     assert len(c.documents) == 1
 
     d = c.documents[0]
-    assert d.text == txt_text
+    assert d.passages[0].text == txt_text
     assert len(d.annotations) == 3
     assert len(d.relations) == 3
