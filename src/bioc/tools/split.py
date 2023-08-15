@@ -1,15 +1,6 @@
-"""
-Usage:
-    split [options] INPUT PREFIX
 
-Options:
-    -a N --suffix-length=N          generate suffixes of length N [default: 2]
-    --additional-suffix=SUFFIX      append an additional SUFFIX to file names [default: .xml]
-    -d NUMBER --documents=NUMBER    put NUMBER docs per output file [default: 100]
-"""
 from typing import Generator
 
-from docopt import docopt
 import tqdm
 import bioc
 
@@ -43,17 +34,3 @@ def split_file(source, *,
         dst = path_format.format(i)
         with open(dst, 'w', encoding='utf8') as fp:
             bioc.dump(subc, fp)
-
-
-def main():
-    args = docopt(__doc__)
-    print(args)
-    split_file(args['INPUT'],
-               prefix=args['PREFIX'],
-               num_doc=int(args['--documents']),
-               suffix_length=int(args['--suffix-length']),
-               additional_suffix=args['--additional-suffix'])
-
-
-if __name__ == '__main__':
-    main()

@@ -2,6 +2,7 @@ from typing import List
 
 import tqdm
 
+import bioc
 from bioc import BioCDocument, BioCCollection, BioCAnnotation, \
     BioCLocation, BioCRelation, BioCNode
 from bioc.brat import BratDocument, BratEntity, BratRelation, \
@@ -50,7 +51,7 @@ def brat2bioc_event(bratevent: BratEvent) -> BioCRelation:
 def brat2bioc_doc(bratdoc: BratDocument) -> BioCDocument:
     biocdoc = BioCDocument()
     biocdoc.id = bratdoc.id
-    biocdoc.text = bratdoc.text
+    biocdoc.add_passage(bioc.BioCPassage.of_text(bratdoc.text, 0))
     # entity
     for bratentity in bratdoc.entities:
         biocdoc.add_annotation(brat2bioc_entity(bratentity))

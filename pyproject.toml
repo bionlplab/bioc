@@ -27,7 +27,8 @@ email = "yip4002@med.cornell.edu"
 Homepage = "https://github.com/bionlplab/bioc"
 
 [project.scripts]
-bioc-split = "bioc.tools.split:main"
+bioc-split = "bioc.cli.split_bioc:main"
+brat2bioc = "bioc.cli.brat2bioc:main"
 
 [tool.setuptools.dynamic.dependencies]
 file = [ "requirements.txt",]
