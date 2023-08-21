@@ -1,6 +1,7 @@
 """
 Constants
 """
+COLLECTION = 0
 DOCUMENT = 1
 PASSAGE = 2
 SENTENCE = 3
